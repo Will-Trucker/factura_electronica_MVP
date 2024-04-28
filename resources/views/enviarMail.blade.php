@@ -1,0 +1,1 @@
+<h1>Este es el contenido del correo</h1>

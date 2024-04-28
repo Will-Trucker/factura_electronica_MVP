@@ -8,24 +8,29 @@ use Revolution\Google\Sheets\Facades\Sheets;
 class GoogleSheetController extends Controller
 {
     public function index(){
-        // $shhet = Sheets::spreadsheet('1tycmeUUxyTqgMAuoeVcTIiMi-Szhqu5R3OJV4uwV5dw')->sheet('prueba1')->all();
-        // $header = $shhet->pull(0);
-        // $values = Sheets::collection($header,$shhet);
-        // $data = array_values($values->toArray());
 
-        // dd($values);
+        // $sheetData = Sheets::spreadsheet('1tycmeUUxyTqgMAuoeVcTIiMi-Szhqu5R3OJV4uwV5dw')->sheet('prueba1')->all();
+        
+        // $header = array_shift($sheetData);
+        
+        // $collection = collect($sheetData);
+        
+        // dd($collection);
 
-        $sheetData = Sheets::spreadsheet('1tycmeUUxyTqgMAuoeVcTIiMi-Szhqu5R3OJV4uwV5dw')->sheet('prueba1')->all();
-        
-        // Extract the header (first row) from the sheet data
-        $header = array_shift($sheetData);
-        
-        // Create a collection from the remaining sheet data
-        $collection = collect($sheetData);
-        
-        // Optionally, if you want to include the header in the collection
-        // $collection->prepend($header);
-        
-        dd($collection);
+        return view('form-test');
+
+    }
+
+    public function storeForm(Request $request){
+        $data = [
+            $request->input('name'),
+            $request->input('email'),
+            $request->input('message')
+        ];
+
+        $sheetData = Sheets::spreadsheet('1tycmeUUxyTqgMAuoeVcTIiMi-Szhqu5R3OJV4uwV5dw')->sheet('prueba1')->append([$data]);
+
+        return redirect()->back()->with('success', 'Los datos se han almacenado correctamente.');
+
     }
 }

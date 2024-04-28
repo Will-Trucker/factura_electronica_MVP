@@ -1,0 +1,186 @@
+.contenedor{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 130vh;
+    flex-wrap: wrap;
+}
+
+.cards{
+    height: 300px;
+    width: 300px;
+    margin: 10px;
+    transition: 300ms;
+    margin: 20px;
+}
+
+.personaje, .personaje_2, .personaje_3, .personaje_4, .personaje_5, .personaje_6, .personaje_7{
+    height: 350px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10%;
+    background-color: #b6b9ee;
+    transition: 300ms;
+    position: relative;
+}
+
+.imagen_personaje{
+    height: 190px;
+    width: 190px;
+    background-image: url(../../public/imagenes/digital-key.png);
+    background-size: cover;
+    margin-bottom: 205px;
+
+}
+
+.imagen_personaje_2{
+    height: 140px;
+    width: 140px;
+    background-image: url(../../public/imagenes/financial-advisor.png);
+    background-size: cover;
+    margin-bottom: 200px;
+}
+
+.imagen_personaje_3{
+    height: 140px;
+    width: 140px;
+    background-image: url(../../public/imagenes/board-of-directors.png);
+    background-size: cover;
+    margin-bottom: 200px;
+}
+
+.imagen_personaje_4{
+    height: 140px;
+    width: 140px;
+    background-image: url(../../public/imagenes/invoice.png);
+    background-size: cover;
+    margin-bottom: 200px;
+}
+
+.imagen_personaje_5{
+    height: 140px;
+    width: 140px;
+    background-image: url(../../public/imagenes/idea.png);
+    background-size: cover;
+    margin-bottom: 200px;
+}
+
+.imagen_personaje_6{
+    height: 140px;
+    width: 140px;
+    background-image: url(../../public/imagenes/invalid-vote.png);
+    background-size: cover;
+    margin-bottom: 200px;
+}
+
+.imagen_personaje_7{
+    height: 140px;
+    width: 140px;
+    background-image: url(../../public/imagenes/send.png);
+    background-size: cover;
+    margin-bottom: 200px;
+}
+
+.detalle, .detalle_2, .detalle_3, .detalle_4, .detalle_5, .detalle_6, .detalle_7{
+    height: 200px;
+    width: 300px;
+    background-color: white;
+    position: absolute;
+    border-bottom-left-radius: 10%;
+    border-bottom-right-radius: 10%;
+    margin-top: 150px;
+    z-index: 2;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    transition: 300ms;
+
+}
+
+/* texto y bottun */
+
+.detalle h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.detalle_2 h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.detalle_3 h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.detalle_4 h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.detalle_5 h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.detalle_6 h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.detalle_7 h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+
+
+.boton h6{
+    text-align: center;
+    font-weight: 100;
+}
+
+.boton {
+    width: 100px;
+    margin: auto;
+    margin-top: 1rem;
+    cursor: pointer;
+    background: #7178df;
+    -webkit-border-radius: 8;
+    -moz-border-radius: 8;
+    border-radius: 8px;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 15px 10px 10px 10px;
+    text-decoration: none;
+  }
+
+  .boton:hover {
+    background: #6569ab;
+
+    text-decoration: none;
+  }

@@ -1,0 +1,219 @@
+.fondo{
+    background-color:#b6b9ee;
+    border-radius: 20px;
+    height: auto;
+}
+
+.title-1{
+    text-align: center;
+    font-weight: bold;
+    color: black;
+    text-transform: uppercase;
+}
+
+.alert-token{
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.alert-token-successful{
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.alert .alert-danger{
+    border: none;
+}
+
+.title-2{
+    text-align: center;
+    font-weight: bold;
+    color: black;
+}
+
+.cont1{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.button-addtoken{
+    margin: 0 auto;
+}
+
+/* Formulario de token */
+.input-group {
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.card {
+    border-radius: 15px;
+    padding: 20px;
+    width: 500rem; /* Ancho de la tarjeta */
+}
+
+.card-body{
+    margin-top: 1rem;
+}
+
+.form-group label{
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+
+}
+
+.forms-cont{
+    margin-top: 2rem;
+}
+
+
+.text-area1{
+    border: none;
+}
+
+.forms-cont label{
+    font-size: 1.5rem;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: black;
+}
+
+.forms-cont textarea{
+    margin-top: 1rem;
+    width: 100%;
+    margin-right: 2rem;
+}
+
+/* Tabla de tokens */
+
+.table-wrappers{
+    margin: 10px 70px 70px;
+    box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
+    margin-top: 2rem;
+    width: 100%;
+    margin-left: 0.1rem;
+}
+
+.fla-table {
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    white-space: nowrap;
+    background-color: white;
+}
+
+.fla-table td, .fla-table th {
+    text-align: center;
+    padding: 10px;
+}
+
+.fla-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 12px;
+}
+
+.fla-table thead th {
+    color: #ffffff;
+    background: #a85ba0;
+    font-size: 1.2rem;
+}
+
+
+.fla-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #6d4369;
+}
+
+.fla-table tr:nth-child(even) {
+    background: #e7e7e7;
+}
+
+.fla-table textarea{
+    width: 90%;
+}
+
+.fla-table tbody{
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+
+@media (max-width: 767px) {
+    .fla-table {
+        display: block;
+        width: 100%;
+    }
+    .table-wrappers:before{
+        display: block;
+        text-align: right;
+        font-size: 11px;
+        color: white;
+        padding: 0 0 10px;
+    }
+    .fla-table thead, .fla-table tbody, .fla-table thead th {
+        display: block;
+    }
+    .fla-table thead th:last-child{
+        border-bottom: none;
+    }
+    .fla-table thead {
+        float: left;
+    }
+    .fla-table tbody {
+        width: auto;
+        position: relative;
+        overflow-x: auto;
+    }
+    .fla-table td, .fla-table th {
+        padding: 20px .625em .625em .625em;
+        height: 60px;
+        vertical-align: middle;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 120px;
+        font-size: 13px;
+        text-overflow: ellipsis;
+    }
+    .fla-table thead th {
+        text-align: left;
+        border-bottom: 1px solid #f7f7f9;
+    }
+    .fla-table tbody tr {
+        display: table-cell;
+    }
+    .fla-table tbody tr:nth-child(odd) {
+        background: none;
+    }
+    .fla-table tr:nth-child(even) {
+        background: transparent;
+    }
+    .fla-table tr td:nth-child(odd) {
+        background: #F8F8F8;
+        border-right: 1px solid #E6E4E4;
+    }
+    .fla-table tr td:nth-child(even) {
+        border-right: 1px solid #E6E4E4;
+    }
+    .fla-table tbody td {
+        display: block;
+        text-align: center;
+    }
+}
+
