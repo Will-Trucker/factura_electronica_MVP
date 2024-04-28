@@ -4,16 +4,16 @@
 
 <div class="container-md p-5 fondo">
         <h1 class="ms-3">Facturación</h1>
-        @if(session('descError'))
+        {{-- @if(session('descError')) --}}
         <div class="alert alert-danger">
-        {{ session('descError') }}
+        {{-- {{ session('descError') }} --}}
         </div>
-        @endif
-        @if(session('observaciones'))
+        {{-- @endif
+        @if(session('observaciones')) --}}
         <div class="alert alert-danger">
-        {{ session('observaciones') }}
+        {{-- {{ session('observaciones') }} --}}
         </div>
-        @endif
+        {{-- @endif --}}
         <form action="guardarFactura" method="post">
             @csrf
             <input type="hidden" name="totalLetras" id="totalLetras" value='cero'>
@@ -87,9 +87,9 @@
                         </div>
                         <div class="col">
                             <select name="emisor" class="form-control" id="emisor" onBlur="traerEmisor()">
-                                @foreach ($emisores as $emisor)
-                                    <option value="{{$emisor['nombre']}}">{{$emisor['nombre']}}</option>
-                                @endforeach
+                                {{-- @foreach ($emisores as $emisor) --}}
+                                     <option value="{{--{{$emisor['nombre']}}--}}">{{--{{$emisor['nombre']}}--}}</option> 
+                                {{-- @endforeach --}}
                                 
                             </select>
 
@@ -199,9 +199,9 @@
                         </div>
                         <div class="col">
                             <select name="receptor" class="form-control" id="receptor" onblur="traerReceptor()">
-                                @foreach ($receptores as $receptor)
-                                    <option value="{{$receptor['nombre']}}">{{$receptor['nombre']}}</option>
-                                @endforeach
+                                {{-- @foreach ($receptores as $receptor) --}}
+                                 <option value="   {{-- {{$receptor['nombre']}}--}}">{{--{{$receptor['nombre']}}--}}</option> 
+                                {{-- @endforeach --}}
                                 
                             </select>
 
@@ -296,7 +296,7 @@
                             </tr>
                         </thead>
                         <tbody id="tablaDetalles">
-                            @for ($i = 0; $i < 5; $i++)
+                            {{-- @for ($i = 0; $i < 5; $i++) --}}
                             <tr>
                                 <th scope="row"><input class="cant" type="number" onblur="calcularVentas()" value=0></th>
                                 <td><input type="text" value="" onblur="calculoDetalles()"></td>
@@ -305,7 +305,7 @@
                                 <td>0.0</td>
                                 <td>0.0</td>
                             </tr>    
-                            @endfor
+                            {{-- @endfor --}}
                             
                         </tbody>
                     </table>

@@ -5,21 +5,21 @@
 <div class="container-md p-5 cont">
     <div class="cont-p">
         <h1 class="title-4">Documentos</h1>
-        @if(session('success'))
+        {{-- @if(session('success')) --}}
         <div class="alert alert-success">
-        {{ session('success') }}
+        {{-- {{ session('success') }} --}}
         </div>
-        @endif
-        @if(session('mensaje'))
+        {{-- @endif --}}
+        {{-- @if(session('mensaje')) --}}
         <div class="alert alert-danger">
-        {{ session('mensaje') }}
+        {{-- {{ session('mensaje') }} --}}
         </div>
-        @endif
-        @if(session('observ'))
+        {{-- @endif
+        @if(session('observ')) --}}
         <div class="alert alert-danger">
-        {{ session('observ') }}
+        {{-- {{ session('observ') }} --}}
         </div>
-        @endif
+        {{-- @endif --}}
         <div class="table-container">
         <div class="table-wrappers-em">
             <table class="flam-table">
@@ -32,18 +32,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @forelse ($documentos as $documento)
+                    {{-- @forelse ($documentos as $documento) --}}
                     <tr>
 
-                        <th>{{$documento['fecha']}}</th>
-                        <th>{{$documento['codigoGeneracion']}}</th>
-                        <th>{{$documento['selloRecibido']}}</th>
-                        <th><a class="btn btn-secondary" href="{{ route('obtenerpdf', ['codGeneracion' =>$documento['codigoGeneracion']]) }}">Obtener PDF</a>
-                        </th>
+                        <th>{{--{{$documento['fecha']}}--}}</th> 
+                        <th>{{--{{$documento['codigoGeneracion']}}--}}</th>
+                        <th>{{--{{$documento['selloRecibido']}}--}}</th>
+                        {{-- <th><a class="btn btn-secondary" href="{{ route('obtenerpdf', ['codGeneracion' =>$documento['codigoGeneracion']]) }}">Obtener PDF</a>
+                        </th> --}}
                     </tr>
-                @empty
+                {{-- @empty --}}
                     <th>Sin datos</th>
-                @endforelse
+                {{-- @endforelse --}}
             </tbody>
             </table>
         </div>

@@ -3,15 +3,15 @@
 @section('content')
     <div class="container-md p-5">
         <h1 class="title-1">Tokens</h1>
-        @if ($ultimo['fecha'] >= date('d-m-Y'))
+        {{-- @if ($ultimo['fecha'] >= date('d-m-Y')) --}}
             <div class="alert alert-success alert-token-successful">
                 Token Activo
             </div>
-        @else
+        {{-- @else --}}
             <div class="alert alert-danger alert-token">
                 No tiene un Token Activo
             </div>
-        @endif
+        {{-- @endif --}}
         <div class="cont1">
             <button type="button" class="btn btn-info button-addtoken" onclick="cambiarSeccion(1)" id="token-button"
                 style="font-size: 1.2rem; font-weight:bold;">Registrar</button>
@@ -50,8 +50,7 @@
         <form action="" class="form-api">
             <div class="form-group forms-cont">
                 <label for="lastToken" class="title-apike">API KEY</label>
-                <textarea class="form-control text-area1" aria-label="With textarea" id="apikey" cols="10" rows="5"
-                    style="outline: 0;">{{ $ultimo['token'] }}</textarea>
+                <textarea class="form-control text-area1" aria-label="With textarea" id="apikey" cols="10" rows="5" style="outline: 0;"> {{--{{ $ultimo['token'] }}--}}</textarea> 
             </div>
         </form>
         <div class="table-wrappers">
@@ -63,16 +62,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($tokens as $registro)
+                    {{-- @forelse ($tokens as $registro) --}}
                         <tr>
-                            <th>{{ $registro['fecha'] }}</th>
+                            <th>{{-- {{ $registro['fecha'] }}--}}</th> 
                             <th>
-                                <textarea name="" id="" cols="100" rows="4">{{ $registro['token'] }}</textarea>
+                                <textarea name="" id="" cols="100" rows="4"> {{--{{ $registro['token'] }}--}}</textarea> 
                             </th>
                         </tr>
-                    @empty
+                    {{-- @empty --}}
                         <th>Datos inexistentes</th>
-                    @endforelse
+                    {{-- @endforelse --}}
                 </tbody>
             </table>
         </div>

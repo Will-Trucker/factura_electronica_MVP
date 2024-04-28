@@ -195,18 +195,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @forelse ($emisores as $emisor)
+                    {{-- @forelse ($emisores as $emisor) --}}
                         <tr>
-                            <th>{{ $emisor['nombre'] }}</th>
-                            <th>{{ $emisor['actividad'] }}</th>
-                            <th>{{ $emisor['nit'] }}</th>
-                            <th>{{ $emisor['correo'] }}</th>
-                            <th>{{ $emisor['telefono'] }}</th>
+                                <th>{{--{{ $emisor['nombre'] }}--}}</th> 
+                                <th> {{--{{ $emisor['actividad'] }}--}}</th> 
+                                <th>{{--{{ $emisor['nit'] }}--}}</th> 
+                                <th> {{--{{ $emisor['correo'] }}--}}</th> 
+                                <th> {{--{{ $emisor['telefono'] }}--}}</th> 
                             <th>
                                 <input type="button" value="Modificar" data-bs-toggle="modal"
-                                    data-bs-target="#modal_modificar{{ $emisor['telefono'] }}" class="btn btn-success">
+                                   data-bs-target="#modal_modificar {{-- {{ $emisor['telefono'] }}--}}" class="btn btn-success"> 
                                 <input type="button" value="Eliminar" data-bs-toggle="modal"
-                                    data-bs-target="#modal_eliminar{{ $emisor['telefono'] }}" class="btn btn-danger">
+                                    data-bs-target="#modal_eliminar{{-- {{ $emisor['telefono'] }}--}}" class="btn btn-danger">
                             </th>
 
                         </tr>
@@ -214,9 +214,9 @@
                         @include('emisor_modificar')
                         @include('emisor_eliminar')
 
-                    @empty
+                    {{-- @empty --}}
                         <th>Sin datos</th>
-                    @endforelse
+                    {{-- @endforelse --}}
                     </tbody>
                 </table>
             </div>

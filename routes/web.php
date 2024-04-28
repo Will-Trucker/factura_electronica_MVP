@@ -17,9 +17,9 @@ Route::get('/sheet', [GoogleSheetController::class, 'index']);
 
 Route::post('/store', [GoogleSheetController::class, 'storeForm'])->name('storeForm');
 
-Route::get('/facturacion', [FacturaController::class, 'registro'])->name('registro');
+Route::get('/facturacion', [FacturaController::class, 'registro'])->name('facturacion');
 
-Route::get('/token', [TokenController::class, 'index'])->name('token');
+Route::get('/tokens', [TokenController::class, 'index'])->name('tokens');
 
 Route::get('/emisores', [EmisorController::class, 'index'])->name('emisores');
 
@@ -27,8 +27,8 @@ Route::get('/receptores', [ReceptorController::class, 'index'])->name('receptore
 
 Route::get('/documentos', [DocumentosController::class, 'index'])->name('documentos');
 
-Route::get('/eInvalidacion', [App\Http\Controllers\EventosController::class, 'listaEInvalidacion'])->name('eInvalidacion');
+Route::get('/eInvalidacion', [EventosController::class, 'listaEInvalidacion'])->name('eInvalidacion');
 
-Route::get('/eContingencia', [App\Http\Controllers\EventosController::class, 'listaEContingencia'])->name('eContingencia');
+Route::get('/eContingencia', [EventosController::class, 'listaEContingencia'])->name('eContingencia');
 
-Route::get('/nuevoEContingencia', [App\Http\Controllers\EventosController::class, 'nuevoEContingencia'])->name('nuevoEContingencia');
+Route::get('/nuevoEContingencia', [EventosController::class, 'nuevoEContingencia'])->name('nuevoEContingencia');

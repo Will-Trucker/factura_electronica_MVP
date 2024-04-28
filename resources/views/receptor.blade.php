@@ -162,22 +162,22 @@
                     </thead>
                     <tbody>
 
-                        @forelse ($receptores as $receptor)
+                        {{-- @forelse ($receptores as $receptor) --}}
                             <tr>
-                                <th>{{$receptor['nombre']}}</th>
-                                <th>{{$receptor['tipodocumento']}}</th>
-                                <th>{{$receptor['nrc']}}</th>
+                                <th> {{-- {{$receptor['nombre']}} --}}</th>
+                                <th> {{-- {{$receptor['tipodocumento']}} --}}</th>
+                                <th> {{-- {{$receptor['nrc']}} --}}</th>
                                 <th>
-                                <input type="button" value="Modificar" data-bs-toggle="modal" data-bs-target="#modal_modificar{{ $receptor['nrc'] }}" class="btn btn-success">
-                                <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar{{ $receptor['nrc'] }}" class="btn btn-danger">
+                                <input type="button" value="Modificar" data-bs-toggle="modal" data-bs-target="#modal_modificar{{-- {{ $receptor['nrc'] }} --}}" class="btn btn-success">
+                                <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar{{-- {{ $receptor['nrc'] }}  --}}" class="btn btn-danger">
                                 </th>
                             </tr>
 
                             @include('receptor_modificar')
                             @include('receptor_eliminar')
-                        @empty
+                        {{-- @empty --}}
                             <th>Sin datos</th>
-                        @endforelse
+                        {{-- @endforelse --}}
                     </tbody>
                 </table>
             </div>

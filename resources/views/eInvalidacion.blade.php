@@ -15,14 +15,14 @@
                 </thead>
                 <tbody>
                     
-                    @forelse ($eventos as $evento)
+                    {{-- @forelse ($eventos as $evento) --}}
                         <tr>
-                            <th>{{$evento}}</th>
+                             <th>{{--{{$evento}}--}}</th> 
                             <th>fecha</th>
                         </tr>
-                    @empty
+                    {{-- @empty --}}
                         <th>Sin datos</th>
-                    @endforelse
+                    {{-- @endforelse --}}
                 </tbody>
             </table>
         </div>
