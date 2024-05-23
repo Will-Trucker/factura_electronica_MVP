@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Google\Client;
 use Revolution\Google\Sheets\Facades\Sheets;
 class GoogleSheetController extends Controller
 {

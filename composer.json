@@ -6,6 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "google/apiclient": "2.15.0",
+        "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
         "revolution/laravel-google-sheets": "^6.3"
@@ -24,12 +26,16 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },"files": [
+            "app/Helpers/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },"files": [
+            "app/Helpers/helpers.php"
+        ]
     },
     "scripts": {
         "post-autoload-dump": [

@@ -3,21 +3,21 @@
 @section('content')
     <div class="container-md p-5">
         <h1 class="title-1">Tokens</h1>
-        {{-- @if ($ultimo['fecha'] >= date('d-m-Y')) --}}
+        @if (isset($ultimo['Fecha']) && $ultimo['Fecha'] >= date('d-m-Y'))
             <div class="alert alert-success alert-token-successful">
                 Token Activo
             </div>
-        {{-- @else --}}
+         @else 
             <div class="alert alert-danger alert-token">
                 No tiene un Token Activo
             </div>
-        {{-- @endif --}}
+        @endif
         <div class="cont1">
             <button type="button" class="btn btn-info button-addtoken" onclick="cambiarSeccion(1)" id="token-button"
                 style="font-size: 1.2rem; font-weight:bold;">Registrar</button>
         </div>
-        <form action="guardartoken" method="post">
-            @csrf
+        <form action="{{route('guardartoken')}}" method="post">
+           @csrf
             <div class="mt-3" id="divisiones">
                 <div class="d-none" id="tokenSection">
                     <h2 class="title-2">Crear Token</h2>
@@ -27,14 +27,14 @@
                                 <div class="form-group row">
                                         <label for="nit" class="col-sm-3 col-form-label cont-label">NIT</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control form-control-lg" id="nit" name="nit" value="06141101171056" aria-describedby="inputGroup-sizing-default">
+                                        <input type="text" class="form-control form-control-lg" id="nit" name="nit" value="06142803901121" aria-describedby="inputGroup-sizing-default">
                                     </div>
                                 </div>
                                 <hr class="mx-n3">
                                 <div class="form-group row">
                                     <label for="clave" class="col-sm-3 col-form-label">Clave</label>
                                     <div class="col-sm-9">
-                                        <input type="password" class="form-control form-control-lg" id="clave" name="clave" value="Un!c@ct3m0$@/*3" aria-describedby="inputGroup-sizing-default">
+                                        <input type="password" class="form-control form-control-lg" id="clave" name="clave" value="Un!v3r$0/*" aria-describedby="inputGroup-sizing-default">
                                     </div>
                                 </div>
                                 <hr class="mx-n3">
@@ -50,7 +50,7 @@
         <form action="" class="form-api">
             <div class="form-group forms-cont">
                 <label for="lastToken" class="title-apike">API KEY</label>
-                <textarea class="form-control text-area1" aria-label="With textarea" id="apikey" cols="10" rows="5" style="outline: 0;"> {{--{{ $ultimo['token'] }}--}}</textarea> 
+                <textarea class="form-control text-area1" aria-label="With textarea" id="apikey" cols="10" rows="5" style="outline: 0;">   {{ $ultimo['Token'] ?? 'Usted no tiene Tokens Activados' }}</textarea> 
             </div>
         </form>
         <div class="table-wrappers">
@@ -62,16 +62,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @forelse ($tokens as $registro) --}}
+                    @forelse ($tokens as $registro)
                         <tr>
-                            <th>{{-- {{ $registro['fecha'] }}--}}</th> 
+                            <th>{{ $registro['Fecha'] }}</th> 
                             <th>
-                                <textarea name="" id="" cols="100" rows="4"> {{--{{ $registro['token'] }}--}}</textarea> 
+                                <textarea name="" id="" cols="100" rows="4">{{ $registro['Token'] }}</textarea> 
                             </th>
                         </tr>
-                    {{-- @empty --}}
+                    @empty
                         <th>Datos inexistentes</th>
-                    {{-- @endforelse --}}
+                    @endforelse
                 </tbody>
             </table>
         </div>
