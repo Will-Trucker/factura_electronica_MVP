@@ -50,7 +50,7 @@ class TokenController extends Controller
 
         Sheets::spreadsheet(env('SHEETID'))->sheet('1. Tokens')->append([$datos]);
     
-        return $this->index();
+        return redirect()->route('tokens')->with('success','Token Creado con Éxito');
     }
 
     function generartoken($usuario, $clave){
