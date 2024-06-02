@@ -25,25 +25,12 @@ class EmisorController extends Controller
             ];
         }
 
-        // Mostrar Emisores Registrados
-        $emSheet = Sheets::spreadsheet(env('SHEETID'))->sheet('2. Emisores')->get();
-        $emData = array_slice($emSheet->toArray(),1);
-        $emisores = [];
-        foreach($emData as $rowE){
-            $emisores[] = [
-                'Id' => $rowE[0],
-                'Nombre' => $rowE[1],
-                'Nombre Comercial' => $rowE[2],
-                'Actividad Economica' => $rowE[3],
-                'NIT' => $rowE[4],
-                'NRC' => $rowE[5],
-                'Departamento' => $rowE[6],
-                'Municipio' => $rowE[7],
-                'Complemento' => $rowE[8],
-                'Telefono' => $rowE[9],
-                'Correo' => $rowE[10]
-            ];
-        }
+       
+        $sheet = Sheets::spreadsheet(env('SHEETID'))->sheet('2. Emisores')->get();
+
+        $header = $sheet->pull(0);
+        $values = Sheets::collection($header, $sheet);
+        $emisores = $values->toArray();
 
 
 
@@ -110,5 +97,86 @@ class EmisorController extends Controller
 
         return redirect()->route('emisores')->with('success','Emisor Registrado Exitosamente');
 
+    }
+
+    public function modificar_emisor(Request $request){
+        $request->validate([
+            'nombre' => 'required|string|regex:/^[\pL\s\-]+$/u',
+            'nombrecomercial' => 'required|string|regex:/^[\pL\s\-]+$/u',
+            'actividad' => 'required|string|regex:/^[\pL\s\-]+$/u',
+            'NRC' => 'required|numeric',
+            'nit' => 'required|numeric',
+            'departamento' => 'required',
+            'municipio' => 'required',
+            'complemento' => 'required',
+            'telefono' => 'required',
+            'correo' => 'required|email'
+        ]);
+    
+        $id = $request->idemisor;
+    
+        $sheet = Sheets::spreadsheet(env('SHEETID'))->sheet('2. Emisores');
+        $emData = $sheet->get()->toArray();
+    
+        // Find the row with the given ID
+        foreach ($emData as $index => $row) {
+            if ($row[0] == $id) {
+                // Update the row data
+                $emData[$index] = [
+                    $id,
+                    $request->nombre,
+                    $request->nombrecomercial,
+                    $request->actividad,
+                    $request->nit,
+                    $request->NRC,
+                    $request->departamento,
+                    $request->municipio,
+                    $request->complemento,
+                    $request->telefono,
+                    $request->correo
+                ];
+                break;
+            }
+        }
+    
+        // Save the updated data back to the sheet
+        Sheets::spreadsheet(env('SHEETID'))->sheet('2. Emisores')->range('A1')->update($emData);
+    
+        return redirect()->route('emisores')->with('success', 'Emisor Modificado Exitosamente');
+    }
+
+    public function eliminar_emisor(Request $request)
+    {
+        $idemisor = $request->input('idemisor');
+        
+        // Obtener los datos actuales de la hoja
+        $values = Sheets::spreadsheet(env('SHEETID'))
+                        ->sheet('2. Emisores')
+                        ->all();
+        
+        // Encontrar la fila que coincide con el id del emisor
+        $rowToDelete = null;
+        foreach ($values as $index => $row) {
+            if ($row[0] == $idemisor) { // Suponiendo que el ID está en la primera columna
+                $rowToDelete = $index + 1; // Las filas en Sheets empiezan en 1
+                break;
+            }
+        }
+
+        // Si se encontró la fila, eliminarla
+        if ($rowToDelete) {
+            Sheets::spreadsheet(env('SHEETID'))
+                    ->sheet('2. Emisores')
+                    ->all();
+        }
+
+        // Redirigir de vuelta con un mensaje de éxito
+        return redirect()->back()->with('success', 'Emisor eliminado correctamente.');
+    }
+
+    public function obtenerEmisor($id){
+        $respuesta = buscar('2. Emisores','Nombre', $id);
+
+        return $respuesta;
     }
 }

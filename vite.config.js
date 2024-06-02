@@ -10,7 +10,7 @@ export default defineConfig({
                     'resources/css/tokens.css',
                     'resources/css/emisor.css',
                     'resources/css/receptor.css',
-                    'resources/js/main.js'],
+                    'resources/js/numeroLetras.js'],
             refresh: true,
         }),
     ],

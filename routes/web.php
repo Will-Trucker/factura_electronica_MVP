@@ -18,13 +18,13 @@ Route::post('/guardartoken',[App\Http\Controllers\TokenController::class, 'guard
 
 Route::get('/emisores',[App\Http\Controllers\EmisorController::class, 'index'])->name('emisores');
 Route::post('/guardaremisor',[App\Http\Controllers\EmisorController::class, 'storeEm'])->name('storeEm');
-Route::post('/modificaremisor',[App\Http\Controllers\EmisorController::class, 'modificar_emisor'])->name('modificaremisor');
-Route::post('/eliminaremisor',[App\Http\Controllers\EmisorController::class, 'eliminar_emisor'])->name('eliminaremisor');
-Route::post('/buscaremisor/{id}',[App\Http\Controllers\EmisorController::class, 'obetenerEmisor'])->name('buscaremisor');
+Route::post('/modificaremisor',[App\Http\Controllers\EmisorController::class, 'modificar_emisor'])->name('modificar_emisor');
+Route::post('/eliminaremisor',[App\Http\Controllers\EmisorController::class, 'eliminar_emisor'])->name('eliminar_emisor');
+Route::post('/buscaremisor/{id}',[App\Http\Controllers\EmisorController::class, 'obtenerEmisor'])->name('buscaremisor');
 
 Route::get('/receptores',[App\Http\Controllers\ReceptorController::class, 'index'])->name('receptores');
-Route::post('/guardarreceptor',[App\Http\Controllers\ReceptorController::class, 'store'])->name('guardarreceptor');
-Route::post('/modificarreceptor',[App\Http\Controllers\ReceptorController::class, 'modificar_receptor'])->name('modificarreceptor');
+Route::post('/guardarreceptor',[App\Http\Controllers\ReceptorController::class, 'storeRe'])->name('storeRe');
+Route::post('/modificarreceptor',[App\Http\Controllers\ReceptorController::class, 'modificar_receptor'])->name('modificar_receptor');
 Route::post('/eliminarreceptor',[App\Http\Controllers\ReceptorController::class, 'eliminar_receptor'])->name('eliminarreceptor');
 Route::post('/buscareceptor/{id}',[App\Http\Controllers\ReceptorController::class, 'obetenerReceptor'])->name('buscareceptor');
 

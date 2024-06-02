@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>| Fáctura Electronica</title>
-    @vite([ 'resources/js/app.js','resources/css/index.css','resources/css/tokens.css','resources/css/emisor.css','resources/css/receptor.css','resources/js/main.js'])
-    <script src="{{Vite::asset('resources/js/main.js')}}"></script>
-    <script src="/numeroLetras.js"></script>
+    @vite([ 'resources/js/app.js','resources/css/index.css','resources/css/tokens.css','resources/css/emisor.css','resources/css/receptor.css','resources/js/numeroLetras.js'])
+    <script src="/main.js"></script>
+    <script src="{{Vite::asset('resources/js/numeroLetras.js')}}"></script>
     <script src="https://kit.fontawesome.com/9f312215fd.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -69,6 +69,6 @@
 
 @yield('content')
 <script src="https://kit.fontawesome.com/9e5ba2e3f5.js" crossorigin="anonymous"></script>
-<script src="{{Vite::asset('resources/js/main.js')}}"></script>
+@yield('customJS')
 </body>
 </html>

@@ -1,23 +1,6 @@
 
-let wrapper = document.querySelector('.wrapper'),
-    signUpLink = document.querySelector('.link .signup-link'),
-    signInLink = document.querySelector('.link .signin-link');
-
-signUpLink.addEventListener('click', () => {
-    wrapper.classList.add('animated-signin');
-    wrapper.classList.remove('animated-signup');
-});
-
-signInLink.addEventListener('click', () => {
-    wrapper.classList.add('animated-signup');
-    wrapper.classList.remove('animated-signin');
-});
-
-
 //datos de los detalles de factura
 let datos = [];
-
-
 window.addEventListener("load", function (event) {
     console.log("'Todos los recursos terminaron de cargar!");
     const pagina = location.href;
@@ -90,11 +73,10 @@ function calcularVentas(){
 
 function traerEmisor(){
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
     let emisor = document.getElementById('emisor').value;
     const apiUrl = 'buscaremisor/' + emisor;
 
-    fetch(apiUrl,{
+    fetch(apiUrl, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
@@ -102,38 +84,35 @@ function traerEmisor(){
             "X-CSRF-Token": token,
         },
         method: 'POST',
-        
     })
     .then(response => {
-        return response.text();
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
     })
-    .then(text => {
-        console.log("respuesta")
-        ponerdatosEmisor(JSON.parse(text))
-        //return console.log(text);
+    .then(data => {
+        console.log("respuesta", data);
+        ponerdatosEmisor(data);
     })
-    .catch(function(error){
-        error.json().then((error) => { //changed here
-            errorCallback(error)
-          });
+    .catch(error => {
+        console.error('Hubo un problema con la petición Fetch:', error);
     });
-    
-
 }
 
 function ponerdatosEmisor(data){
-    const datos = data;
-    document.getElementById('emisorNombre').value=datos.nombre;
-    document.getElementById('nombreComercial').value=datos.nombrecomercial;
-    document.getElementById('emisornrc').value=datos.nrc;
-    document.getElementById('emisornit').value=datos.nit;
-    document.getElementById('actividademisor').value=datos.actividad;
-    document.getElementById('complemento').value=datos.complemento;
-    document.getElementById('emisordepartamento').value=datos.departamento;
-    document.getElementById('emisormunicipio').value=datos.municipio;
-    document.getElementById('emisortelefono').value=datos.telefono;
-    document.getElementById('emisorcorreo').value=datos.correo;
+    document.getElementById('emisorNombre').value = data['Nombre'] || '';
+    document.getElementById('nombreComercial').value = data['Nombre Comercial'] || '';
+    document.getElementById('emisornrc').value = data['NRC'] || '';
+    document.getElementById('emisornit').value = data['NIT'] || '';
+    document.getElementById('actividademisor').value = data['Actividad Economica'] || '';
+    document.getElementById('complemento').value = data['Complemento'] || '';
+    document.getElementById('emisordepartamento').value = data['Departamento'] || '';
+    document.getElementById('emisormunicipio').value = data['Municipio'] || '';
+    document.getElementById('emisortelefono').value = data['Telefono'] || '';
+    document.getElementById('emisorcorreo').value = data['Correo'] || '';
 }
+
 
 
 function traerReceptor(){
@@ -170,12 +149,14 @@ function traerReceptor(){
 
 function ponerdatosReceptor(data){
     const datos = data;
-    document.getElementById('receptornombre').value=datos.nombre;
-    document.getElementById('tipodocumento').value=datos.tipodocumento;
-    document.getElementById('receptornrc').value=datos.nrc;
-    document.getElementById('receptorcomplemento').value=datos.complemento;
-    document.getElementById('receptordepartamento').value=datos.departamento;
-    document.getElementById('receptormunicipio').value=datos.municipio;
+    document.getElementById('receptornombre').value=datos['Nombre'] || '';
+    document.getElementById('tipodocumento').value=datos['Tipo Documento'] || '';
+    document.getElementById('receptorndocumento').value=datos['Num Documento'] || '';
+    document.getElementById('receptornrc').value=datos['NRC'] || '';
+    document.getElementById('receptordepartamento').value=datos['Departamento'] || '';
+    document.getElementById('receptormunicipio').value=datos['Municipio'] || '';
+    document.getElementById('receptorcomplemento').value=datos['Complemento'] || '';
+
 }
 
 

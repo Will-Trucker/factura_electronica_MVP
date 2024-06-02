@@ -3,6 +3,7 @@
 @section('content')
     <div class="container-md p-5 cont">
           <div class="max-w-md mx-auto" style="margin-top: 4rem">
+            
             @if ($errors->any())
             <div class="alert alert-danger" role="alert">
                 <strong class="font-bold">Error</strong>
@@ -185,16 +186,15 @@
                                 <th> {{ $emisor['Correo'] }}</th> 
                                 <th> {{ $emisor['Telefono'] }}</th> 
                             <th>
-                                <input type="button" value="Modificar" data-bs-toggle="modal"
-                                   data-bs-target="#modal_modificar" class="btn btn-success"> 
-                                <input type="button" value="Eliminar" data-bs-toggle="modal"
-                                    data-bs-target="#modal_eliminar" class="btn btn-danger">
+                                <input type="button" value="Modificar" data-bs-toggle="modal" data-bs-target="#modal_modificar{{ $emisor['Id'] }}" class="btn btn-success"> 
+                                {{-- <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar{{ $emisor['Id'] }}" class="btn btn-danger">  --}}
+                            
                             </th>
 
                         </tr>
 
                         @include('emisor_modificar')
-                        @include('emisor_eliminar')
+                        {{-- @include('emisor_eliminar') --}}
 
                     @empty
                         <th colspan="6">Sin datos</th>
@@ -211,3 +211,4 @@
     <br>
     <br>
 @endsection
+
