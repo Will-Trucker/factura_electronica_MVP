@@ -52,7 +52,12 @@
                                     <div class="form-group row">
                                         <label for="actividad" class="col-sm-3 col-form-label cont-label">Actividad</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="actividad" id="actividad" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{old('actividad')}}">
+                                            <select class="form-control" name="municipio" id="actividad">
+                                                <option class="text-center"> Elige una Actividad Económica </option>
+                                                @foreach ($actividades as $actividad)
+                                                <option value="{{$actividad['id']}}">{{$actividad['nombreGiro']}}</option>
+                                                @endforeach
+                                            </select>
                                             @error('actividad')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -85,7 +90,7 @@
                                             <select class="form-control" name="departamento" id="departamento">
                                                 <option class="text-center"> Elige un departamento </option>
                                                 @foreach ($departments as $depart)
-                                                <option value="{{$depart['Id']}}">{{$depart['Nombre']}}</option>
+                                                <option value="{{$depart['id']}}">{{$depart['nombreDepartamento']}}</option>
                                                 @endforeach
                                             </select>
                                             @error('departamento')
@@ -99,25 +104,9 @@
                                         <div class="col-sm-9">
                                             <select class="form-control" name="municipio" id="municipio">
                                                 <option class="text-center"> Elige un Municipio </option>
-                                                <option value="01">Aguilares</option>
-                                                <option value="02">Apopa</option>
-                                                <option value="03">Ayutuxtepeque</option>
-                                                <option value="04">Cuscatancingo</option>
-                                                <option value="05">Delgado</option>
-                                                <option value="06">El Paisnal</option>
-                                                <option value="07">Guazapa</option>
-                                                <option value="08">Ilopango</option>
-                                                <option value="09">Mejicanos</option>
-                                                <option value="10">Nejapa</option>
-                                                <option value="11">Panchimalco</option>
-                                                <option value="12">Rosario de Mora</option>
-                                                <option value="13">San Marcos</option>
-                                                <option value="14">San Martín</option>
-                                                <option value="15">San Salvador</option>
-                                                <option value="16">Santiago Texacuangos</option>
-                                                <option value="17">Santo Tomás</option>
-                                                <option value="18">Soyapango</option>
-                                                <option value="19">Tonacatepeque</option>
+                                                @foreach ($municipios as $municipio)
+                                                <option value="{{$municipio['idMunicipio']}}">{{$municipio['nombreMunicipio']}}</option>
+                                                @endforeach
                                             </select>
                                             @error('municipio')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -181,20 +170,20 @@
                     @forelse ($emisores as $emisor)
                         <tr>
                                 <th>{{ $emisor['Nombre'] }}</th> 
-                                <th> {{ $emisor['Actividad Economica'] }}</th> 
+                                <th> {{ $emisor['ActividadEconomica'] }}</th> 
                                 <th>{{ $emisor['NIT'] }}</th> 
                                 <th> {{ $emisor['Correo'] }}</th> 
                                 <th> {{ $emisor['Telefono'] }}</th> 
                             <th>
                                 <input type="button" value="Modificar" data-bs-toggle="modal" data-bs-target="#modal_modificar{{ $emisor['Id'] }}" class="btn btn-success"> 
-                                {{-- <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar{{ $emisor['Id'] }}" class="btn btn-danger">  --}}
+                                <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar{{ $emisor['Id'] }}" class="btn btn-danger">
                             
                             </th>
 
                         </tr>
 
                         @include('emisor_modificar')
-                        {{-- @include('emisor_eliminar') --}}
+                        @include('emisor_eliminar')
 
                     @empty
                         <th colspan="6">Sin datos</th>

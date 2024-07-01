@@ -48,18 +48,10 @@
                                             de documento</label>
                                         <div class="col-sm-9">
                                             <select class="form-control form-control-lg" name="tipodocumento">
-                                                <option value="FE">Factura Electrónica</option>
-                                                <option value="CCE">Comprobante de Crédito Fiscal. Electrónico</option>
-                                                <option value="NR">Nota de Remisión Electrónico</option>
-                                                <option value="NC">Nota de Crédito Electrónico</option>
-                                                <option value="ND">Nota de Débito Electrónico</option>
-                                                <option value="CR">Comprobante de Retención Electrónico</option>
-                                                <option value="CL">Comprobante de Liquidación Electrónico</option>
-                                                <option value="DCLE">Documento Contable de Liquidación Electrónico
-                                                </option>
-                                                <option value="FEE">Factura de Exportación Electrónica</option>
-                                                <option value="FSE">Factura de Sujeto Excluido Electrónica</option>
-                                                <option value="CD">Comprobante de Donación Electrónico</option>
+                                                <option class="text-center">Eliga un tipo de DTE a generar</option>
+                                                @foreach ($tipos as $tipo)
+                                                <option value="{{$tipo['codigoTipoDocumento']}}">{{$tipo['nombreTipoDocumento']}}</option>
+                                                @endforeach
                                             </select>
                                             @error('tipodocumento')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -75,6 +67,18 @@
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default">
                                             @error('ndocumento')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <hr class="mx-n3">
+                                    <div class="form-group row">
+                                        <label for="receptor-nit" class="col-sm-3 col-form-label cont-label">NIT</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="nit" class="form-control form-control-lg"
+                                                aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default">
+                                            @error('nit')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -99,7 +103,7 @@
                                             <select class="form-control form-control-lg" name="departamento">
                                                 <option class="text-center"> Elige un departamento </option>
                                                 @foreach ($departments as $depart)
-                                                    <option value="{{ $depart['Id'] }}">{{ $depart['Nombre'] }}</option>
+                                                <option value="{{$depart['id']}}">{{$depart['nombreDepartamento']}}</option>
                                                 @endforeach
                                             </select>
                                             @error('departamento')
@@ -114,25 +118,9 @@
                                         <div class="col-sm-9">
                                             <select class="form-control form-control-lg" name="municipio">
                                                 <option class="text-center"> Elige un Municipio </option>
-                                                <option value="01">Aguilares</option>
-                                                <option value="02">Apopa</option>
-                                                <option value="03">Ayutuxtepeque</option>
-                                                <option value="04">Cuscatancingo</option>
-                                                <option value="05">Delgado</option>
-                                                <option value="06">El Paisnal</option>
-                                                <option value="07">Guazapa</option>
-                                                <option value="08">Ilopango</option>
-                                                <option value="09">Mejicanos</option>
-                                                <option value="10">Nejapa</option>
-                                                <option value="11">Panchimalco</option>
-                                                <option value="12">Rosario de Mora</option>
-                                                <option value="13">San Marcos</option>
-                                                <option value="14">San Martín</option>
-                                                <option value="15">San Salvador</option>
-                                                <option value="16">Santiago Texacuangos</option>
-                                                <option value="17">Santo Tomás</option>
-                                                <option value="18">Soyapango</option>
-                                                <option value="19">Tonacatepeque</option>
+                                                @foreach ($municipios as $municipio)
+                                                <option value="{{$municipio['idMunicipio']}}">{{$municipio['nombreMunicipio']}}</option>
+                                                @endforeach
                                             </select>
                                             @error('municipio')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -155,11 +143,14 @@
                                     <hr class="mx-n3">
                                     <div class="form-group row">
                                         <label for="receptor-complemento"
-                                            class="col-sm-3 col-form-label cont-label">Actividad Economica</label>
+                                            class="col-sm-3 col-form-label cont-label">Actividad Económica</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="actividadecono"
-                                                class="form-control form-control-lg" aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default">
+                                            <select class="form-control form-control-lg" name="actividadecono">
+                                                <option class="text-center"> Elige una Actividad Económica </option>
+                                                @foreach ($actividades as $actividad)
+                                                <option value="{{$actividad['id']}}">{{$actividad['nombreGiro']}}</option>
+                                                @endforeach
+                                            </select>
                                             @error('actividadecono')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -272,23 +263,23 @@
 
                         @forelse ($receptores as $receptor)
                             <tr>
-                                <th> {{ $receptor['Nombre'] }}</th>
-                                <th> {{ $receptor['Tipo Documento'] }}</th>
-                                <th> {{ $receptor['NRC'] }}</th>
-                                <th> {{ $receptor['Departamento'] }}</th>
-                                <th> {{ $receptor['Municipio'] }}</th>
-                                <th> {{ $receptor['Actividad Economica'] }}</th>
+                                <th>{{ $receptor->Nombre }}</th>
+                                <th>{{ $receptor->tipos->nombreTipoDocumento }}</th>
+                                <th>{{ $receptor->NRC }}</th>
+                                <th>{{ $receptor->departamento->nombreDepartamento }}</th>
+                                <th>{{ $receptor->municipio->nombreMunicipio }}</th>
+                                <th>{{ $receptor->actividades->nombreGiro }}</th>
                                 <th>
                                     <input type="button" value="Modificar" data-bs-toggle="modal"
-                                        data-bs-target="#modal_modificar{{ $receptor['Id'] }}" class="btn btn-success">
-                                    {{-- <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar" class="btn btn-danger"> --}}
+                                        data-bs-target="#modal_modificar{{ $receptor['id'] }}" class="btn btn-success">
+                                    <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar" class="btn btn-danger">
                                 </th>
                             </tr>
 
                             @include('receptor_modificar')
-                            {{-- @include('receptor_eliminar') --}}
+                            @include('receptor_eliminar')
                         @empty
-                            <th>Sin datos</th>
+                        <th colspan="10">Sin datos</th>
                         @endforelse
                     </tbody>
                 </table>
