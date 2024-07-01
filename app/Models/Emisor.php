@@ -18,7 +18,7 @@ class Emisor extends Model
     protected $fillable = [
         'Nombre', 
         'NombreComercial', 
-        'ActividadEconomica', 
+        'idActividadEconomica', 
         'NIT', 
         'NRC', 
         'idDepartamento', 
@@ -37,5 +37,10 @@ class Emisor extends Model
     public function municipio()
     {
         return $this->belongsTo(Municipio::class, 'idMunicipio');
+    }
+
+    public function actividades()
+    {
+        return $this->belongsTo(ActividadEconomica::class, 'idActividadEconomica');
     }
 }

@@ -1,5 +1,5 @@
 
-<div class="modal fade bd-example-modal-lg" id="modal_modificar{{$emisor['Id']}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="modal_modificar{{$emisor['id']}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
         <div class="modal-header">
@@ -14,21 +14,26 @@
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label" style="color:black;">Nombre del Emisor:</label>
                 <input type="text"  name="nombre" class="form-control" value="{{ $emisor['Nombre']}}" >
-                @error('nombre')
-                    <div class="text-danger">{{ $message }}</div>
+                @error('actividad')
+                <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label" style="color:black;">Actividad Economica:</label>
-                <input type="text"  name="nombrecomercial" class="form-control" value="{{ $emisor['Actividad Economica']}}" >
+                <select class="form-control" name="municipio" id="actividad">
+                    <option class="text-center"> Elige una Actividad Económica </option>
+                    @foreach ($actividades as $actividad)
+                    <option value="{{$actividad['id']}}" {{$emisor['idActividadEconomica'] == $actividad['id'] ? 'selected' : ''}}>{{$actividad['nombreGiro']}}</option>
+                    @endforeach
+                </select>
                 @error('nombrecomercial')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label" style="color:black;">Nombre Comercial:</label>
-                <input type="text" name="actividad" class="form-control" value="{{ $emisor['Nombre Comercial']}}" >
-                @error('actividad')
+                <input type="text" name="nombrecomercial" class="form-control" value="{{ $emisor['NombreComercial']}}" >
+                @error('nombre')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
@@ -65,7 +70,7 @@
                 <select class="form-control" name="departamento" id="departamento">
                     <option class="text-center"> Elige un departamento </option>
                     @foreach ($departments as $depart)
-                    <option value="{{$depart['Id']}}" {{$depart['Id'] == $emisor['Departamento'] ?  'selected' : '' }}>{{$depart['Nombre']}}</option>
+                        <option value="{{$depart['id']}}" {{$emisor['idDepartamento'] == $depart['id'] ? 'selected' : ''}}>{{$depart['nombreDepartamento']}}</option>
                     @endforeach
                 </select>
                 @error('departamento')
@@ -77,25 +82,9 @@
              
                     <select class="form-control" name="municipio" id="municipio">
                         <option class="text-center"> Elige un Municipio </option>
-                        <option value="01">Aguilares</option>
-                        <option value="02">Apopa</option>
-                        <option value="03">Ayutuxtepeque</option>
-                        <option value="04">Cuscatancingo</option>
-                        <option value="05">Delgado</option>
-                        <option value="06">El Paisnal</option>
-                        <option value="07">Guazapa</option>
-                        <option value="08">Ilopango</option>
-                        <option value="09">Mejicanos</option>
-                        <option value="10">Nejapa</option>
-                        <option value="11">Panchimalco</option>
-                        <option value="12">Rosario de Mora</option>
-                        <option value="13">San Marcos</option>
-                        <option value="14">San Martín</option>
-                        <option value="15">San Salvador</option>
-                        <option value="16">Santiago Texacuangos</option>
-                        <option value="17">Santo Tomás</option>
-                        <option value="18">Soyapango</option>
-                        <option value="19">Tonacatepeque</option>
+                        @foreach ($municipios as $municipio)
+                        <option value="{{$municipio['idMunicipio']}}" {{$emisor['idMunicipio'] == $municipio['idMunicipio'] ? 'selected' : ''}}>{{$municipio['nombreMunicipio']}}</option>
+                        @endforeach
                     </select>
                     @error('municipio')
                     <div class="text-danger">{{ $message }}</div>
@@ -109,7 +98,7 @@
                 @enderror
             </div>
 
-            <input type="hidden" value="{{$emisor['Id']}}" name="idemisor">
+            <input type="hidden" value="{{$emisor['id']}}" name="idemisor">
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>

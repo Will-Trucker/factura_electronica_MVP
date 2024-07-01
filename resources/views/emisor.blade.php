@@ -52,7 +52,7 @@
                                     <div class="form-group row">
                                         <label for="actividad" class="col-sm-3 col-form-label cont-label">Actividad</label>
                                         <div class="col-sm-9">
-                                            <select class="form-control" name="municipio" id="actividad">
+                                            <select class="form-control" name="actividad" id="actividad">
                                                 <option class="text-center"> Elige una Actividad Económica </option>
                                                 @foreach ($actividades as $actividad)
                                                 <option value="{{$actividad['id']}}">{{$actividad['nombreGiro']}}</option>
@@ -159,7 +159,7 @@
                 <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Actividad</th>
+                    <th>Actividad Economica</th>
                     <th>NIT</th>
                     <th>Correo</th>
                     <th>Telefono</th>
@@ -169,14 +169,14 @@
                 <tbody>
                     @forelse ($emisores as $emisor)
                         <tr>
-                                <th>{{ $emisor['Nombre'] }}</th> 
-                                <th> {{ $emisor['ActividadEconomica'] }}</th> 
-                                <th>{{ $emisor['NIT'] }}</th> 
-                                <th> {{ $emisor['Correo'] }}</th> 
-                                <th> {{ $emisor['Telefono'] }}</th> 
+                                <th>{{ $emisor->Nombre}}</th> 
+                                <th> {{ $emisor->actividades->nombreGiro }}</th> 
+                                <th>{{ $emisor->NIT}}</th> 
+                                <th> {{ $emisor->NRC }}</th> 
+                                <th> {{ $emisor->Telefono}}</th> 
                             <th>
-                                <input type="button" value="Modificar" data-bs-toggle="modal" data-bs-target="#modal_modificar{{ $emisor['Id'] }}" class="btn btn-success"> 
-                                <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar{{ $emisor['Id'] }}" class="btn btn-danger">
+                                <input type="button" value="Modificar" data-bs-toggle="modal" data-bs-target="#modal_modificar{{ $emisor['id'] }}" class="btn btn-success"> 
+                                <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar{{ $emisor['id'] }}" class="btn btn-danger">
                             
                             </th>
 
