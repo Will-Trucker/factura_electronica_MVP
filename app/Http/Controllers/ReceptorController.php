@@ -18,7 +18,7 @@ class ReceptorController extends Controller
                 // // Obtener el array de los departamentos
                 // $departSheet = Sheets::spreadsheet(env('SHEETID'))->sheet('Departamento')->get();
                 // $departmentsData = array_slice($departSheet->toArray(), 1);
-                
+
                 // $departments = [];
                 // foreach ($departmentsData as $rowD) {
                 //     $departments[] = [
@@ -26,7 +26,7 @@ class ReceptorController extends Controller
                 //         'Nombre' => $rowD[1]
                 //     ];
                 // }
-        
+
                 // $sheet = Sheets::spreadsheet(env('SHEETID'))->sheet('3. Receptores')->get();
 
                 // $header = $sheet->pull(0);
@@ -39,7 +39,7 @@ class ReceptorController extends Controller
                 $tipos = TipoDocumento::all();
                 $receptores = Receptor::all();
 
-        
+
         return view('receptor',compact('departments','municipios','actividades','tipos','receptores'));
     }
 
@@ -62,6 +62,8 @@ class ReceptorController extends Controller
             'tipodocumento.required' => 'El Nombre Comercial es obligatorio.',
             'ndocumento.required' => 'La Actvidad es obligatorio.',
             'ndocumento.numero' => 'La Actividad solo puede contener numeros',
+            'nit.required' => 'El NIT es obligatorio',
+            'nit.numeric' => 'El NIT solo puede contener números',
             'nrc.required' => 'El NRC es obligatorio',
             'nrc.numeric' => 'El NRC solo puede contener números',
             'departamento.required' => 'El departamento es obligatorio.',
@@ -114,7 +116,7 @@ class ReceptorController extends Controller
             'Correo' => $request->correo
         ]);
 
-       
+
         $receptores->save();
 
         return redirect()->route('receptores')->with('success','Receptor Registrado Exitosamente');
@@ -125,11 +127,12 @@ class ReceptorController extends Controller
             'nombre' => 'required|string|regex:/^[\pL\s\-]+$/u',
             'tipodocumento' => 'required',
             'ndocumento' => 'required|numeric',
+            'nit' => 'required|numeric',
             'nrc' => 'required|numeric',
             'departamento' => 'required|numeric',
             'municipio' => 'required',
-            'complemento' => 'required|string|regex:/^[\pL\s\-]+$/u',
-            'actividadecono' => 'required|string|regex:/^[\pL\s\-]+$/u',
+            'complemento' => 'required|string',
+            'actividadecono' => 'required',
             'telefono' => 'required',
             'correo' => 'required|email'
         ],[
@@ -138,49 +141,84 @@ class ReceptorController extends Controller
             'tipodocumento.required' => 'El Nombre Comercial es obligatorio.',
             'ndocumento.required' => 'La Actvidad es obligatorio.',
             'ndocumento.numero' => 'La Actividad solo puede contener numeros',
+            'nit.required' => 'El NIT es obligatorio',
+            'nit.numeric' => 'El NIT solo puede contener números',
             'nrc.required' => 'El NRC es obligatorio',
             'nrc.numeric' => 'El NRC solo puede contener números',
             'departamento.required' => 'El departamento es obligatorio.',
             'municipio.required' => 'El municipio es obligatorio.',
             'complemento.required' => 'El complementos es requerido',
-            'complemento.alpa' => 'El complemento solo puede contener texto',
-            'actividadecono' => 'La Actividad Economica es requerido',
-            'actividadecono.alpa' => 'La Actividad Economica solo puede contener letras',
+            'actividadecono.required' => 'La Actividad Economica es requerido',
             'telefono.required' => 'El telefono es obligatorio',
             'correo.required' => 'El correo electrónico es obligatorio',
-            'corre.email' => 'El correo electrónico debe tener un formato válido'
+            'correo.email' => 'El correo electrónico debe tener un formato válido'
         ]);
-    
+
         $id = $request->idreceptor;
-    
-        $sheet = Sheets::spreadsheet(env('SHEETID'))->sheet('3. Receptores');
-        $reData = $sheet->get()->toArray();
-    
-        // Find the row with the given ID
-        foreach ($reData as $index => $row) {
-            if ($row[0] == $id) {
-                // Update the row data
-                $reData[$index] = [
-                    $id,
-                    $request->nombre,
-                    $request->tipodocumento,
-                    $request->ndocumento,
-                    $request->nrc,
-                    $request->departamento,
-                    $request->municipio,
-                    $request->complemento,
-                    $request->actividadecono,
-                    $request->telefono,
-                    $request->correo
-                ];
-                break;
-            }
+
+        $receptores= Receptor::find($id);
+
+        if(!$receptores){
+            return redirect()->route('receptores')->with('error','Receptor no Encontrado');
         }
-    
+
+        $receptores->update([
+            'Nombre' => $request->nombre,
+            'TipoDocumento' => $request->tipodocumento,
+            'NumDocumento' => $request->ndocumento,
+            'NIT' => $request->nit,
+            'NRC' => $request->nrc,
+            'idDepartamento' => $request->departamento,
+            'idMunicipio' => $request->municipio,
+            'Complemento' => $request->complemento,
+            'idActividadEconomica' => $request->actividadecono,
+            'Telefono' => $request->telefono,
+            'Correo' => $request->correo
+        ]);
+
+        // $sheet = Sheets::spreadsheet(env('SHEETID'))->sheet('3. Receptores');
+        // $reData = $sheet->get()->toArray();
+
+        // // Find the row with the given ID
+        // foreach ($reData as $index => $row) {
+        //     if ($row[0] == $id) {
+        //         // Update the row data
+        //         $reData[$index] = [
+        //             $id,
+        //             $request->nombre,
+        //             $request->tipodocumento,
+        //             $request->ndocumento,
+        //             $request->nrc,
+        //             $request->departamento,
+        //             $request->municipio,
+        //             $request->complemento,
+        //             $request->actividadecono,
+        //             $request->telefono,
+        //             $request->correo
+        //         ];
+        //         break;
+        //     }
+       // }
+
         // Save the updated data back to the sheet
-        Sheets::spreadsheet(env('SHEETID'))->sheet('3. Receptores')->range('A1')->update($reData);
-    
+        //Sheets::spreadsheet(env('SHEETID'))->sheet('3. Receptores')->range('A1')->update($reData);
+
         return redirect()->route('receptores')->with('success', 'Emisor Modificado Exitosamente');
+    }
+
+    public function eliminar_receptor(Request $request){
+        $idreceptor = $request->input('idreceptor');
+
+        $receptores = Receptor::find($idreceptor);
+
+        if(!$receptores){
+            return redirect()->back()->with('error','Emisor No Encontrado');
+        }
+
+        $receptores->delete();
+
+
+
     }
 
     public function obetenerReceptor($id){
@@ -189,5 +227,5 @@ class ReceptorController extends Controller
         return $respuesta;
     }
 
-    
+
 }

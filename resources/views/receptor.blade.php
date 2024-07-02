@@ -190,7 +190,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- 
+                    {{--
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="inputGroup-sizing-default">Nombre</span>
                                 <input type="text" name="nombre" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
@@ -271,9 +271,9 @@
                                 <th>{{ $receptor->actividades->nombreGiro }}</th>
                                 <th>
                                     <input type="button" value="Modificar" data-bs-toggle="modal"
-                                        data-bs-target="#modal_modificar{{ $receptor['id'] }}" class="btn btn-success">
-                                    <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar" class="btn btn-danger">
-                                </th>
+                                        data-bs-target="#modal_modificar{{ $receptor['NRC'] }}" class="btn btn-success">
+                                        <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar{{ $receptor['NRC'] }}" class="btn btn-danger">
+                                    </th>
                             </tr>
 
                             @include('receptor_modificar')

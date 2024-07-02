@@ -24,8 +24,8 @@ Route::post('/buscaremisor/{id}',[App\Http\Controllers\EmisorController::class, 
 
 Route::get('/receptores',[App\Http\Controllers\ReceptorController::class, 'index'])->name('receptores');
 Route::post('/guardarreceptor',[App\Http\Controllers\ReceptorController::class, 'storeRe'])->name('storeRe');
-Route::post('/modificarreceptor',[App\Http\Controllers\ReceptorController::class, 'modificar_receptor'])->name('modificar_receptor');
-Route::post('/eliminarreceptor',[App\Http\Controllers\ReceptorController::class, 'eliminar_receptor'])->name('eliminarreceptor');
+Route::put('/modificarreceptor',[App\Http\Controllers\ReceptorController::class, 'modificar_receptor'])->name('modificar_receptor');
+Route::post('/eliminarreceptor',[App\Http\Controllers\ReceptorController::class, 'eliminar_receptor'])->name('eliminar_receptor');
 Route::post('/buscareceptor/{id}',[App\Http\Controllers\ReceptorController::class, 'obetenerReceptor'])->name('buscareceptor');
 
 Route::get('/documentos',[App\Http\Controllers\DocumentosController::class, 'index'])->name('documentos');
