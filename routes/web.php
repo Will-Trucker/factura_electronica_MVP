@@ -18,7 +18,7 @@ Route::post('/guardartoken',[App\Http\Controllers\TokenController::class, 'guard
 
 Route::get('/emisores',[App\Http\Controllers\EmisorController::class, 'index'])->name('emisores');
 Route::post('/guardaremisor',[App\Http\Controllers\EmisorController::class, 'storeEm'])->name('storeEm');
-Route::post('/modificaremisor',[App\Http\Controllers\EmisorController::class, 'modificar_emisor'])->name('modificar_emisor');
+Route::put('/modificaremisor',[App\Http\Controllers\EmisorController::class, 'modificar_emisor'])->name('modificar_emisor');
 Route::post('/eliminaremisor',[App\Http\Controllers\EmisorController::class, 'eliminar_emisor'])->name('eliminar_emisor');
 Route::post('/buscaremisor/{id}',[App\Http\Controllers\EmisorController::class, 'obtenerEmisor'])->name('buscaremisor');
 

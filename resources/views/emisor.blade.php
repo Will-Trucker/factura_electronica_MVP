@@ -172,7 +172,7 @@
                                 <th>{{ $emisor->Nombre}}</th> 
                                 <th> {{ $emisor->actividades->nombreGiro }}</th> 
                                 <th>{{ $emisor->NIT}}</th> 
-                                <th> {{ $emisor->NRC }}</th> 
+                                <th> {{ $emisor->Correo }}</th> 
                                 <th> {{ $emisor->Telefono}}</th> 
                             <th>
                                 <input type="button" value="Modificar" data-bs-toggle="modal" data-bs-target="#modal_modificar{{ $emisor['id'] }}" class="btn btn-success"> 

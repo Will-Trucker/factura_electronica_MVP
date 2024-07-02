@@ -11,16 +11,18 @@
         @csrf
 
         <div class="modal-body" id="cont-modal">
+            @method('PUT')
+            <input type="hidden" name="idemisor" value="{{ $emisor->id }}">
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label" style="color:black;">Nombre del Emisor:</label>
                 <input type="text"  name="nombre" class="form-control" value="{{ $emisor['Nombre']}}" >
-                @error('actividad')
+                @error('nombre')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label" style="color:black;">Actividad Economica:</label>
-                <select class="form-control" name="municipio" id="actividad">
+                <select class="form-control" name="actividad" id="actividad">
                     <option class="text-center"> Elige una Actividad Económica </option>
                     @foreach ($actividades as $actividad)
                     <option value="{{$actividad['id']}}" {{$emisor['idActividadEconomica'] == $actividad['id'] ? 'selected' : ''}}>{{$actividad['nombreGiro']}}</option>
@@ -33,7 +35,7 @@
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label" style="color:black;">Nombre Comercial:</label>
                 <input type="text" name="nombrecomercial" class="form-control" value="{{ $emisor['NombreComercial']}}" >
-                @error('nombre')
+                @error('nombrecomercial')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>

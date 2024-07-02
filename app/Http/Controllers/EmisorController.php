@@ -118,21 +118,57 @@ class EmisorController extends Controller
     }
 
     public function modificar_emisor(Request $request){
-    //     $request->validate([
-    //         'nombre' => 'required|string|regex:/^[\pL\s\-]+$/u',
-    //         'nombrecomercial' => 'required|string|regex:/^[\pL\s\-]+$/u',
-    //         'actividad' => 'required|string|regex:/^[\pL\s\-]+$/u',
-    //         'NRC' => 'required|numeric',
-    //         'nit' => 'required|numeric',
-    //         'departamento' => 'required',
-    //         'municipio' => 'required',
-    //         'complemento' => 'required',
-    //         'telefono' => 'required',
-    //         'correo' => 'required|email'
-    //     ]);
+       $request->validate([
+         'nombre' => 'required|string|regex:/^[\pL\s\-]+$/u',
+         'nombrecomercial' => 'required|string|regex:/^[\pL\s\-]+$/u',
+         'actividad' => 'required',
+         'NRC' => 'required|numeric',
+         'nit' => 'required|numeric',
+         'departamento' => 'required',
+         'municipio' => 'required',
+         'complemento' => 'required',
+         'telefono' => 'required',
+         'correo' => 'required|email'
+     ],[
+        'nombre.required' => 'El Nombre es obligatorio.',
+        'nombre.alpa' => 'El Nombre solo puede contener letras',
+        'nombrecomercial.required' => 'El Nombre Comercial es obligatorio.',
+        'nombrecomercial.alpa' => 'El nombre comercial solo puede contener letras',
+        'actividad.required' => 'La Actvidad es obligatorio.',
+        'NRC.required' => 'El NRC es obligatorio',
+        'NRC.numeric' => 'El NRC solo puede contener números',
+        'nit.required' => 'El NIT es obligatorio',
+        'nit.numeric' => 'El NIT solo puede contener números',
+        'nit' => 'El NIT solo puede contener 14 números',
+        'departamento.required' => 'El departamento es obligatorio.',
+        'municipio.required' => 'El municipio es obligatorio.',
+        'complemento.required' => 'El complementos es requerido',
+        'telefono.required' => 'El telefono es obligatorio',
+        'correo.required' => 'El correo electrónico es obligatorio',
+        'correo.email' => 'El correo electrónico debe tener un formato válido'
+    ]);
     
-    //     $id = $request->idemisor;
-    
+    $id = $request->idemisor;
+
+    $emisor = Emisor::find($id);
+
+    if(!$emisor){
+        return redirect()->route('emisores')->with('error','Emisor no Encontrado');
+    }
+
+    $emisor->update([
+        'Nombre'=>$request->nombre,
+        'NombreComercial'=>$request->nombrecomercial,
+        'idActividadEconomica'=>$request->actividad,
+        'NIT'=>$request->nit,
+        'NRC'=>$request->NRC,
+        'idDepartamento'=>$request->departamento,
+        'idMunicipio'=>$request->municipio,
+        'Complemento'=>$request->complemento,
+        'Telefono'=>$request->telefono,
+        'Correo'=>$request->correo,
+    ]);
+
     //     $sheet = Sheets::spreadsheet(env('SHEETID'))->sheet('2. Emisores');
     //     $emData = $sheet->get()->toArray();
     
@@ -160,14 +196,24 @@ class EmisorController extends Controller
     //     // Save the updated data back to the sheet
     //     Sheets::spreadsheet(env('SHEETID'))->sheet('2. Emisores')->range('A1')->update($emData);
     
-         return redirect()->route('emisores')->with('success', 'Emisor Modificado Exitosamente');
+     return redirect()->route('emisores')->with('success', 'Emisor Modificado Exitosamente');
     }
 
     public function eliminar_emisor(Request $request)
     {
-    //     $idemisor = $request->input('idemisor');
+        $idemisor = $request->input('idemisor');
         
-    //     // Obtener los datos actuales de la hoja
+        $emisor = Emisor::find($idemisor);
+
+        if(!$emisor){
+            return redirect()->back()->with('error','Emisor No Encontrado');
+        }
+
+        $emisor->delete();
+
+
+
+        // Obtener los datos actuales de la hoja
     //     $values = Sheets::spreadsheet(env('SHEETID'))
     //                     ->sheet('2. Emisores')
     //                     ->all();
@@ -189,7 +235,7 @@ class EmisorController extends Controller
     //     }
 
     //     // Redirigir de vuelta con un mensaje de éxito
-    //     return redirect()->back()->with('success', 'Emisor eliminado correctamente.');
+         return redirect()->back()->with('success', 'Emisor eliminado correctamente.');
     }
 
     public function obtenerEmisor($id){

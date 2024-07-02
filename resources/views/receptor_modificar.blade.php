@@ -1,4 +1,4 @@
-<div class="modal fade bd-example-modal-lg" id="modal_modificar{{ $receptor['Id'] }}" tabindex="-1" role="dialog"
+<div class="modal fade bd-example-modal-lg" id="modal_modificar{{ $receptor['id'] }}" tabindex="-1" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -44,17 +44,10 @@
                 
                 {{ Form::select('tipodocumento', $opciones, $receptor['Tipo Documento'], ['class' => 'form-select', 'id'=>'Tipo Documento'])}} --}}
                         <select class="form-control" name="tipodocumento">
-                            <option value="FE">Factura Electrónica</option>
-                            <option value="CCE">Comprobante de Crédito Fiscal. Electrónico</option>
-                            <option value="NR">Nota de Remisión Electrónico</option>
-                            <option value="NC">Nota de Crédito Electrónico</option>
-                            <option value="ND">Nota de Débito Electrónico</option>
-                            <option value="CR">Comprobante de Retención Electrónico</option>
-                            <option value="CL">Comprobante de Liquidación Electrónico</option>
-                            <option value="DCLE">Documento Contable de Liquidación Electrónico</option>
-                            <option value="FEE">Factura de Exportación Electrónica</option>
-                            <option value="FSE">Factura de Sujeto Excluido Electrónica</option>
-                            <option value="CD">Comprobante de Donación Electrónico</option>
+                            <option class="text-center">Eliga un tipo de DTE a generar</option>
+                            @foreach ($tipos as $tipo)
+                            <option value="{{$tipo['codigoTipoDocumento']}}" {{$receptor['TipoDocumento'] == $tipo['id'] ? 'selected' : ''}}>{{$tipo['nombreTipoDocumento']}}</option>
+                            @endforeach
                         </select>
                         @error('tipodocumento')
                         <div class="text-danger">{{ $message }}</div>
@@ -64,7 +57,7 @@
                         <label for="recipient-name" class="col-form-label" style="color:black;">Numero de
                             Documento:</label>
                         <input type="text" name="ndocumento" class="form-control"
-                            value="{{ $receptor['Num Documento'] }}" >
+                            value="{{ $receptor['NumDocumento'] }}" >
                         @error('ndocumento')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
