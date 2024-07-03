@@ -129,7 +129,7 @@ class ReceptorController extends Controller
             'ndocumento' => 'required|numeric',
             'nit' => 'required|numeric',
             'nrc' => 'required|numeric',
-            'departamento' => 'required|numeric',
+            'departamento' => 'required',
             'municipio' => 'required',
             'complemento' => 'required|string',
             'actividadecono' => 'required',
@@ -206,20 +206,21 @@ class ReceptorController extends Controller
         return redirect()->route('receptores')->with('success', 'Emisor Modificado Exitosamente');
     }
 
-    public function eliminar_receptor(Request $request){
+    public function eliminar_receptor(Request $request)
+    {
         $idreceptor = $request->input('idreceptor');
-
+    
         $receptores = Receptor::find($idreceptor);
-
-        if(!$receptores){
-            return redirect()->back()->with('error','Emisor No Encontrado');
+    
+        if (!$receptores) {
+            return redirect()->back()->with('error', 'Receptor No Encontrado');
         }
-
+    
         $receptores->delete();
-
-
-
+    
+        return redirect()->back()->with('success', 'Receptor Eliminado Exitosamente');
     }
+    
 
     public function obetenerReceptor($id){
         $respuesta = buscar('3. Receptores','Nombre', $id);

@@ -1,10 +1,11 @@
-<div class="modal fade bd-example-modal-lg" id="modal_eliminar{{ $receptor['NRC'] }}" tabindex="-1" role="dialog"
-    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<!-- receptor_eliminar.blade.php -->
+
+<div class="modal fade" id="deleteModal{{$receptor->id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{$receptor->id}}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" style="color: black; text-align:center;">
-                    Eliminar emisor
+                    Eliminar Receptor
                 </h6>
             </div>
             <form method="POST" action="{{ route('eliminar_receptor') }}">
@@ -21,7 +22,6 @@
                     <button type="submit" class="btn btn-danger">Eliminar</button>
                 </div>
             </form>
-
         </div>
     </div>
 </div>

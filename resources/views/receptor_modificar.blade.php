@@ -1,5 +1,4 @@
-<div class="modal fade bd-example-modal-lg" id="modal_modificar{{ $receptor['id'] }}" tabindex="-1" role="dialog"
-    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="modifyModal{{$receptor->id}}" tabindex="-1" aria-labelledby="modifyModalLabel{{$receptor->id}}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,46 +6,25 @@
                     Actualizar datos del Receptor
                 </h6>
             </div>
-            <form method="POST" action="modificarreceptor">
+            <form method="POST" action="{{ route('modificar_receptor', $receptor['id']) }}">
                 @csrf
-
+                @method('PUT')
                 <div class="modal-body" id="cont-modal">
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label" style="color:black;">Nombre del
                             Receptor:</label>
-                        <input type="text" name="nombre" class="form-control" value="{{ $receptor['Nombre'] }}"
-                            >
-                            @error('nombre')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
+                        <input type="text" name="nombre" class="form-control" value="{{ $receptor['Nombre'] }}">
+                        @error('nombre')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label" style="color:black;">Tipo de
                             Documento:</label>
-                        {{-- @php 
-                use Collective\Html\FormFacade as Form;
-
-                $opciones= array(
-                                "FE"=> 'Factura Electrónica',
-                                "CCE"=>'Comprobante de Crédito Fiscal. Electrónico',
-                                "NR"=> 'Nota de Remisión Electrónico',
-                                "NC"=> 'Nota de Crédito Electrónico.vv',
-                                "ND"=> 'Nota de Débito Electrónico',
-                                "CR"=> 'Comprobante de Retención Electrónico',
-                                "CL"=> 'Comprobante de Liquidación Electrónico',
-                                "DCLE"=>'Documento Contable de Liquidación Electrónico',
-                                "FEE"=>'Factura de Exportación Electrónica',
-                                "FSE"=>'Factura de Sujeto Excluido Electrónica',
-                                "CD"=> 'Comprobante de Donación Electrónico'
-                                );
-                                
-                @endphp
-                
-                {{ Form::select('tipodocumento', $opciones, $receptor['Tipo Documento'], ['class' => 'form-select', 'id'=>'Tipo Documento'])}} --}}
                         <select class="form-control" name="tipodocumento">
                             <option class="text-center">Eliga un tipo de DTE a generar</option>
                             @foreach ($tipos as $tipo)
-                            <option value="{{$tipo['codigoTipoDocumento']}}" {{$receptor['TipoDocumento'] == $tipo['id'] ? 'selected' : ''}}>{{$tipo['nombreTipoDocumento']}}</option>
+                            <option value="{{$tipo['codigoTipoDocumento']}}" {{$receptor['TipoDocumento'] == $tipo['codigoTipoDocumento'] ? 'selected' : ''}}>{{$tipo['nombreTipoDocumento']}}</option>
                             @endforeach
                         </select>
                         @error('tipodocumento')
@@ -57,15 +35,21 @@
                         <label for="recipient-name" class="col-form-label" style="color:black;">Numero de
                             Documento:</label>
                         <input type="text" name="ndocumento" class="form-control"
-                            value="{{ $receptor['NumDocumento'] }}" >
+                            value="{{ $receptor['NumDocumento'] }}">
                         @error('ndocumento')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label" style="color:black;">NRC:</label>
-                        <input type="text" name="nrc" class="form-control" value="{{ $receptor['NRC'] }}"
-                            >
+                        <input type="text" name="nit" class="form-control" value="{{ $receptor['NIT'] }}">
+                        @error('nit')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label" style="color:black;">NRC:</label>
+                        <input type="text" name="nrc" class="form-control" value="{{ $receptor['NRC'] }}">
                         @error('nrc')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -75,9 +59,7 @@
                         <select class="form-control" name="departamento" id="departamento">
                             <option class="text-center"> Elige un departamento </option>
                             @foreach ($departments as $depart)
-                                <option value="{{ $depart['Id'] }}"
-                                    {{ $depart['Id'] == $receptor['Departamento'] ? 'selected' : '' }}>
-                                    {{ $depart['Nombre'] }}</option>
+                                <option value="{{$depart['id']}}" {{$receptor['idDepartamento'] == $depart['id'] ? 'selected' : ''}}>{{$depart['nombreDepartamento']}}</option>
                             @endforeach
                         </select>
                         @error('departamento')
@@ -86,27 +68,11 @@
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label" style="color:black;">Municipio:</label>
-                        <select class="form-control" name="municipio">
+                        <select class="form-control" name="municipio" id="municipio">
                             <option class="text-center"> Elige un Municipio </option>
-                            <option value="01">Aguilares</option>
-                            <option value="02">Apopa</option>
-                            <option value="03">Ayutuxtepeque</option>
-                            <option value="04">Cuscatancingo</option>
-                            <option value="05">Delgado</option>
-                            <option value="06">El Paisnal</option>
-                            <option value="07">Guazapa</option>
-                            <option value="08">Ilopango</option>
-                            <option value="09">Mejicanos</option>
-                            <option value="10">Nejapa</option>
-                            <option value="11">Panchimalco</option>
-                            <option value="12">Rosario de Mora</option>
-                            <option value="13">San Marcos</option>
-                            <option value="14">San Martín</option>
-                            <option value="15">San Salvador</option>
-                            <option value="16">Santiago Texacuangos</option>
-                            <option value="17">Santo Tomás</option>
-                            <option value="18">Soyapango</option>
-                            <option value="19">Tonacatepeque</option>
+                            @foreach ($municipios as $municipio)
+                            <option value="{{$municipio['idMunicipio']}}" {{$receptor['idMunicipio'] == $municipio['idMunicipio'] ? 'selected' : ''}}>{{$municipio['nombreMunicipio']}}</option>
+                            @endforeach
                         </select>
                         @error('municipio')
                         <div class="text-danger">{{ $message }}</div>
@@ -114,45 +80,45 @@
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label" style="color:black;">Complemento:</label>
-                        <input type="text" name="complemento" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{$receptor['Complemento']}}">
+                        <input type="text" name="complemento" class="form-control" value="{{$receptor['Complemento']}}">
                         @error('complemento')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label" style="color:black;">Actividad Economica:</label>
-                        <input type="text" name="actividadecono" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{$receptor['Actividad Economica']}}">
+                        <select class="form-control" name="actividadecono" id="actividad">
+                            <option class="text-center"> Elige una Actividad Económica </option>
+                            @foreach ($actividades as $actividad)
+                            <option value="{{$actividad['id']}}" {{$receptor['idActividadEconomica'] == $actividad['id'] ? 'selected' : ''}}>{{$actividad['nombreGiro']}}</option>
+                            @endforeach
+                        </select>
                         @error('actividadecono')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label" style="color:black;">Télefono:</label>
-                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" name="telefono" pattern="\+503 [267][0-9]{3}-[0-9]{4}" value="{{$receptor['Telefono']}}">
+                        <input type="text" class="form-control" name="telefono" pattern="\+503 [267][0-9]{3}-[0-9]{4}" value="{{$receptor['Telefono']}}">
                         @error('telefono')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>  
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label" style="color:black;">Correo Electronico:</label>
-                        <input type="text" name="correo" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{$receptor['Correo']}}">
+                        <input type="text" name="correo" class="form-control" value="{{$receptor['Correo']}}">
                         @error('correo')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>    
-                    <input type="hidden" value="{{ $receptor['Id'] }}" name="idreceptor">
+                    <input type="hidden" value="{{ $receptor['id'] }}" name="idreceptor">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                             aria-label="Close">Cancelar</button>
                         <button type="submit" class="btn btn-primary">Modificar Emisor</button>
-
                     </div>
-
+                </div>
             </form>
-
         </div>
     </div>
 </div>
-
-
-<!-- Large modal -->

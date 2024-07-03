@@ -28,7 +28,7 @@
                     <option value="{{$actividad['id']}}" {{$emisor['idActividadEconomica'] == $actividad['id'] ? 'selected' : ''}}>{{$actividad['nombreGiro']}}</option>
                     @endforeach
                 </select>
-                @error('nombrecomercial')
+                @error('actividad')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>

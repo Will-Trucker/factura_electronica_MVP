@@ -270,14 +270,16 @@
                                 <th>{{ $receptor->municipio->nombreMunicipio }}</th>
                                 <th>{{ $receptor->actividades->nombreGiro }}</th>
                                 <th>
-                                    <input type="button" value="Modificar" data-bs-toggle="modal"
-                                        data-bs-target="#modal_modificar{{ $receptor['NRC'] }}" class="btn btn-success">
-                                        <input type="button" value="Eliminar" data-bs-toggle="modal" data-bs-target="#modal_eliminar{{ $receptor['NRC'] }}" class="btn btn-danger">
+                                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modifyModal{{$receptor->id}}">Modificar</button>
+                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{$receptor->id}}">Eliminar</button>
                                     </th>
                             </tr>
 
-                            @include('receptor_modificar')
-                            @include('receptor_eliminar')
+                    <!-- Include Modify Modal -->
+                    @include('receptor_modificar', ['receptor' => $receptor])
+
+                    <!-- Include Delete Modal -->
+                    @include('receptor_eliminar', ['receptor' => $receptor])
                         @empty
                         <th colspan="10">Sin datos</th>
                         @endforelse

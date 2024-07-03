@@ -20,13 +20,14 @@ Route::get('/emisores',[App\Http\Controllers\EmisorController::class, 'index'])-
 Route::post('/guardaremisor',[App\Http\Controllers\EmisorController::class, 'storeEm'])->name('storeEm');
 Route::put('/modificaremisor',[App\Http\Controllers\EmisorController::class, 'modificar_emisor'])->name('modificar_emisor');
 Route::post('/eliminaremisor',[App\Http\Controllers\EmisorController::class, 'eliminar_emisor'])->name('eliminar_emisor');
-Route::post('/buscaremisor/{id}',[App\Http\Controllers\EmisorController::class, 'obtenerEmisor'])->name('buscaremisor');
+// Route::post('/buscaremisor/{id}',[App\Http\Controllers\EmisorController::class, 'obtenerEmisor'])->name('buscaremisor');
+Route::get('/emisores/{id}', [App\Http\Controllers\FacturaController::class, 'obtenerEmisor']);
 
 Route::get('/receptores',[App\Http\Controllers\ReceptorController::class, 'index'])->name('receptores');
 Route::post('/guardarreceptor',[App\Http\Controllers\ReceptorController::class, 'storeRe'])->name('storeRe');
 Route::put('/modificarreceptor',[App\Http\Controllers\ReceptorController::class, 'modificar_receptor'])->name('modificar_receptor');
 Route::post('/eliminarreceptor',[App\Http\Controllers\ReceptorController::class, 'eliminar_receptor'])->name('eliminar_receptor');
-Route::post('/buscareceptor/{id}',[App\Http\Controllers\ReceptorController::class, 'obetenerReceptor'])->name('buscareceptor');
+// Route::post('/buscareceptor/{id}',[App\Http\Controllers\ReceptorController::class, 'obetenerReceptor'])->name('buscareceptor');
 
 Route::get('/documentos',[App\Http\Controllers\DocumentosController::class, 'index'])->name('documentos');
 Route::get('/obtenerpdf/{codGeneracion}',[App\Http\Controllers\DocumentosController::class, 'obtenerPdf'])->name('obtenerpdf');

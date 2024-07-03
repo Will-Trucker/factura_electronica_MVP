@@ -71,19 +71,18 @@ function calcularVentas(){
 }
 
 
-function traerEmisor(){
+function traerEmisor() {
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    let emisor = document.getElementById('emisor').value;
-    const apiUrl = 'buscaremisor/' + emisor;
+    let emisorId = document.getElementById('emisor').value; // Asumiendo que tienes un elemento con id 'emisor'
 
-    fetch(apiUrl, {
+    fetch(`/emisores/${emisorId}`, { // La ruta debe coincidir con la que defines en Laravel
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
             "X-Requested-With": "XMLHttpRequest",
             "X-CSRF-Token": token,
         },
-        method: 'POST',
+        method: 'GET', // Si es solo para obtener datos, usa 'GET'
     })
     .then(response => {
         if (!response.ok) {
@@ -100,20 +99,32 @@ function traerEmisor(){
     });
 }
 
-function ponerdatosEmisor(data){
-    document.getElementById('emisorNombre').value = data['Nombre'] || '';
-    document.getElementById('nombreComercial').value = data['Nombre Comercial'] || '';
-    document.getElementById('emisornrc').value = data['NRC'] || '';
-    document.getElementById('emisornit').value = data['NIT'] || '';
-    document.getElementById('actividademisor').value = data['Actividad Economica'] || '';
-    document.getElementById('complemento').value = data['Complemento'] || '';
-    document.getElementById('emisordepartamento').value = data['Departamento'] || '';
-    document.getElementById('emisormunicipio').value = data['Municipio'] || '';
-    document.getElementById('emisortelefono').value = data['Telefono'] || '';
-    document.getElementById('emisorcorreo').value = data['Correo'] || '';
-}
+// function ponerdatosEmisor(data){
+//     document.getElementById('emisorNombre').value = data['Nombre'] || '';
+//     document.getElementById('nombreComercial').value = data['Nombre Comercial'] || '';
+//     document.getElementById('emisornrc').value = data['NRC'] || '';
+//     document.getElementById('emisornit').value = data['NIT'] || '';
+//     document.getElementById('actividademisor').value = data['Actividad Economica'] || '';
+//     document.getElementById('complemento').value = data['Complemento'] || '';
+//     document.getElementById('emisordepartamento').value = data['Departamento'] || '';
+//     document.getElementById('emisormunicipio').value = data['Municipio'] || '';
+//     document.getElementById('emisortelefono').value = data['Telefono'] || '';
+//     document.getElementById('emisorcorreo').value = data['Correo'] || '';
+// }
 
-
+function ponerdatosEmisor(data) {
+    // Establece los valores de los campos del formulario con los datos del emisor
+    document.getElementById('emisorNombre').value = data.Nombre || '';
+    document.getElementById('nombreComercial').value = data.NombreComercial || '';
+    document.getElementById('emisornrc').value = data.NIT || ''; // Ajusta el nombre de la propiedad si es necesario
+    document.getElementById('emisornit').value = data.NRC || '';
+    document.getElementById('actividademisor').value = data.idActividadEconomica || '';
+    document.getElementById('complemento').value = data.Complemento || '';
+    document.getElementById('emisordepartamento').value = data.idDepartamento || '';
+    document.getElementById('emisormunicipio').value = data.idMunicipio || '';
+    document.getElementById('emisortelefono').value = data.Telefono || '';
+    document.getElementById('emisorcorreo').value = data.Correo || '';
+  }
 
 function traerReceptor(){
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
