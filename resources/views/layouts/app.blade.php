@@ -69,6 +69,7 @@
 
 @yield('content')
 <script src="https://kit.fontawesome.com/9e5ba2e3f5.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @yield('customJS')
 </body>
 </html>
