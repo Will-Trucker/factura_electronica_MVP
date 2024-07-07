@@ -330,8 +330,7 @@
                         </div> --}}
                         <div class="d-none" id="receptorSection">
                                 <h2 class="title-2">Receptor</h2>
-                                <select name="receptor" class="form-control" id="receptor"
-                                        onblur="traerReceptor()">
+                                <select name="receptor" class="form-control" id="receptor" onblur="traerReceptor()">
                                         @foreach ($receptores as $receptor)
                                             <option value="{{ $receptor['Nombre'] }}">{{ $receptor['Nombre'] }}</option>
                                         @endforeach
@@ -367,6 +366,14 @@
                                             </div>
                                             <hr class="mx-n3">
                                             <div class="form-group row">
+                                                <label for="receptor-nit" class="col-sm-3 col-form-label cont-label">NRC</label>
+                                                <div class="col-sm-9">
+                                                    <input name="receptornit" id="receptornit" type="text" class="form-control" aria-label="Sizing example input"
+                                                    aria-describedby="inputGroup-sizing-default">
+                                                </div>
+                                            </div>
+                                            <hr class="mx-n3">
+                                            <div class="form-group row">
                                                 <label for="receptor-nrc" class="col-sm-3 col-form-label cont-label">NRC</label>
                                                 <div class="col-sm-9">
                                                     <input name="receptornrc" id="receptornrc" type="text" class="form-control" aria-label="Sizing example input"
@@ -396,6 +403,29 @@
                                                 </div>
                                             </div>
                                             <hr class="mx-n3">
+                                            <div class="form-group row">
+                                                <label for="receptor-actividadEconomica"
+                                                class="col-sm-3 col-form-label cont-label">Actividad Economica</label>
+                                                <div class="col-sm-9">
+                                                    <input name="receptoractividadEconomica" id="receptorActividadEconomica" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                                </div>
+                                            </div>
+                                            <hr class="mx-n3">
+                                            <div class="form-group row">
+                                                <label for="receptor-telefono"
+                                                class="col-sm-3 col-form-label cont-label">Telefono</label>
+                                                <div class="col-sm-9">
+                                                    <input name="receptortelefono" id="receptorTelefono" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                                </div>
+                                            </div>
+                                            <hr class="mx-n3">
+                                            <div class="form-group row">
+                                                <label for="receptor-correo"
+                                                class="col-sm-3 col-form-label cont-label">Correo Electronico</label>
+                                                <div class="col-sm-9">
+                                                    <input name="receptorcorreo" id="receptorcorreo" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                                </div>
+                                            </div>
                                             <div class="px-5 py-4 text-center">
                                                 <button type="button" class="btn btn-secondary"
                                                 onclick="cambiarSeccion(4)">Siguiente</button>
@@ -647,26 +677,5 @@
 
 
         </div>
-        <script>
-            $(document).ready(function() {
-                $('#userSelect').change(function() {
-                    var userId = $(this).val();
-                    if (userId) {
-                        $.ajax({
-                            url: '/factura/usuario/' + userId,
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function(data) {
-                                $('#name').val(data.name);
-                                $('#email').val(data.email);
-                                // Rellena más campos según sea necesario
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Error al obtener los datos del usuario:', error);
-                            }
-                        });
-                    }
-                });
-            });
-        </script>
+
     @endsection

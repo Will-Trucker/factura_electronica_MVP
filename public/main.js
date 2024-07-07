@@ -6,22 +6,22 @@ window.addEventListener("load", function (event) {
     const pagina = location.href;
     const menu = document.getElementById('listamenu');
     if (menu != null) {
-        
+
         for (let i = 0; i < menu.childElementCount; i++) {
-    
+
             if(menu.children[i].children[0].href == pagina){
-                var pagActual = menu.children[i].children[0]; 
+                var pagActual = menu.children[i].children[0];
                 console.log(pagActual.href)
                 pagActual.className = "nav-link text-white pgActual"
-    
+
             }
-            
+
         }
     }
   });
 
 function cambiarSeccion(seccion){
-    let section; 
+    let section;
     let secciones = document.getElementById("divisiones")
     for (let i = 0; i < secciones.childElementCount; i++) {
         secciones.children[i].className = 'd-none'
@@ -54,14 +54,14 @@ function cambiarSeccion(seccion){
         default:
             break;
     }
-    
+
     section.className = '';
-    
+
 }
 
 function calcularVentas(){
     let tabla = document.getElementById("tablaDetalles");
-    
+
     for (let i = 0; i < tabla.childElementCount; i++) {
         let fila = tabla.children[i];
         //casilla de ventas = cantidad * precio unitario
@@ -71,18 +71,46 @@ function calcularVentas(){
 }
 
 
+//  function traerEmisor() {
+//      let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+//      let emisorId = document.getElementById('emisor').value; // Asumiendo que tienes un elemento con id 'emisor'
+
+//     fetch(`/emisores/${emisorId}`, { // La ruta debe coincidir con la que defines en Laravel
+//         headers: {
+//             "Content-Type": "application/json",
+//             "Accept": "application/json",
+//            "X-Requested-With": "XMLHttpRequest",
+//             "X-CSRF-Token": token,
+//         },
+//         method: 'GET', // Si es solo para obtener datos, usa 'GET'
+//      })
+//      .then(response => {
+//          if (!response.ok) {
+//              throw new Error('Network response was not ok');
+//          }
+//          return response.json();
+//      })
+//      .then(data => {
+//          console.log("respuesta", data);
+//          ponerdatosEmisor(data);
+//      })
+//     .catch(error => {
+//          console.error('Hubo un problema con la petición Fetch:', error);
+//      });
+// }
 function traerEmisor() {
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    let emisorId = document.getElementById('emisor').value; // Asumiendo que tienes un elemento con id 'emisor'
+    let emisor = document.getElementById('emisor').value;
+    const apiUrl = '/buscaremisor/' + emisor;
 
-    fetch(`/emisores/${emisorId}`, { // La ruta debe coincidir con la que defines en Laravel
+    fetch(apiUrl, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
             "X-Requested-With": "XMLHttpRequest",
             "X-CSRF-Token": token,
         },
-        method: 'GET', // Si es solo para obtener datos, usa 'GET'
+        method: 'POST',
     })
     .then(response => {
         if (!response.ok) {
@@ -91,14 +119,13 @@ function traerEmisor() {
         return response.json();
     })
     .then(data => {
-        console.log("respuesta", data);
         ponerdatosEmisor(data);
     })
     .catch(error => {
-        console.error('Hubo un problema con la petición Fetch:', error);
+        console.error('Error fetching data:', error);
+        // Handle error display or logging here
     });
 }
-
 // function ponerdatosEmisor(data){
 //     document.getElementById('emisorNombre').value = data['Nombre'] || '';
 //     document.getElementById('nombreComercial').value = data['Nombre Comercial'] || '';
@@ -112,27 +139,44 @@ function traerEmisor() {
 //     document.getElementById('emisorcorreo').value = data['Correo'] || '';
 // }
 
+
+// function ponerdatosEmisor(data) {
+//     // Establece los valores de los campos del formulario con los datos del emisor
+//     const datos = data;
+//     document.getElementById('emisorNombre').value = datos.Nombre || '';
+//     document.getElementById('nombreComercial').value = datos.NombreComercial || '';
+//     document.getElementById('emisornrc').value = datos.NIT || ''; // Ajusta el nombre de la propiedad si es necesario
+//     document.getElementById('emisornit').value = datos.NRC || '';
+//     document.getElementById('actividademisor').value = datos.idActividadEconomica.nombreGiro || '';
+//     document.getElementById('complemento').value = datos.Complemento || '';
+//     document.getElementById('emisordepartamento').value = datos.idDepartamento.nombreDepartamento || '';
+//     document.getElementById('emisormunicipio').value = datos.idMunicipio.nombreMunicipio || '';
+//     document.getElementById('emisortelefono').value = datos.Telefono || '';
+//     document.getElementById('emisorcorreo').value = datos.Correo || '';
+//   }
 function ponerdatosEmisor(data) {
     // Establece los valores de los campos del formulario con los datos del emisor
     document.getElementById('emisorNombre').value = data.Nombre || '';
     document.getElementById('nombreComercial').value = data.NombreComercial || '';
     document.getElementById('emisornrc').value = data.NIT || ''; // Ajusta el nombre de la propiedad si es necesario
     document.getElementById('emisornit').value = data.NRC || '';
-    document.getElementById('actividademisor').value = data.idActividadEconomica || '';
+
+    // Accede a los nombres de las relaciones
+    document.getElementById('actividademisor').value = data.actividades ? data.actividades.nombreGiro : '';
     document.getElementById('complemento').value = data.Complemento || '';
-    document.getElementById('emisordepartamento').value = data.idDepartamento || '';
-    document.getElementById('emisormunicipio').value = data.idMunicipio || '';
+    document.getElementById('emisordepartamento').value = data.departamento ? data.departamento.nombreDepartamento : '';
+    document.getElementById('emisormunicipio').value = data.municipio ? data.municipio.nombreMunicipio : '';
+
     document.getElementById('emisortelefono').value = data.Telefono || '';
     document.getElementById('emisorcorreo').value = data.Correo || '';
-  }
+}
 
 function traerReceptor(){
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
     let receptor = document.getElementById('receptor').value;
     const apiUrl = 'buscareceptor/' + receptor;
 
-    fetch(apiUrl,{
+    fetch(apiUrl, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
@@ -140,34 +184,47 @@ function traerReceptor(){
             "X-CSRF-Token": token,
         },
         method: 'POST',
-        
     })
     .then(response => {
-        return response.text();
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
     })
-    .then(text => {
-        console.log("respuesta")
-        ponerdatosReceptor(JSON.parse(text))
-        //return console.log(text);
+    .then(data => {
+        ponerdatosReceptor(data);
     })
-    .catch(function(error){
-        error.json().then((error) => { //changed here
-            errorCallback(error)
-          });
+    .catch(error => {
+        console.error('Error fetching data:', error);
+        // Handle error display or logging here
     });
 
 }
 
-function ponerdatosReceptor(data){
-    const datos = data;
-    document.getElementById('receptornombre').value=datos['Nombre'] || '';
-    document.getElementById('tipodocumento').value=datos['Tipo Documento'] || '';
-    document.getElementById('receptorndocumento').value=datos['Num Documento'] || '';
-    document.getElementById('receptornrc').value=datos['NRC'] || '';
-    document.getElementById('receptordepartamento').value=datos['Departamento'] || '';
-    document.getElementById('receptormunicipio').value=datos['Municipio'] || '';
-    document.getElementById('receptorcomplemento').value=datos['Complemento'] || '';
+// function ponerdatosReceptor(data){
+//     const datos = data;
+//     document.getElementById('receptornombre').value=datos['Nombre'] || '';
+//     document.getElementById('tipodocumento').value=datos['Tipo Documento'] || '';
+//     document.getElementById('receptorndocumento').value=datos['Num Documento'] || '';
+//     document.getElementById('receptornrc').value=datos['NRC'] || '';
+//     document.getElementById('receptordepartamento').value=datos['Departamento'] || '';
+//     document.getElementById('receptormunicipio').value=datos['Municipio'] || '';
+//     document.getElementById('receptorcomplemento').value=datos['Complemento'] || '';
 
+// }
+
+function ponerdatosReceptor(data) {
+    document.getElementById('receptornombre').value = data.Nombre || '';
+    document.getElementById('tipodocumento').value = data.tipos ? data.tipos.nombreTipoDocumento : '';
+    document.getElementById('receptorndocumento').value = data.NumDocumento;
+    document.getElementById('receptornit').value = data.NIT || '';
+    document.getElementById('receptornrc').value = data.NRC || '';
+    document.getElementById('receptordepartamento').value = data.departamento ? data.departamento.nombreDepartamento : '';
+    document.getElementById('receptormunicipio').value = data.municipio ? data.municipio.nombreMunicipio : '';
+    document.getElementById('receptorcomplemento').value = data.Complemento;
+    document.getElementById('receptorActividadEconomica').value = data.actividades ? data.actividades.nombreGiro : '';
+    document.getElementById('receptorTelefono').value = data.Telefono || '';
+    document.getElementById('receptorcorreo').value = data.Correo || '';
 }
 
 
@@ -188,7 +245,7 @@ function cambiarTipoDoc(){
     }else{
         document.getElementById('receptorExportacion').className = "d-none";
     }
-    
+
 }
 
 function calculoDetalles(){
@@ -199,7 +256,7 @@ function calculoDetalles(){
     for (let i = 0; i < filas; i++) {
         let descripcion = tabla.children[i].children[1].children[0].value;
         if(descripcion != ""){
-            
+
             let cantidad = tabla.children[i].children[0].children[0].value;
             let preciounitario = tabla.children[i].children[2].children[0].value;
             let ventasexcentas = tabla.children[i].children[3].textContent;
@@ -254,10 +311,10 @@ function calculoTotales(){
     vGravada.innerHTML = (sumaAfectas).toFixed(2);
 
     let tipoDocumento = document.getElementById("tipoDocumento");
-    
+
     iva.innerHTML = (sumaAfectas * 0.13).toFixed(2);
-    
-    
+
+
     Vexcenta.innerHTML = sumaExcenta;
     Vnosujeta.innerHTML = sumaNosujeta;
     subtotal.innerHTML = (parseFloat(iva.innerHTML) + parseFloat(vGravada.innerHTML)).toFixed(2);
@@ -269,9 +326,9 @@ function calculoTotales(){
     let TotalVenta = document.getElementById("TotalVenta");
     if (TotalVenta != null) {
         TotalVenta.value = parseFloat(subtotal2.innerHTML);
-        
+
     }
-    
+
 
     letras.innerHTML = NumeroALetras(parseFloat(subtotal2.innerHTML));
     document.getElementById('totalLetras').value = NumeroALetras(vGravada.innerHTML);
@@ -283,7 +340,7 @@ function agregarDetalle(){
     tabla = document.getElementById('tablaDetalles');
     //console.log()
     var nuevaFila = tabla.insertRow(tabla.rows.length);
-  
+
     var cantidadCell = nuevaFila.insertCell(0);
     var cantidadInput = document.createElement('input');
     cantidadInput.setAttribute('type', 'number');
@@ -291,13 +348,13 @@ function agregarDetalle(){
     cantidadInput.setAttribute('onblur', 'calcularVentas()');
     cantidadInput.setAttribute('value', '0');
     cantidadCell.appendChild(cantidadInput);
-    
+
     var descripcionCell = nuevaFila.insertCell(1);
     var descripcionInput = document.createElement('input');
     descripcionInput.setAttribute('type', 'text');
     descripcionInput.setAttribute('onblur', 'calculoDetalles()');
     descripcionCell.appendChild(descripcionInput);
-    
+
     var precioCell = nuevaFila.insertCell(2);
     var precioInput = document.createElement('input');
     precioInput.setAttribute('type', 'number');
@@ -306,10 +363,10 @@ function agregarDetalle(){
     precioInput.setAttribute('onblur', 'calcularVentas()');
     precioInput.setAttribute('value', '0');
     precioCell.appendChild(precioInput);
-    
+
     for (var i = 3; i < 6; i++) {
       var cell = nuevaFila.insertCell(i);
       cell.innerHTML = "0.0";
     }
-  
+
 }

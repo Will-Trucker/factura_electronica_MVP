@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use App\Models\Emisor;
 use App\Models\Departamento;
 use App\Models\Municipio;
-use App\Models\ActividadEconomica; 
+use App\Models\ActividadEconomica;
 use Illuminate\Support\Facades\Session;
 
 class EmisorController extends Controller
@@ -18,7 +18,7 @@ class EmisorController extends Controller
     public function index(){
         // $departSheet = Sheets::spreadsheet(env('SHEETID'))->sheet('Departamento')->get();
         // $departmentsData = array_slice($departSheet->toArray(), 1);
-        
+
         // $departments = [];
         // foreach ($departmentsData as $rowD) {
         //     $departments[] = [
@@ -27,7 +27,7 @@ class EmisorController extends Controller
         //     ];
         // }
 
-       
+
         // $sheet = Sheets::spreadsheet(env('SHEETID'))->sheet('2. Emisores')->get();
 
         // $header = $sheet->pull(0);
@@ -72,7 +72,7 @@ class EmisorController extends Controller
             'correo.required' => 'El correo electrónico es obligatorio',
             'corre.email' => 'El correo electrónico debe tener un formato válido'
         ]);
-     
+
 //    $lastId = Session::get('lastEmisorId', 0);
 
 //         // Incrementar el ID
@@ -111,9 +111,9 @@ class EmisorController extends Controller
                             'Correo'=>$request->correo,
                     ]);
 
-            
+
             $emisor->save();
-    
+
         return redirect()->route('emisores')->with('success','Emisor Registrado Exitosamente');
     }
 
@@ -147,7 +147,7 @@ class EmisorController extends Controller
         'correo.required' => 'El correo electrónico es obligatorio',
         'correo.email' => 'El correo electrónico debe tener un formato válido'
     ]);
-    
+
     $id = $request->idemisor;
 
     $emisor = Emisor::find($id);
@@ -171,7 +171,7 @@ class EmisorController extends Controller
 
     //     $sheet = Sheets::spreadsheet(env('SHEETID'))->sheet('2. Emisores');
     //     $emData = $sheet->get()->toArray();
-    
+
     //     // Find the row with the given ID
     //     foreach ($emData as $index => $row) {
     //         if ($row[0] == $id) {
@@ -192,17 +192,17 @@ class EmisorController extends Controller
     //             break;
     //         }
     //     }
-    
+
     //     // Save the updated data back to the sheet
     //     Sheets::spreadsheet(env('SHEETID'))->sheet('2. Emisores')->range('A1')->update($emData);
-    
+
      return redirect()->route('emisores')->with('success', 'Emisor Modificado Exitosamente');
     }
 
     public function eliminar_emisor(Request $request)
     {
         $idemisor = $request->input('idemisor');
-        
+
         $emisor = Emisor::find($idemisor);
 
         if(!$emisor){
@@ -217,7 +217,7 @@ class EmisorController extends Controller
     //     $values = Sheets::spreadsheet(env('SHEETID'))
     //                     ->sheet('2. Emisores')
     //                     ->all();
-        
+
     //     // Encontrar la fila que coincide con el id del emisor
     //     $rowToDelete = null;
     //     foreach ($values as $index => $row) {
@@ -238,14 +238,15 @@ class EmisorController extends Controller
          return redirect()->back()->with('success', 'Emisor eliminado correctamente.');
     }
 
-    public function obtenerEmisor($id)
-{
-    $emisor = Emisor::find($id);
+    public function obtenerEmisor($nombre)
+    {
+        $emisor = Emisor::with(['actividades','departamento','municipio'])
+                        ->where('Nombre', $nombre)->first();
 
-    if (!$emisor) {
-        return response()->json(['message' => 'Emisor no encontrado'], 404);
-    }
-
-    return response()->json($emisor);
+        if ($emisor) {
+            return response()->json($emisor);
+        } else {
+            return response()->json(['error' => 'Emisor no encontrado'], 404);
+        }
     }
 }
