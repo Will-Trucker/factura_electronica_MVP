@@ -209,30 +209,37 @@ class ReceptorController extends Controller
     public function eliminar_receptor(Request $request)
     {
         $idreceptor = $request->input('idreceptor');
-
+    
         $receptores = Receptor::find($idreceptor);
-
+    
         if (!$receptores) {
             return redirect()->back()->with('error', 'Receptor No Encontrado');
         }
-
+    
         $receptores->delete();
-
+    
         return redirect()->back()->with('success', 'Receptor Eliminado Exitosamente');
     }
+    
+    public function obtenerReceptor($id)
+{
+    $receptor = Receptor::with('departamento', 'municipio')->find($id);
 
-
-    public function obtenerReceptor($nombre)
-    {
-        $receptor = Receptor::with(['actividades','departamento','municipio','tipos'])
-                        ->where('Nombre', $nombre)->first();
-
-        if ($receptor) {
-            return response()->json($receptor);
-        } else {
-            return response()->json(['error' => 'Receptor no encontrado'], 404);
-        }
+    if ($receptor) {
+        $data = [
+            'Nombre' => $receptor->Nombre,
+            'TipoDocumento' => $receptor->TipoDocumento,
+            'NumDocumento' => $receptor->NumDocumento,
+            'NRC' => $receptor->NRC,
+            'Departamento' => $receptor->departamento->nombreDepartamento,
+            'Municipio' => $receptor->municipio->nombreMunicipio,
+            'Complemento' => $receptor->Complemento,
+        ];
+        return response()->json($data);
     }
+
+    return response()->json(['error' => 'Receptor no encontrado'], 404);
+}
 
 
 }

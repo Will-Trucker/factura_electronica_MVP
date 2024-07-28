@@ -9,6 +9,7 @@
         "google/apiclient": "2.15.0",
         "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^11.0",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "revolution/laravel-google-sheets": "^6.3"
     },

@@ -10,11 +10,11 @@ class FacturaController extends Controller
 {
     public function registro()
     {
+        // ... 
         $emisores = Emisor::all(); // Obtiene todos los emisores de la base de datos
-        $receptores = Receptor::all(); // Obtiene todos los receptores de la base de datos
+        $receptores = Receptor::all();
         return view('facturacion', compact('emisores', 'receptores'));
     }
 
-
-
+    
 }

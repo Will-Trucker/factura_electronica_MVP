@@ -34,7 +34,7 @@
                                 <div class="form-group row">
                                     <label for="clave" class="col-sm-3 col-form-label">Clave</label>
                                     <div class="col-sm-9">
-                                        <input type="password" class="form-control form-control-lg" id="clave" name="clave" value="Un!v3r$0/*" aria-describedby="inputGroup-sizing-default">
+                                        <input type="password" class="form-control form-control-lg" id="clave" name="clave" value="iDJWKWGC@459bzM" aria-describedby="inputGroup-sizing-default">
                                     </div>
                                 </div>
                                 <hr class="mx-n3">
