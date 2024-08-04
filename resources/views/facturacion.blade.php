@@ -497,7 +497,7 @@
 
                         </div>
                     </div>
-                    <input type="hidden" name="detallesfactura" value="" id="detallesfactura">
+                    <input type="hidden" name="detallesFactura" value="" id="detallesFactura">
 
             </form>
             <div class="">
