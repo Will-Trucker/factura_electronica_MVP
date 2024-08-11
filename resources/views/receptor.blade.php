@@ -44,41 +44,13 @@
                                     </div>
                                     <hr class="mx-n3">
                                     <div class="form-group row">
-                                        <label for="receptor-tipodocumento" class="col-sm-3 col-form-label cont-label">Tipo
-                                            de documento</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control form-control-lg" name="tipodocumento">
-                                                <option class="text-center">Eliga un tipo de DTE a generar</option>
-                                                @foreach ($tipos as $tipo)
-                                                <option value="{{$tipo['codigoTipoDocumento']}}">{{$tipo['nombreTipoDocumento']}}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('tipodocumento')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <hr class="mx-n3">
-                                    <div class="form-group row">
                                         <label for="receptor-ndocumento" class="col-sm-3 col-form-label cont-label">N°
                                             documento</label>
                                         <div class="col-sm-9">
                                             <input type="text" name="ndocumento" class="form-control form-control-lg"
                                                 aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default">
+                                                aria-describedby="inputGroup-sizing-default" placeholder="NIT">
                                             @error('ndocumento')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <hr class="mx-n3">
-                                    <div class="form-group row">
-                                        <label for="receptor-nit" class="col-sm-3 col-form-label cont-label">NIT</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="nit" class="form-control form-control-lg"
-                                                aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default">
-                                            @error('nit')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -100,10 +72,10 @@
                                         <label for="receptor-departamento"
                                             class="col-sm-3 col-form-label cont-label">Departamento</label>
                                         <div class="col-sm-9">
-                                            <select class="form-control form-control-lg" name="departamento">
+                                            <select class="form-control form-control-lg" name="departamento" id="departamento">
                                                 <option class="text-center"> Elige un departamento </option>
                                                 @foreach ($departments as $depart)
-                                                <option value="{{$depart['id']}}">{{$depart['nombreDepartamento']}}</option>
+                                                <option value="{{$depart['codigoDepartamento']}}">{{$depart['nombreDepartamento']}}</option>
                                                 @endforeach
                                             </select>
                                             @error('departamento')
@@ -116,11 +88,8 @@
                                         <label for="receptor-municipio"
                                             class="col-sm-3 col-form-label cont-label">Municipio</label>
                                         <div class="col-sm-9">
-                                            <select class="form-control form-control-lg" name="municipio">
-                                                <option class="text-center"> Elige un Municipio </option>
-                                                @foreach ($municipios as $municipio)
-                                                <option value="{{$municipio['idMunicipio']}}">{{$municipio['nombreMunicipio']}}</option>
-                                                @endforeach
+                                            <select class="form-control form-control-lg" name="municipio" id="municipio">
+                                               
                                             </select>
                                             @error('municipio')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -136,22 +105,6 @@
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default">
                                             @error('complemento')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <hr class="mx-n3">
-                                    <div class="form-group row">
-                                        <label for="receptor-complemento"
-                                            class="col-sm-3 col-form-label cont-label">Actividad Económica</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control form-control-lg" name="actividadecono">
-                                                <option class="text-center"> Elige una Actividad Económica </option>
-                                                @foreach ($actividades as $actividad)
-                                                <option value="{{$actividad['id']}}">{{$actividad['nombreGiro']}}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('actividadecono')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -190,58 +143,6 @@
                             </div>
                         </div>
                     </div>
-                    {{--
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">Nombre</span>
-                                <input type="text" name="nombre" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"  id="inputGroup-sizing-default">Tipo de Documento</span>
-                                <input type="text" name="tipodocumento" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                            </div>
-                        </div>
-                        <div class="col">
-                        <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">N° documento</span>
-                                <input type="text" name="ndocumento" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">NRC</span>
-                                <input type="text" name="nrc" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <select class="form-control" name="departamento">
-                                <option value="1">Departamento</option>
-                                <option value="2">datos</option>
-                                <option value="3">datos</option>
-                                <option value="4">datos</option>
-                            </select>
-                        </div>
-                        <div class="col">
-                            <select class="form-control" name="municipio">
-                                <option value="1">Municipio</option>
-                                <option value="2">datos</option>
-                                <option value="3">datos</option>
-                                <option value="4">datos</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">Complemento</span>
-                                <input type="text" name="complemento" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                            </div>
-
-                        </div>
-                    </div>
-                    <button type="submit" class="ms-3 btn btn-primary">Guardar</button> --}}
-                    <!-- fin receptor section -->
                 </div>
         </div>
         </form>
@@ -251,11 +152,10 @@
                     <thead>
                         <tr>
                             <th>Nombre</th>
-                            <th>Tipo documento</th>
+                            <th>N° Documento</th>
                             <th>NRC</th>
                             <th>Departamento</th>
                             <th>Municipio</th>
-                            <th>Actividad Economica</th>
                             <th>Operaciones</th>
                         </tr>
                     </thead>
@@ -264,11 +164,16 @@
                         @forelse ($receptores as $receptor)
                             <tr>
                                 <th>{{ $receptor->Nombre }}</th>
-                                <th>{{ $receptor->tipos->nombreTipoDocumento }}</th>
+                                <th>{{ $receptor->NumDocumento }}</th>
                                 <th>{{ $receptor->NRC }}</th>
-                                <th>{{ $receptor->departamento->nombreDepartamento }}</th>
-                                <th>{{ $receptor->municipio->nombreMunicipio }}</th>
-                                <th>{{ $receptor->actividades->nombreGiro }}</th>
+                              <th>
+                                @if($departments->contains('id', intval($receptor->idDepartamento)))
+                                {{ $departments->firstWhere('id', intval($receptor->idDepartamento))->nombreDepartamento }}
+                                @else
+                                No existe el departamento con ID {{ $receptor->idDepartamento }}
+                                @endif
+                               </th>
+                                <th>{{ $receptor->idMunicipio }}</th>
                                 <th>
                                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modifyModal{{$receptor->id}}">Modificar</button>
                                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{$receptor->id}}">Eliminar</button>
@@ -289,3 +194,32 @@
         </div>
 
     @endsection
+    @section('customJS')
+    <script>
+    $(document).ready(function() {
+    $('#departamento').change(function() {
+        var idDepartamento = $(this).val(); // Obtener el valor del departamento seleccionado
+        if (idDepartamento) {
+            $.ajax({
+                url: '/municipios/' + idDepartamento, // Llamar al endpoint con el idDepartamento
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#municipio').empty(); // Limpiar el campo de municipios
+                    $('#municipio').append('<option class="text-center">Elige un municipio</option>');
+                    $.each(data, function(key, value) {
+                        $('#municipio').append('<option value="' + value.codMunicipio + '">' + value.nombreMunicipio + '</option>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error); // Registrar cualquier error
+                }
+            });
+        } else {
+            $('#municipio').empty(); // Limpiar el campo si no hay departamento seleccionado
+            $('#municipio').append('<option class="text-center">Elige un municipio</option>');
+        }
+    });
+});
+    </script>
+@endsection

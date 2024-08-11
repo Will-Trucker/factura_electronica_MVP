@@ -21,7 +21,7 @@ class ApiController extends Controller
 
     public function getReceptor($id)
     {
-        $receptor = Receptor::with(['departamento', 'municipio', 'actividades', 'tipos'])->find($id);
+        $receptor = Receptor::with(['departamento', 'municipio'])->find($id);
 
         if (!$receptor) {
             return response()->json(['error' => 'Receptor not found'], 404);

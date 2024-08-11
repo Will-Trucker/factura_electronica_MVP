@@ -9,6 +9,11 @@ Route::get('/', function () {
 Route::get('/registros', function () {
     return view('registros');
 })->name('registros');
+
+Route::get('/municipios/{idDepartamento}', [App\Http\Controllers\MunicipioController::class, 'getMunicipios'])->name('municipios');
+
+
+
 // Route::post('/iniciarSesion',[App\Http\Controllers\loginController::class, 'iniciar_sesion'])->name('iniciarSesion');
 Route::post('/saveTicket',[App\Http\Controllers\facturaController::class, 'saveTicket'])->name('saveTicket');
 Route::get('/tok',[App\Http\Controllers\FacturaController::class, 'lastToken'])->name('tok');

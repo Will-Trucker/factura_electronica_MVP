@@ -55,7 +55,7 @@
                                             <select class="form-control" name="actividad" id="actividad">
                                                 <option class="text-center"> Elige una Actividad Económica </option>
                                                 @foreach ($actividades as $actividad)
-                                                <option value="{{$actividad['id']}}">{{$actividad['nombreGiro']}}</option>
+                                                <option value="{{$actividad['codigoGiro']}}">{{$actividad['nombreGiro']}}</option>
                                                 @endforeach
                                             </select>
                                             @error('actividad')
@@ -90,7 +90,7 @@
                                             <select class="form-control" name="departamento" id="departamento">
                                                 <option class="text-center"> Elige un departamento </option>
                                                 @foreach ($departments as $depart)
-                                                <option value="{{$depart['id']}}">{{$depart['nombreDepartamento']}}</option>
+                                                <option value="{{$depart['codigoDepartamento']}}">{{$depart['nombreDepartamento']}}</option>
                                                 @endforeach
                                             </select>
                                             @error('departamento')
@@ -103,10 +103,7 @@
                                         <label for="municipio" class="col-sm-3 col-form-label cont-label">Municipio</label>
                                         <div class="col-sm-9">
                                             <select class="form-control" name="municipio" id="municipio">
-                                                <option class="text-center"> Elige un Municipio </option>
-                                                @foreach ($municipios as $municipio)
-                                                <option value="{{$municipio['idMunicipio']}}">{{$municipio['nombreMunicipio']}}</option>
-                                                @endforeach
+
                                             </select>
                                             @error('municipio')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -161,6 +158,8 @@
                     <th>Nombre</th>
                     <th>Actividad Economica</th>
                     <th>NIT</th>
+                    <th>Departamento</th>
+                    <th>Municipio</th>
                     <th>Correo</th>
                     <th>Telefono</th>
                     <th>Acciones</th>
@@ -170,8 +169,24 @@
                     @forelse ($emisores as $emisor)
                         <tr>
                                 <th>{{ $emisor->Nombre}}</th> 
-                                <th> {{ $emisor->actividades->nombreGiro }}</th> 
+                                <th> 
+                                    @if (isset($actividades[$emisor->idActividadEconomica]))
+                                        {{ $actividades[$emisor->idActividadEconomica]->nombreGiro }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </th> 
                                 <th>{{ $emisor->NIT}}</th> 
+                                <th>
+                                    @if (isset($departments[$emisor->idDepartamento]))
+                                        {{ $departments[$emisor->idDepartamento]->nombreDepartamento }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </th>
+                                <th>
+                                   {{ $emisor->idMunicipio}}
+                                </th>
                                 <th> {{ $emisor->Correo }}</th> 
                                 <th> {{ $emisor->Telefono}}</th> 
                             <th>
@@ -186,7 +201,7 @@
                         @include('emisor_eliminar')
 
                     @empty
-                        <th colspan="6">Sin datos</th>
+                        <th colspan="8">Sin datos</th>
                     @endforelse
                     </tbody>
                 </table>
@@ -199,5 +214,33 @@
     <br>
     <br>
     <br>
+@endsection
+
+@section('customJS')
+
+<script>
+    $(document).ready(function() {
+        $('#departamento').change(function() {
+            var idDepartamento = $(this).val(); // Obtén el valor del departamento seleccionado
+            if (idDepartamento) {
+                $.ajax({
+                    url: '/municipios/' + idDepartamento, // Llama al endpoint con el idDepartamento
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#municipio').empty(); // Limpia el campo de municipios
+                        $('#municipio').append('<option class="text-center">Elige un municipio</option>');
+                        $.each(data, function(key, value) {
+                            $('#municipio').append('<option value="' + value.codMunicipio + '">' + value.nombreMunicipio + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#municipio').empty(); // Limpia el campo si no hay departamento seleccionado
+                $('#municipio').append('<option class="text-center">Elige un municipio</option>');
+            }
+        });
+    });
+</script>
 @endsection
 

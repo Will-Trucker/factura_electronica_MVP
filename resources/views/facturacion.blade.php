@@ -102,32 +102,7 @@
                                 </div>
                             </div>  
                         </div>      
-{{-- 
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">NIT</span>
-                                <input type="text" class="form-control" aria-label="Sizing example input"
-                                    aria-describedby="inputGroup-sizing-default">
-                            </div>
 
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">Contraseña</span>
-                                <input type="text" class="form-control" aria-label="Sizing example input"
-                                    aria-describedby="inputGroup-sizing-default">
-                            </div>
-
-
-                            <div class=" m-3">
-                                <label for="apikey" class="form-label">API Key</label>
-                                <textarea name="apikey" id="apikey" cols="10" rows="5" class="form-control"></textarea>
-
-                            </div>
-
-
-
-
-                            <button type="button" class="btn btn-secondary" onclick="cambiarSeccion(2)">Siguiente</button>
-                            <!-- fin token section -->
-                        </div> --}}
                         <div class="d-none" id="emisorSection">
                             <h2 class="title-2">Emisor</h2>
                             <select name="emisor" class="form-control" id="emisor" onBlur="traerEmisor()">
@@ -166,16 +141,16 @@
                                         </div>      
                                         <hr class="mx-n3">
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label cont-label" for="NCR">Número de Registro de Contribuyente</label> 
+                                            <label class="col-sm-3 col-form-label cont-label" for="NIT">NIT</label> 
                                             <div class="col-sm-9">
-                                                <input name="emisornrc" id="emisornrc" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                                <input name="emisornit" id="emisornit" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
                                         </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label cont-label" for="NIT">NIT</label>
+                                            <label class="col-sm-3 col-form-label cont-label" for="NRC">NRC</label>
                                             <div class="col-sm-9">
-                                                <input name="emisornit" id="emisornit" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                                <input name="emisornrc" id="emisornrc" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
                                         </div>
                                         <hr class="mx-n3">
@@ -223,111 +198,7 @@
                                 </div>
                             </div>
                         </div>                    
-                            {{-- <div class="row">
-                                <div class="col">
-                                    <h2>Emisor</h2>
-                                </div>
-                                <div class="col">
-                                    <select name="emisor" class="form-control" id="emisor" onBlur="traerEmisor()">
-                                        @foreach ($emisores as $emisor)
-                                            <option value="{{ $emisor['Nombre'] }}">{{ $emisor['Nombre'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">Nombre</span>
-                                        <input name="emisornombre" type="text" class="form-control"
-                                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"
-                                            id="emisorNombre">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">Nombre
-                                            Comercial</span>
-                                        <input name="nombrecomercial" type="text" class="form-control"
-                                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"
-                                            id="nombreComercial">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">Actividad</span>
-                                        <input name="actividademisor" id="actividademisor" type="text"
-                                            class="form-control" aria-label="Sizing example input"
-                                            aria-describedby="inputGroup-sizing-default">
-                                    </div>
-
-                                </div>
-                                <div class="col">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">NRC</span>
-                                        <input name="emisornrc" id="emisornrc" type="text" class="form-control"
-                                            aria-label="Sizing example input"
-                                            aria-describedby="inputGroup-sizing-default">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">NIT</span>
-                                        <input name="emisornit" id="emisornit" type="text" class="form-control"
-                                            aria-label="Sizing example input"
-                                            aria-describedby="inputGroup-sizing-default">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row ">
-                                <div class="col">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">Departamento</span>
-                                        <input name="emisordepartamento" id="emisordepartamento" type="text"
-                                            class="form-control" aria-label="Sizing example input"
-                                            aria-describedby="inputGroup-sizing-default">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">Municipio</span>
-                                        <input name="emisormunicipio" id="emisormunicipio" type="text"
-                                            class="form-control" aria-label="Sizing example input"
-                                            aria-describedby="inputGroup-sizing-default">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">Complemento</span>
-                                        <input name="complemento" id="complemento" type="text" class="form-control"
-                                            aria-label="Sizing example input"
-                                            aria-describedby="inputGroup-sizing-default">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">Telefono</span>
-                                        <input name="emisortelefono" id="emisortelefono" type="text"
-                                            class="form-control" aria-label="Sizing example input"
-                                            aria-describedby="inputGroup-sizing-default">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="inputGroup-sizing-default">Correo</span>
-                                        <input name="emisorcorreo" id="emisorcorreo" type="text" class="form-control"
-                                            aria-label="Sizing example input"
-                                            aria-describedby="inputGroup-sizing-default">
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-secondary"
-                                onclick="cambiarSeccion(3)">Siguiente</button>
-                        </div> --}}
+                         
                         <div class="d-none" id="receptorSection">
                             <h2 class="title-2">Receptor</h2>
                             <select name="receptor" class="form-control" id="receptor" onblur="traerReceptor()">
@@ -346,13 +217,6 @@
                                         </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
-                                            <label for="tipodocumento" class="col-sm-3 col-form-label cont-label">Tipo de documento</label>
-                                            <div class="col-sm-9">
-                                                <input name="tipodocumento" id="tipodocumento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                                            </div>
-                                        </div>
-                                        <hr class="mx-n3">
-                                        <div class="form-group row">
                                             <label for="receptorndocumento" class="col-sm-3 col-form-label cont-label">N° Documento</label>
                                             <div class="col-sm-9">
                                                 <input name="ndocumento" id="receptorndocumento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
@@ -363,6 +227,22 @@
                                             <label for="receptornrc" class="col-sm-3 col-form-label cont-label">NRC</label>
                                             <div class="col-sm-9">
                                                 <input name="receptornrc" id="receptornrc" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                            </div>
+                                        </div>
+                                        <hr class="mx-n3">
+                                        
+                                        <div class="form-group row">
+                                            <label for="telefono" class="col-sm-3 col-form-label cont-label">Teléfono</label>
+                                            <div class="col-sm-9">
+                                                <input name="receptortelefono" id="receptortelefono" type="text"
+                                                class="form-control form-control-lg" aria-label="Sizing example input" pattern="\+503 [267][0-9]{3}-[0-9]{4}" aria-describedby="inputGroup-sizing-default"> 
+                                            </div>
+                                        </div> 
+                                        <hr class="mx-n3">
+                                        <div class="form-group row">
+                                            <label for="correo" class="col-sm-3 col-form-label cont-label">Correo</label>
+                                            <div class="col-sm-9">
+                                                <input name="receptorcorreo" id="receptorcorreo" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">                     
                                             </div>
                                         </div>
                                         <hr class="mx-n3">
@@ -386,7 +266,6 @@
                                                 <input name="receptorcomplemento" id="receptorcomplemento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">                
                                             </div>
                                         </div>
-                                        <hr class="mx-n3">
                                         <div class="px-5 py-4 text-center">
                                             <button type="button" class="btn btn-secondary" onclick="cambiarSeccion(4)">Siguiente</button>
                                         </div>
@@ -527,7 +406,7 @@
                                 @for ($i = 0; $i < 5; $i++)
                                     <tr>
                                         <th scope="row"><input class="cant" type="number"
-                                                onblur="calcularVentas()" value=0></th>
+                                                onblur="calcularVentas()" value="0" min="0"></th>
                                         <td><input type="text" value="" onblur="calculoDetalles()"></td>
                                         <td><input type="number" name="precio" class="precios"
                                                 onblur="calcularVentas()" value=0></td>

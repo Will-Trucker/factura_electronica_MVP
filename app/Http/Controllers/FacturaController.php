@@ -63,7 +63,7 @@ class FacturaController extends Controller
         }
     }
 
-    public function firmarDocumento($documento,$tipoDoc){
+    public function firmarDocumento($documento,$tipoDeDocumento){
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'http://localhost:8113/firmardocumento/',
@@ -91,15 +91,15 @@ class FacturaController extends Controller
         }
         curl_close($curl);
 
-        return response()->sendDocFirmado(json_decode($response),$tipoDoc);
+        return response()->sendDocFirmado(json_decode($response),$tipoDeDocumento);
     }
 
-    public function sendDocFirmado($resp, $tipoDoc){
+    public function sendDocFirmado($resp, $tipoDeDocumento){
         // Tipo de DTE
         $tipoDTE = "01";
         $version = "1";
 
-        if($tipoDoc == "FE"){
+        if($tipoDeDocumento == "FE"){
            $tipoDTE = "01";
            $version = "1";
         }
@@ -123,7 +123,7 @@ class FacturaController extends Controller
 
         $response = Http::withHeaders($headers)->post($apiURL,$document);
 
-        $this->updateNumControl($tipoDoc);
+        $this->updateNumControl($tipoDeDocumento);
 
         echo $response;
 
@@ -288,10 +288,54 @@ class FacturaController extends Controller
                     "nit" => strval($request->emisornit),
                     "nrc" => $request->emisornrc,
                     "nombre" => $request->emisornombre,
-                    "codActividad" => ""
+                    "codActividad" => $request->actividademisor,
+                    "descActividad" => "Publicidad",
+                    "nombreComercial" => $request->nombrecomercial,
+                    "tipoEstablecimiento" => "01",
+                    "direccion" => [
+                        "departamento" => $request->emisordepartamento,
+                        "municipio" => $request->emisormunicipio,
+                        "complemento" => $request->complemento,
+                    ],
+                    "telefono" => $request->emisortelefono,
+                    "codEstableMH"=> "0000",
+                    "codEstable"=>"0000",
+                    "codPuntoVentaMH"=>"0000",
+                    "codPuntoVenta"=> "0000",
+                    "correo" => $request->emisorcorreo
                 ],
-            ]
-                ];
+                "receptor" => [
+                    "tipoDocumento" =>  "36",
+                    "numDocumento" => $request->ndocumento,
+                    "nrc" => $request->receptornrc,
+                    "codActividad" => null,
+                    "descActividad" => null,
+                    "direccion" => [
+                        "departamento" => $request->receptordepartamento,
+                        "municipio" => $request->receptormunicipio,
+                        "complemento" => $request->receptorcomplemento
+                    ],
+                    "telefono" => $request->receptortelefono,
+                    "correo" => $request->receptorcorreo
+                ],
+                "otrosDocumentos" => null,
+                "ventaTercero" => null,
+                "cuerpoDocumento" => $cuerpoDocumento,
+                "resumen" => $resumen,
+                "extension"=> [
+                        "nombEntrega"=> null,
+                        "docuEntrega"=> null,
+                        "nombRecibe"=> null,
+                        "docuRecibe"=> null,
+                        "observaciones"=> null,
+                        "placaVehiculo"=> null
+                ],
+                "apendice" => null
+            ],
+        ];
+
+        $docJson = json_encode($documento);
+        return $this->firmarDocumento($docJson,$request->tipoDeDocumento);
 
 
     }

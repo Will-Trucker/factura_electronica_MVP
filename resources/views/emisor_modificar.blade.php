@@ -25,7 +25,7 @@
                 <select class="form-control" name="actividad" id="actividad">
                     <option class="text-center"> Elige una Actividad Económica </option>
                     @foreach ($actividades as $actividad)
-                    <option value="{{$actividad['id']}}" {{$emisor['idActividadEconomica'] == $actividad['id'] ? 'selected' : ''}}>{{$actividad['nombreGiro']}}</option>
+                    <option value="{{$actividad['codigoGiro']}}" {{$emisor['idActividadEconomica'] == $actividad['codigoGiro'] ? 'selected' : ''}}>{{$actividad['nombreGiro']}}</option>
                     @endforeach
                 </select>
                 @error('actividad')
@@ -72,7 +72,9 @@
                 <select class="form-control" name="departamento" id="departamento">
                     <option class="text-center"> Elige un departamento </option>
                     @foreach ($departments as $depart)
-                        <option value="{{$depart['id']}}" {{$emisor['idDepartamento'] == $depart['id'] ? 'selected' : ''}}>{{$depart['nombreDepartamento']}}</option>
+                    <option value="{{ $depart['codigoDepartamento'] }}" {{ $emisor['idDepartamento'] == $depart['codigoDepartamento'] ? 'selected' : '' }}>
+                        {{ $depart['nombreDepartamento'] }}
+                    </option>
                     @endforeach
                 </select>
                 @error('departamento')
@@ -81,11 +83,9 @@
             </div>
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label" style="color:black;">Municipio:</label>
-             
                     <select class="form-control" name="municipio" id="municipio">
-                        <option class="text-center"> Elige un Municipio </option>
                         @foreach ($municipios as $municipio)
-                        <option value="{{$municipio['idMunicipio']}}" {{$emisor['idMunicipio'] == $municipio['idMunicipio'] ? 'selected' : ''}}>{{$municipio['nombreMunicipio']}}</option>
+                        <option value="{{$municipio['codMunicipio']}}">{{$municipio['nombreMunicipio']}}</option>
                         @endforeach
                     </select>
                     @error('municipio')
@@ -109,7 +109,47 @@
         </div>
 
     </form>
-      
 </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Hide the municipality select field initially
+    $('#municipio').hide();
+
+    // On department selection
+    $('#departamento').change(function() {
+        var idDepartamento = $(this).val(); // Get the selected department ID
+
+        if (idDepartamento) {
+            // Show the municipality select field
+            $('#municipio').show();
+
+            $.ajax({
+                url: '/municipios/' + idDepartamento, // Call the endpoint with the department ID
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#municipio').empty(); // Clear existing options
+                    $('#municipio').append('<option class="text-center">Elige un municipio</option>'); // Add default option
+
+                    $.each(data, function(key, value) {
+                        // Add municipalities without duplicating
+                        $('#municipio').append('<option value="' + value.codMunicipio + '">' + value.nombreMunicipio + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#municipio').empty(); // Clear if no department is selected
+            $('#municipio').append('<option class="text-center">Elige un municipio</option>');
+        }
+    });
+
+    // If department is already selected when opening the modal, show the municipality dropdown
+    if ($('#departamento').val()) {
+        $('#municipio').show();
+    }
+});
+</script>
 </div>
+
