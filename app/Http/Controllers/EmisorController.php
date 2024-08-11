@@ -238,14 +238,5 @@ class EmisorController extends Controller
          return redirect()->back()->with('success', 'Emisor eliminado correctamente.');
     }
 
-    public function obtenerEmisor($id)
-{
-    $emisor = Emisor::find($id);
-
-    if (!$emisor) {
-        return response()->json(['message' => 'Emisor no encontrado'], 404);
-    }
-
-    return response()->json($emisor);
-    }
+  
 }

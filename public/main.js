@@ -72,31 +72,48 @@ function calcularVentas(){
 
 
 function traerEmisor() {
-    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    let emisorId = document.getElementById('emisor').value; // Asumiendo que tienes un elemento con id 'emisor'
+    let emisorId = document.getElementById('emisor').value;
+    const apiUrl = `/api/emisor/${emisorId}`;
 
-    fetch(`/emisores/${emisorId}`, { // La ruta debe coincidir con la que defines en Laravel
+    fetch(apiUrl, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "X-Requested-With": "XMLHttpRequest",
-            "X-CSRF-Token": token,
         },
-        method: 'GET', // Si es solo para obtener datos, usa 'GET'
+        method: 'GET',
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log("respuesta", data);
         ponerdatosEmisor(data);
     })
     .catch(error => {
-        console.error('Hubo un problema con la petición Fetch:', error);
+        console.error('Error fetching emisor:', error);
     });
+    // let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    // let emisorId = document.getElementById('emisor').value; // Asumiendo que tienes un elemento con id 'emisor'
+
+    // fetch(`/emisores/${emisorId}`, { // La ruta debe coincidir con la que defines en Laravel
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //         "Accept": "application/json",
+    //         "X-Requested-With": "XMLHttpRequest",
+    //         "X-CSRF-Token": token,
+    //     },
+    //     method: 'GET', // Si es solo para obtener datos, usa 'GET'
+    // })
+    // .then(response => {
+    //     if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //     }
+    //     return response.json();
+    // })
+    // .then(data => {
+    //     console.log("respuesta", data);
+    //     ponerdatosEmisor(data);
+    // })
+    // .catch(error => {
+    //     console.error('Hubo un problema con la petición Fetch:', error);
+    // });
 }
 
 // function ponerdatosEmisor(data){
@@ -113,61 +130,90 @@ function traerEmisor() {
 // }
 
 function ponerdatosEmisor(data) {
-    // Establece los valores de los campos del formulario con los datos del emisor
     document.getElementById('emisorNombre').value = data.Nombre || '';
     document.getElementById('nombreComercial').value = data.NombreComercial || '';
-    document.getElementById('emisornrc').value = data.NIT || ''; // Ajusta el nombre de la propiedad si es necesario
+    document.getElementById('emisornrc').value = data.NIT || '';
     document.getElementById('emisornit').value = data.NRC || '';
-    document.getElementById('actividademisor').value = data.idActividadEconomica || '';
+    document.getElementById('actividademisor').value = data.actividades ? data.actividades.nombreGiro : '';
     document.getElementById('complemento').value = data.Complemento || '';
-    document.getElementById('emisordepartamento').value = data.idDepartamento || '';
-    document.getElementById('emisormunicipio').value = data.idMunicipio || '';
+    document.getElementById('emisordepartamento').value = data.departamento ? data.departamento.nombreDepartamento : '';
+    document.getElementById('emisormunicipio').value = data.municipio ? data.municipio.nombreMunicipio : '';
     document.getElementById('emisortelefono').value = data.Telefono || '';
     document.getElementById('emisorcorreo').value = data.Correo || '';
-  }
+}
 
-function traerReceptor(){
-    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+// function traerReceptor(){
+//     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    let receptor = document.getElementById('receptor').value;
-    const apiUrl = 'buscareceptor/' + receptor;
+//     let receptor = document.getElementById('receptor').value;
+//     const apiUrl = 'buscareceptor/' + receptor;
 
-    fetch(apiUrl,{
+//     fetch(apiUrl,{
+//         headers: {
+//             "Content-Type": "application/json",
+//             "Accept": "application/json",
+//             "X-Requested-With": "XMLHttpRequest",
+//             "X-CSRF-Token": token,
+//         },
+//         method: 'POST',
+        
+//     })
+//     .then(response => {
+//         return response.text();
+//     })
+//     .then(text => {
+//         console.log("respuesta")
+//         ponerdatosReceptor(JSON.parse(text))
+//         //return console.log(text);
+//     })
+//     .catch(function(error){
+//         error.json().then((error) => { //changed here
+//             errorCallback(error)
+//           });
+//     });
+
+// }
+
+// function ponerdatosReceptor(data){
+//     const datos = data;
+//     document.getElementById('receptornombre').value=datos['Nombre'] || '';
+//     document.getElementById('tipodocumento').value=datos['Tipo Documento'] || '';
+//     document.getElementById('receptorndocumento').value=datos['Num Documento'] || '';
+//     document.getElementById('receptornrc').value=datos['NRC'] || '';
+//     document.getElementById('receptordepartamento').value=datos['Departamento'] || '';
+//     document.getElementById('receptormunicipio').value=datos['Municipio'] || '';
+//     document.getElementById('receptorcomplemento').value=datos['Complemento'] || '';
+
+// }
+
+function traerReceptor() {
+    let receptorId = document.getElementById('receptor').value;
+    const apiUrl = `/api/receptor/${receptorId}`;
+
+    fetch(apiUrl, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "X-Requested-With": "XMLHttpRequest",
-            "X-CSRF-Token": token,
         },
-        method: 'POST',
-        
+        method: 'GET',
     })
-    .then(response => {
-        return response.text();
+    .then(response => response.json())
+    .then(data => {
+        ponerdatosReceptor(data);
     })
-    .then(text => {
-        console.log("respuesta")
-        ponerdatosReceptor(JSON.parse(text))
-        //return console.log(text);
-    })
-    .catch(function(error){
-        error.json().then((error) => { //changed here
-            errorCallback(error)
-          });
+    .catch(error => {
+        console.error('Error fetching receptor:', error);
     });
-
 }
 
-function ponerdatosReceptor(data){
-    const datos = data;
-    document.getElementById('receptornombre').value=datos['Nombre'] || '';
-    document.getElementById('tipodocumento').value=datos['Tipo Documento'] || '';
-    document.getElementById('receptorndocumento').value=datos['Num Documento'] || '';
-    document.getElementById('receptornrc').value=datos['NRC'] || '';
-    document.getElementById('receptordepartamento').value=datos['Departamento'] || '';
-    document.getElementById('receptormunicipio').value=datos['Municipio'] || '';
-    document.getElementById('receptorcomplemento').value=datos['Complemento'] || '';
-
+function ponerdatosReceptor(data) {
+    document.getElementById('receptornombre').value = data.Nombre || '';
+    document.getElementById('tipodocumento').value = data.idActividadEconomica;
+    document.getElementById('receptorndocumento').value = data.NumDocumento || '';
+    document.getElementById('receptornrc').value = data.NRC || '';
+    document.getElementById('receptordepartamento').value = data.departamento ? data.departamento.nombreDepartamento : '';
+    document.getElementById('receptormunicipio').value = data.municipio ? data.municipio.nombreMunicipio : '';
+    document.getElementById('receptorcomplemento').value = data.Complemento || '';
 }
 
 

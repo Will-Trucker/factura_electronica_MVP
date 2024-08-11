@@ -131,8 +131,8 @@
                         <div class="d-none" id="emisorSection">
                             <h2 class="title-2">Emisor</h2>
                             <select name="emisor" class="form-control" id="emisor" onBlur="traerEmisor()">
-                                @foreach ($emisores as $emisor)
-                                    <option value="{{ $emisor['Nombre'] }}">{{ $emisor['Nombre'] }}</option>
+                                @foreach($emisores as $emisor)
+                                <option value="{{ $emisor->id }}">{{ $emisor->Nombre }}</option>
                                 @endforeach
                             </select>
                             <div class="row">
@@ -329,81 +329,72 @@
                                 onclick="cambiarSeccion(3)">Siguiente</button>
                         </div> --}}
                         <div class="d-none" id="receptorSection">
-                                <h2 class="title-2">Receptor</h2>
-                                <select name="receptor" class="form-control" id="receptor"
-                                        onblur="traerReceptor()">
-                                        @foreach ($receptores as $receptor)
-                                            <option value="{{ $receptor['Nombre'] }}">{{ $receptor['Nombre'] }}</option>
-                                        @endforeach
-                                </select>
-                                <br>
-                                <br>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="card-body">
-                                            <div class="form-group row">
-                                                <label for="receptor-nombre" class="col-sm-3 col-form-label cont-label">Nombre</label>
-                                                <div class="col-sm-9">
-                                                    <input name="receptornombre" id="receptornombre" type="text"
-                                                    class="form-control form-control-lg" aria-label="Sizing example input"
-                                                    aria-describedby="inputGroup-sizing-default">  
-                                                </div>
+                            <h2 class="title-2">Receptor</h2>
+                            <select name="receptor" class="form-control" id="receptor" onblur="traerReceptor()">
+                                @foreach ($receptores as $receptor)
+                                    <option value="{{ $receptor->id }}">{{ $receptor->Nombre }}</option>
+                                @endforeach
+                            </select>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="receptornombre" class="col-sm-3 col-form-label cont-label">Nombre</label>
+                                            <div class="col-sm-9">
+                                                <input name="receptornombre" id="receptornombre" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">  
                                             </div>
-                                            <hr class="mx-n3">
-                                            <div class="form-group row">
-                                                <label for="receptor-tipodocumento" class="col-sm-3 col-form-label cont-label">Tipo de documento</label>
-                                                <div class="col-sm-9">
-                                                    <input name="tipodocumento" id="tipodocumento" type="text"
-                                                    class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                                                </div>
+                                        </div>
+                                        <hr class="mx-n3">
+                                        <div class="form-group row">
+                                            <label for="tipodocumento" class="col-sm-3 col-form-label cont-label">Tipo de documento</label>
+                                            <div class="col-sm-9">
+                                                <input name="tipodocumento" id="tipodocumento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
-                                            <hr class="mx-n3">
-                                            <div class="form-group row">
-                                                <label for="receptor-ndocumento" class="col-sm-3 col-form-label cont-label">N° Documento</label>
-                                                <div class="col-sm-9">
-                                                    <input name="ndocumento" id="receptorndocumento" type="text"
-                                                    class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                                                </div>
+                                        </div>
+                                        <hr class="mx-n3">
+                                        <div class="form-group row">
+                                            <label for="receptorndocumento" class="col-sm-3 col-form-label cont-label">N° Documento</label>
+                                            <div class="col-sm-9">
+                                                <input name="ndocumento" id="receptorndocumento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
-                                            <hr class="mx-n3">
-                                            <div class="form-group row">
-                                                <label for="receptor-nrc" class="col-sm-3 col-form-label cont-label">NRC</label>
-                                                <div class="col-sm-9">
-                                                    <input name="receptornrc" id="receptornrc" type="text" class="form-control" aria-label="Sizing example input"
-                                                    aria-describedby="inputGroup-sizing-default">
-                                                </div>
+                                        </div>
+                                        <hr class="mx-n3">
+                                        <div class="form-group row">
+                                            <label for="receptornrc" class="col-sm-3 col-form-label cont-label">NRC</label>
+                                            <div class="col-sm-9">
+                                                <input name="receptornrc" id="receptornrc" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
-                                            <hr class="mx-n3">
-                                            <div class="form-group row">
-                                                <label for="receptor-departamento"class="col-sm-3 col-form-label cont-label">Departamento</label>
-                                                <div class="col-sm-9">
-                                                    <input name="receptordepartamento" id="receptordepartamento" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">                 
-                                                </div>
-                                            </div> 
-                                            <hr class="mx-n3">
-                                            <div class="form-group row">
-                                                <label for="receptor-municipio" class="col-sm-3 col-form-label cont-label">Municipio</label>   
-                                                <div class="col-sm-9">
-                                                    <input name="receptormunicipio" id="receptormunicipio" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                                                </div>
+                                        </div>
+                                        <hr class="mx-n3">
+                                        <div class="form-group row">
+                                            <label for="receptordepartamento"class="col-sm-3 col-form-label cont-label">Departamento</label>
+                                            <div class="col-sm-9">
+                                                <input name="receptordepartamento" id="receptordepartamento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">                 
                                             </div>
-                                            <hr class="mx-n3"> 
-                                            <div class="form-group row">
-                                                <label for="receptor-complemento"
-                                                class="col-sm-3 col-form-label cont-label">Complemento</label>
-                                                <div class="col-sm-9">
-                                                    <input name="receptorcomplemento" id="receptorcomplemento" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">                
-                                                </div>
+                                        </div> 
+                                        <hr class="mx-n3">
+                                        <div class="form-group row">
+                                            <label for="receptormunicipio" class="col-sm-3 col-form-label cont-label">Municipio</label>   
+                                            <div class="col-sm-9">
+                                                <input name="receptormunicipio" id="receptormunicipio" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
-                                            <hr class="mx-n3">
-                                            <div class="px-5 py-4 text-center">
-                                                <button type="button" class="btn btn-secondary"
-                                                onclick="cambiarSeccion(4)">Siguiente</button>
+                                        </div>
+                                        <hr class="mx-n3"> 
+                                        <div class="form-group row">
+                                            <label for="receptorcomplemento" class="col-sm-3 col-form-label cont-label">Complemento</label>
+                                            <div class="col-sm-9">
+                                                <input name="receptorcomplemento" id="receptorcomplemento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">                
                                             </div>
+                                        </div>
+                                        <hr class="mx-n3">
+                                        <div class="px-5 py-4 text-center">
+                                            <button type="button" class="btn btn-secondary" onclick="cambiarSeccion(4)">Siguiente</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        
                             {{-- <div class="row">
                                 <div class="col">
                                     

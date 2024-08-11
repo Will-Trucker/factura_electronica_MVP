@@ -16,14 +16,5 @@ class FacturaController extends Controller
         return view('facturacion', compact('emisores', 'receptores'));
     }
 
-    public function obtenerEmisor($id) {
-        $emisor = Emisor::find($id);
-    
-        if (!$emisor) {
-            return response()->json(['message' => 'Emisor no encontrado'], 404);
-        }
-    
-        return response()->json($emisor);
-    }
     
 }

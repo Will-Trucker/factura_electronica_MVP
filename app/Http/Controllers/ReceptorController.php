@@ -221,12 +221,25 @@ class ReceptorController extends Controller
         return redirect()->back()->with('success', 'Receptor Eliminado Exitosamente');
     }
     
+    public function obtenerReceptor($id)
+{
+    $receptor = Receptor::with('departamento', 'municipio')->find($id);
 
-    public function obetenerReceptor($id){
-        $respuesta = buscar('3. Receptores','Nombre', $id);
-
-        return $respuesta;
+    if ($receptor) {
+        $data = [
+            'Nombre' => $receptor->Nombre,
+            'TipoDocumento' => $receptor->TipoDocumento,
+            'NumDocumento' => $receptor->NumDocumento,
+            'NRC' => $receptor->NRC,
+            'Departamento' => $receptor->departamento->nombreDepartamento,
+            'Municipio' => $receptor->municipio->nombreMunicipio,
+            'Complemento' => $receptor->Complemento,
+        ];
+        return response()->json($data);
     }
+
+    return response()->json(['error' => 'Receptor no encontrado'], 404);
+}
 
 
 }

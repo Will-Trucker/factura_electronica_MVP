@@ -19,4 +19,6 @@ class Departamento extends Model
         'codigoDepartamento','nombreDepartamento'
     ];
 
+    
+
 }
