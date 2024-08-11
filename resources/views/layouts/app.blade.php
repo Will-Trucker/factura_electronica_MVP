@@ -66,9 +66,10 @@
   </div>
 </nav>
 
-
-@yield('content')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://kit.fontawesome.com/9e5ba2e3f5.js" crossorigin="anonymous"></script>
+@yield('content')
+
 @yield('customJS')
 </body>
 </html>

@@ -9,9 +9,11 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/emisor/{id}',[ApiController::class,'getEmisor']);
-Route::get('/receptor/{id}', [ApiController::class, 'getReceptor']);
+
 
 // Route::middleware('decrypt.id')->group(function () {
 //     Route::get('/emisor/{id}', [ApiController::class, 'getEmisor']);
 //     Route::get('/receptor/{id}', [ApiController::class, 'getReceptor']);
 // });
+
+Route::get('/receptor/{id}', [ApiController::class, 'getReceptor']);

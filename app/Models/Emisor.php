@@ -31,16 +31,21 @@ class Emisor extends Model
     // Relación con el modelo Departamento
     public function departamento()
     {
-        return $this->belongsTo(Departamento::class, 'idDepartamento');
+        return $this->belongsTo(Departamento::class, 'idDepartamento','codigoDepartamento');
     }
+
+    // public function municipio()
+    // {
+    //     return $this->belongsTo(Municipio::class, 'idMunicipio','codMunicipio');
+    // }
 
     public function municipio()
     {
-        return $this->belongsTo(Municipio::class, 'idMunicipio');
+        return $this->belongsTo(Municipio::class, 'idMunicipio', 'codMunicipio');
     }
 
     public function actividades()
     {
-        return $this->belongsTo(ActividadEconomica::class, 'idActividadEconomica');
+        return $this->belongsTo(ActividadEconomica::class, 'idActividadEconomica','codigoGiro');
     }
 }
