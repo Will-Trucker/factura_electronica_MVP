@@ -58,77 +58,91 @@ class FacturaController extends Controller
             return $this->facturaElectronica($request);
         }
 
-        if($request->tipoDeDTE == "CCFE"){
-            return $this->creditoFiscal($request);
-        }
+        // if($request->tipoDeDTE == "CCFE"){
+        //     return $this->creditoFiscal($request);
+        // }
     }
 
-    public function firmarDocumento($documento,$tipoDeDocumento){
+    public function firmarDocumento($documento, $tipoDocumento) {
+        
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://localhost:8113/firmardocumento/',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS =>$documento,
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json'
-            ),
+        CURLOPT_URL => 'http://localhost:8113/firmardocumento/',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>$documento,
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
         ));
 
         $response = curl_exec($curl);
         $info = curl_getinfo($curl);
 
-        if(curl_errno($curl)){
-            echo 'Hubo un error en la peticion ' . curl_error($curl);
+        //echo $response;
+        if(curl_errno($curl)) {
+            echo 'Error al realizar la solicitud: ' . curl_error($curl);
             print_r($info);
         }
         curl_close($curl);
-
-        return response()->sendDocFirmado(json_decode($response),$tipoDeDocumento);
+    
+        //echo $response;
+        //echo $documento;
+        //echo $this->obtenerNumeroDeControl('FSEE');
+        return $this->mandarDocFirmado(json_decode($response), $tipoDocumento);
     }
+    
+    public function mandarDocFirmado($respuesta, $tipoDocumento){
 
-    public function sendDocFirmado($resp, $tipoDeDocumento){
-        // Tipo de DTE
-        $tipoDTE = "01";
-        $version = "1";
-
-        if($tipoDeDocumento == "FE"){
-           $tipoDTE = "01";
-           $version = "1";
+        $tipoDte="01";
+        $version="1";
+        if($tipoDocumento == "FE"){
+            $tipoDte = "01";
+            $version="1";
         }
-
-        // Estructura del JSON
-        $document = [
-            "ambiente" => "00",
-            "idEnvio" => "1",
-            "version" => $version,
-            "tipoDTE" => $tipoDTE,
-            "documento" => $resp->body,
+        if($tipoDocumento == "CCFE"){
+            $tipoDte = "03";
+            $version="3";
+        }
+        if($tipoDocumento == "FEXE"){
+            $tipoDte = "11";
+            $version="1";
+        }
+        if($tipoDocumento == "FSEE"){
+            $tipoDte = "14";
+            $version="1";
+        }
+        if($tipoDocumento == "CDE"){
+            $tipoDte = "15";
+            $version="1";
+        }
+        $documento = [
+            "ambiente"=>"00",
+            "idEnvio"=>"1",
+            "version"=>$version,
+            "tipoDte"=>$tipoDte,
+            "documento"=>$respuesta->body,
         ];
-
-        // Direccion donde mandara el documento firmado
-        $apiURL = "http://apitest.dtes.mh.gob.sv/fesv/recepciondte";
-
+        //echo json_encode($documento)."  cuerpofirmado------respuesta  ";
+        $apiUrl = "https://apitest.dtes.mh.gob.sv/fesv/recepciondte";
+        
         $headers = [
-            'Authorization' => lastToken(),
-            'Content-Type' => 'application/json'
+            'Authorization' => ultimoToken(),
+            'Content-Type' => 'application/json',
         ];
-
-        $response = Http::withHeaders($headers)->post($apiURL,$document);
-
-        $this->updateNumControl($tipoDeDocumento);
-
-        echo $response;
-
-        return $this->saveDoc($response);
+    
+        $response = Http::withHeaders($headers)->post($apiUrl, $documento);
+        dd($response);
+    
     }
+
 
     public function updateNumControl($tipoDTE){
          // Buscar el registro en la base de datos

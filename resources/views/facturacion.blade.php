@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-md p-5 cont">
-        <div class="cont-p">
+       
             <h1 class="title-1">Facturacion</h1>
             @if (session('descError'))
                 <div class="alert alert-danger">
@@ -14,7 +14,7 @@
                     {{ session('observaciones') }}
                 </div>
             @endif
-            <form action="guardarFactura" method="post">
+            <form action="{{route('saveTicket')}}" method="post">
                 @csrf
 
                 <input type="hidden" name="totalLetras" id="totalLetras" value='cero'>
@@ -180,7 +180,7 @@
                                             <label for="telefono" class="col-sm-3 col-form-label cont-label">Teléfono</label>
                                             <div class="col-sm-9">
                                                 <input name="emisortelefono" id="emisortelefono" type="text"
-                                                class="form-control form-control-lg" aria-label="Sizing example input" pattern="\+503 [267][0-9]{3}-[0-9]{4}" aria-describedby="inputGroup-sizing-default"> 
+                                                class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"> 
                                             </div>
                                         </div> 
                                         <hr class="mx-n3">
@@ -235,7 +235,7 @@
                                             <label for="telefono" class="col-sm-3 col-form-label cont-label">Teléfono</label>
                                             <div class="col-sm-9">
                                                 <input name="receptortelefono" id="receptortelefono" type="text"
-                                                class="form-control form-control-lg" aria-label="Sizing example input" pattern="\+503 [267][0-9]{3}-[0-9]{4}" aria-describedby="inputGroup-sizing-default"> 
+                                                class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"> 
                                             </div>
                                         </div> 
                                         <hr class="mx-n3">
@@ -376,7 +376,7 @@
 
                         </div>
                     </div>
-                    <input type="hidden" name="detallesFactura" value="" id="detallesFactura">
+                    <input type="hidden" name="detallesfactura" value="" id="detallesfactura">
 
             </form>
             <div class="">
@@ -409,7 +409,7 @@
                                                 onblur="calcularVentas()" value="0" min="0"></th>
                                         <td><input type="text" value="" onblur="calculoDetalles()"></td>
                                         <td><input type="number" name="precio" class="precios"
-                                                onblur="calcularVentas()" value=0></td>
+                                                onblur="calcularVentas()" value="0.00" min="0.00" step="0.01"></td>
                                         <td>0.0</td>
                                         <td>0.0</td>
                                         <td>0.0</td>
@@ -476,45 +476,10 @@
                             </table>
                         </div>
                     </div>
-
-                    <div class="table-responsive d-none" id="liquidacion">
-                        <h1>liquidacion</h1>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Fecha de Generación</th>
-                                    <th scope="col">tipo DTE</th>
-                                    <th scope="col">Numero de documento</th>
-                                    <th scope="col">Ventas No Sujetas</th>
-                                    <th scope="col">Ventas Excentas</th>
-                                    <th scope="col">Ventas Afectas</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tablaDetallesLiquidacion">
-                                @for ($i = 0; $i < 5; $i++)
-                                    <tr>
-                                        <th scope="row"><input class="cant" type="number"
-                                                onblur="calcularVentas()" value=0></th>
-                                        <td><input type="text" value="" onblur="calculoDetalles()"></td>
-                                        <td><input type="number" name="precio" class="precios"
-                                                onblur="calcularVentas()" value=0></td>
-                                        <td>0.0</td>
-                                        <td>0.0</td>
-                                        <td><input type="number" name="precio" class="precios"
-                                                onblur="calcularVentas()" value=0></td>
-
-                                    </tr>
-                                @endfor
-
-                            </tbody>
-                        </table>
-                    </div>
                     <!-- fin description section -->
                 </div>
-
-
             </div>
 
 
-        </div>
+
     @endsection

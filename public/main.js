@@ -307,7 +307,9 @@ function agregarDetalle(){
     precioInput.setAttribute('name', 'precio');
     precioInput.setAttribute('class', 'precios');
     precioInput.setAttribute('onblur', 'calcularVentas()');
-    precioInput.setAttribute('value', '0');
+    precioInput.setAttribute('value','0')
+    precioInput.setAttribute('min','0');
+    precioInput.setAttribute('step','0.01');
     precioCell.appendChild(precioInput);
     
     for (var i = 3; i < 6; i++) {

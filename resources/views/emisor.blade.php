@@ -124,7 +124,7 @@
                                     <div class="form-group row">
                                         <label for="telefono" class="col-sm-3 col-form-label cont-label">Teléfono</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" name="telefono" pattern="\+503 [267][0-9]{3}-[0-9]{4}" value="{{old('telefono')}}">
+                                            <input type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" name="telefono" pattern="\[267][0-9]{3}-[0-9]{4}" value="{{old('telefono')}}">
                                             @error('telefono')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror

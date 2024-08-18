@@ -232,11 +232,11 @@ if (!function_exists('checkInternetConnection')) {
 }
 
 if(!function_exists('lastToken')){
-    function lastToken(){
+    function ultimoToken(){
         if(checkInternetConnection()){
             // Tomar el ultimo token de la bd
-            $lastToken = Token::orderBy('fechaGeneracion','desc')->first();
-            return $lastToken ? $lastToken->token : null;
+            $ultimoToken = Token::orderBy('fechaGeneracion','desc')->first();
+            return $ultimoToken ? $ultimoToken->token : null;
         } else {
             return 0;
         }
