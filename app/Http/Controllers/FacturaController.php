@@ -263,15 +263,189 @@ class FacturaController extends Controller
             'Content-Type' => 'application/json',
         ];
 
-        $response = Http::withHeaders($headers)->post($apiUrl, $documento);
-        dd($response);
+        if(verificarConexionInternet()){
+            $response = Http::withHeaders($headers)->post($apiUrl,$documento);
+        } else {
+            $response = null;
+        }
 
+        if($response != null){
+            $this->actualizarNumeroControl($tipoDocumento);
+        }
+
+        return $this->guardarDocumento($response, $esquema);
+    }
+
+    public function actualizarNumeroControl($tipoDte){
+        $respuesta = DB::table('reset_ndecontrol')
+                        ->where('tipodte',$tipoDte)
+                        ->first();
+
+        if($registro){
+            $nuevo = intval($registro['numero'])+1;
+            DB::table('reset_ndecontrol')
+            ->where('tipodte',$tipoDte)
+            ->update(['numero' => $nuevo]);
+        } else {
+            DB::table('reset_ndecontrol')
+            ->insert(['tipodte' => $tipoDte, 'numero' => 1]);
+
+            $nuevo = 1;
+        }
+
+        return $nuevo;
+    }
+
+    public function guardarDocumento($response, $esquema){
+        if($response == '' || $response == null){
+            $esquema = json_decode($esquema);
+            $codGeneracion = $esquema->identificacion->numeroControl;
+            $esquema = json_encode($esquema);
+            $pdfPath = 'contingencia/' . $codGeneracion . '.json';
+            Storage::put($pdfPath, $esquema);
+            echo 'Hubo un error al intentar procesarlo, se hara un evento de contingencia';
+
+            return redirect()->route('documentos')->with('message','Hubo un error al intentar procesarlo, se hará una contingencia');
+        }
+
+        if($response != null && $response['estado'] == "PROCESADO"){
+            $esquema = json_decode($esquema);
+            $tipoDTE = $esquema->identificacion->tipoDte;
+            $esquema = json_encode($esquema);
+
+            $datos = [
+                'fhProcesamiento' => $response['fhProcesamiento'],
+                'codigoGeneracion' => $response['codigoGeneracion'],
+                'selloRecibido' => $response['selloRecibido'],
+                'esquema' => $esquema,
+                'tipoDTE' => $tipoDTE
+            ];
+
+            DB::table('documentos_procesados')->insert($datos);
+
+            return redirect()->route('documentos')->with('success','El documento se procesó correctamente');
+        } elseif ($response != null && $response['estado'] == "RECHAZADO"){
+            $datos = [
+                'fhProcesamiento' => $response['fhProcesamiento'],
+                'codigoGeneracion' => $response['codigoGeneracion'],
+                'selloRecibido' => $response['selloRecibido'],
+                'observaciones' => implode(',', $response['observaciones']),
+                'descripcionMsg' => $response['descripcionMsg']
+            ];
+
+            DB::table('documentos_rechazados')->insert($datos);
+
+            return redirect()->route('documentos')
+            ->with('mensaje', $response['descripcionMsg'])
+            ->with('observ', implode(',', $response['observaciones']));
+        }
+    }
+
+    public function facturaElectronica(Request $request){
+        $formatter = new NumeroALetras();
+
+        $detallesfactura = json_decode($request->detallesfactura);
+        $cuerpodocumento = [];
+        $i=0;
+        $totalnosujeto = 0; $totalexcento = 0; $totalgravado = 0; $totalDespuesto = 0;
+        $totaliva = 0;
+        foreach ($detallesfactura as $detalle) {
+            $i++;
+            $totalnosujeto += $detalle->ventasnosujetas;
+            $totalexcento += $detalle->ventasexcentas;
+            $totalgravado += $detalle->ventasafectas;
+            $dato = [
+                ""
+            ]
+        }
     }
 
 
-    public function updateNumControl($tipoDTE){
-         // Buscar el registro en la base de datos
-         $respuesta = NumeroControl::where('tipodte', $tipoDTE)->first();
+
+    // public function firmarDocumento($documento, $tipoDocumento) {
+
+    //     $curl = curl_init();
+    //     curl_setopt_array($curl, array(
+    //     CURLOPT_URL => 'http://localhost:8113/firmardocumento/',
+    //     CURLOPT_RETURNTRANSFER => true,
+    //     CURLOPT_ENCODING => '',
+    //     CURLOPT_MAXREDIRS => 10,
+    //     CURLOPT_TIMEOUT => 0,
+    //     CURLOPT_FOLLOWLOCATION => true,
+    //     CURLOPT_SSL_VERIFYPEER => false,
+    //     CURLOPT_SSL_VERIFYHOST => false,
+    //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //     CURLOPT_CUSTOMREQUEST => 'POST',
+    //     CURLOPT_POSTFIELDS =>$documento,
+    //     CURLOPT_HTTPHEADER => array(
+    //         'Content-Type: application/json'
+    //     ),
+    //     ));
+
+    //     $response = curl_exec($curl);
+    //     $info = curl_getinfo($curl);
+
+    //     //echo $response;
+    //     if(curl_errno($curl)) {
+    //         echo 'Error al realizar la solicitud: ' . curl_error($curl);
+    //         print_r($info);
+    //     }
+    //     curl_close($curl);
+
+    //     //echo $response;
+    //     //echo $documento;
+    //     //echo $this->obtenerNumeroDeControl('FSEE');
+    //     return $this->mandarDocFirmado(json_decode($response), $tipoDocumento);
+    // }
+
+    // public function mandarDocFirmado($respuesta, $tipoDocumento){
+
+    //     $tipoDte="01";
+    //     $version="1";
+    //     if($tipoDocumento == "FE"){
+    //         $tipoDte = "01";
+    //         $version="1";
+    //     }
+    //     if($tipoDocumento == "CCFE"){
+    //         $tipoDte = "03";
+    //         $version="3";
+    //     }
+    //     if($tipoDocumento == "FEXE"){
+    //         $tipoDte = "11";
+    //         $version="1";
+    //     }
+    //     if($tipoDocumento == "FSEE"){
+    //         $tipoDte = "14";
+    //         $version="1";
+    //     }
+    //     if($tipoDocumento == "CDE"){
+    //         $tipoDte = "15";
+    //         $version="1";
+    //     }
+    //     $documento = [
+    //         "ambiente"=>"00",
+    //         "idEnvio"=>"1",
+    //         "version"=>$version,
+    //         "tipoDte"=>$tipoDte,
+    //         "documento"=>$respuesta->body,
+    //     ];
+    //     //echo json_encode($documento)."  cuerpofirmado------respuesta  ";
+    //     $apiUrl = "https://apitest.dtes.mh.gob.sv/fesv/recepciondte";
+
+    //     $headers = [
+    //         'Authorization' => ultimoToken(),
+    //         'Content-Type' => 'application/json',
+    //     ];
+
+    //     $response = Http::withHeaders($headers)->post($apiUrl, $documento);
+    //     dd($response);
+
+    // }
+
+
+    // public function updateNumControl($tipoDTE){
+    //      // Buscar el registro en la base de datos
+    //      $respuesta = NumeroControl::where('tipodte', $tipoDTE)->first();
 
     //      if ($respuesta) {
     //          // Incrementar el número
@@ -326,14 +500,14 @@ class FacturaController extends Controller
 
     //         DocumentosRechazados::create($datos);
 
-            echo " - ocurrio un error al momento de procesar - ";
-            echo $response['descripcionMsg'];
-            print_r($response['observaciones']);
-            return redirect()->route('documentos')
-                ->with('mensaje', $response['descripcionMsg'])
-                ->with('observ', implode(',', $response['observaciones']));
-        }
-    }
+    //         echo " - ocurrio un error al momento de procesar - ";
+    //         echo $response['descripcionMsg'];
+    //         print_r($response['observaciones']);
+    //         return redirect()->route('documentos')
+    //             ->with('mensaje', $response['descripcionMsg'])
+    //             ->with('observ', implode(',', $response['observaciones']));
+    //     }
+    // }
 
     // // Funciones para DTE
     // public function facturaElectronica(Request $request){
@@ -349,33 +523,33 @@ class FacturaController extends Controller
     //     $totalGravado = 0;
     //     $totalIva = 0;
 
-        foreach($detallesFact as $detalle){
-            $i++;
-            $totalNoSujeto += $detalle->ventasnosujetas;
-            $totalExento +=  $detalle->ventasexcentas;
-            $totalGravado += $detalle->ventasafectas;
-            $dato = [
-                "numItem" => $i,
-                "tipoItem" => 2,
-                "numeroDocumento" => null,
-                "cantidad" => floatval($detalle->cantidad),
-                "codigo" => null,
-                "codTributo" => null,
-                "uniMedida" => 59,
-                "descripcion" => $detalle->descripcion,
-                "precioUni" => $detalle->preciounitario,
-                "montoDescu" => 0,
-                "ventaNoSuj" => floatval($detalle->ventasnosujetas),
-                "ventaExenta" => floatval($detalle->ventasexcentas),
-                "ventaGravada" => floatval($detalle->ventasafectas),
-                "tributos" => null,
-                "psv" => 0,
-                "noGravado" => 0,
-                "ivaItem" => round($detalle->ventasafectas/1.13*0.13,2)
-            ];
-            $totaliva += round($detalle->ventasafectas/1.13*0.13,2);
-            array_push($cuerpoDocumento,$dato);
-        }
+    //     foreach($detallesFact as $detalle){
+    //         $i++;
+    //         $totalNoSujeto += $detalle->ventasnosujetas;
+    //         $totalExento +=  $detalle->ventasexcentas;
+    //         $totalGravado += $detalle->ventasafectas;
+    //         $dato = [
+    //             "numItem" => $i,
+    //             "tipoItem" => 2,
+    //             "numeroDocumento" => null,
+    //             "cantidad" => floatval($detalle->cantidad),
+    //             "codigo" => null,
+    //             "codTributo" => null,
+    //             "uniMedida" => 59,
+    //             "descripcion" => $detalle->descripcion,
+    //             "precioUni" => $detalle->preciounitario,
+    //             "montoDescu" => 0,
+    //             "ventaNoSuj" => floatval($detalle->ventasnosujetas),
+    //             "ventaExenta" => floatval($detalle->ventasexcentas),
+    //             "ventaGravada" => floatval($detalle->ventasafectas),
+    //             "tributos" => null,
+    //             "psv" => 0,
+    //             "noGravado" => 0,
+    //             "ivaItem" => round($detalle->ventasafectas/1.13*0.13,2)
+    //         ];
+    //         $totaliva += round($detalle->ventasafectas/1.13*0.13,2);
+    //         array_push($cuerpoDocumento,$dato);
+    //     }
 
     //     $resumen = [
     //         "totalNoSuj" => $totalNoSujeto,
