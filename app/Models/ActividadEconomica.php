@@ -9,7 +9,7 @@ class ActividadEconomica extends Model
 {
     use HasFactory;
 
-    protected $table = 'giro_comercial';
+    protected $table = 't_giro_comercial';
 
     protected $primaryKey = 'id';
 

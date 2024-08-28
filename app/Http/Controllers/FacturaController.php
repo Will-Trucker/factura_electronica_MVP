@@ -42,13 +42,13 @@ class FacturaController extends Controller
 
     function obtenerNumeroDeControl($tipoDte){
         $respuesta = NumeroControl::where('tipodte',$tipoDte)->first();
-        if(!$numeroDeControl){
+        if(!$respuesta){
             return rand(1,100);
         }
 
-        $nuevoNumero = intval($numeroDeControl->numero + 1);
-        $numeroDeControl->numero = $nuevoNumero;
-        $numeroDeControl->save();
+        $nuevoNumero = intval($respuesta->numero + 1);
+        $respuesta->numero = $nuevoNumero;
+        $respuesta->save();
 
         $codigo = str_pad((string) $nuevoNumero, 15, "0", STR_PAD_LEFT);
         return $codigo;
@@ -142,9 +142,9 @@ class FacturaController extends Controller
     }
 
     public function guardarFactura(Request $request){
-        if($request->tipoDeDocumento == "CCFE"){
-            return $this->creditoFiscal($request);
-        }
+        // if($request->tipoDeDocumento == "CCFE"){
+        //     return $this->creditoFiscal($request);
+        // }
 
         if($request->tipoDeDocumento == "FE"){
             return $this->facturaElectronica($request);
@@ -174,19 +174,19 @@ class FacturaController extends Controller
             //DOCUMENTO CONTABLE DE LIQUIDACION ELECTRONICO
 
         }
-        if($request->tipoDeDocumento == "FEXE"){
-            //FACTURA DE EXPORTACION ELECTRONICA
-            return $this->facturadeExportacion($request);
-        }
-        if($request->tipoDeDocumento == "FSEE"){
-            //FACTURA DE SUJETO EXCLUIDO ELECTRONICA
-            return $this->facturadeSujetoExcluido($request);
+        // if($request->tipoDeDocumento == "FEXE"){
+        //     //FACTURA DE EXPORTACION ELECTRONICA
+        //     return $this->facturadeExportacion($request);
+        // }
+        // if($request->tipoDeDocumento == "FSEE"){
+        //     //FACTURA DE SUJETO EXCLUIDO ELECTRONICA
+        //     return $this->facturadeSujetoExcluido($request);
 
-        }
-        if($request->tipoDeDocumento == "CDE"){
-            //COMPROBANTE DE DONACIÓN ELECTRONICO
-            return $this->comprobanteDonacionElectronica($request);
-        }
+        // }
+        // if($request->tipoDeDocumento == "CDE"){
+        //     //COMPROBANTE DE DONACIÓN ELECTRONICO
+        //     return $this->comprobanteDonacionElectronica($request);
+        // }
     }
 
     public function firmarDocumento($documento, $tipoDocumento){
@@ -224,7 +224,7 @@ class FacturaController extends Controller
         return $this->mandarDocFirmado(json_decode($response), $tipoDocumento, $cuerpojson);
     }
 
-    public function mandaDocFirmado($respuesta, $tipoDocumento, $esquema){
+    public function mandarDocFirmado($respuesta, $tipoDocumento, $esquema){
         $tipoDte = "01";
         $version = "1";
 
@@ -258,7 +258,7 @@ class FacturaController extends Controller
 
         $apiUrl = "https://apitest.dtes.mh.gob.sv/fesv/recepciondte";
 
-        $header = [
+        $headers = [
             'Authorization' => Session::get('ultToken'),
             'Content-Type' => 'application/json',
         ];
@@ -281,8 +281,8 @@ class FacturaController extends Controller
                         ->where('tipodte',$tipoDte)
                         ->first();
 
-        if($registro){
-            $nuevo = intval($registro['numero'])+1;
+        if($respuesta){
+            $nuevo = intval($respuesta['numero'])+1;
             DB::table('reset_ndecontrol')
             ->where('tipodte',$tipoDte)
             ->update(['numero' => $nuevo]);
@@ -318,7 +318,7 @@ class FacturaController extends Controller
                 'codigoGeneracion' => $response['codigoGeneracion'],
                 'selloRecibido' => $response['selloRecibido'],
                 'esquema' => $esquema,
-                'tipoDTE' => $tipoDTE
+                'tipoDte' => $tipoDTE
             ];
 
             DB::table('documentos_procesados')->insert($datos);
@@ -355,9 +355,154 @@ class FacturaController extends Controller
             $totalexcento += $detalle->ventasexcentas;
             $totalgravado += $detalle->ventasafectas;
             $dato = [
-                ""
-            ]
+                "numItem" => $i,
+                "tipoItem" => 2,
+                "numeroDocumento" => null,
+                "cantidad" =>floatval($detalle->cantidad),
+                "codigo" => null,
+                "codTributo" => null,
+                "uniMedida" => 99,
+                "descripcion" => $detalle->descripcion,
+                "precioUni" => floatval($detalle->preciounitario),
+                "montoDescu" => 0,
+                "ventaNoSuj" => floatval($detalle->ventasnosujetas),
+                "ventaExenta" => floatval($detalle->ventasexcentas),
+                "ventaGravada" => floatval($detalle->ventasafectas),
+                "tributos" => null,
+                "psv" => 0,
+                "noGravado" => 0,
+                "ivaItem" => round($detalle->ventasafectas/1.13*0.13, 2)
+            ];
+            $totaliva += round($detalle->ventasafectas/1.13*0.13,2);
+            array_push($cuerpodocumento, $dato);
         }
+        $resumen = [
+            "totalNoSuj"=> $totalnosujeto,
+            "totalExenta"=> $totalexcento,
+            "totalGravada"=> $totalgravado,
+            "subTotalVentas"=> $totalgravado,
+            "descuNoSuj"=> 0,
+            "descuExenta"=> 0,
+            "descuGravada"=> 0,
+            "porcentajeDescuento"=> 0,
+            "totalDescu"=> 0,
+            "tributos"=> null,
+            "subTotal"=> $totalgravado,
+            "ivaRete1"=> 0,
+            "reteRenta"=> 0,
+            "montoTotalOperacion"=> $totalgravado,
+            "totalNoGravado"=> 0,
+            "totalPagar"=> $totalgravado,
+            "totalLetras"=> $formatter->toMoney($totalgravado, 2, "dolares", "centavos")          ,
+            "totalIva"=> round($totaliva, 2),
+            "saldoFavor"=> 0,
+            "condicionOperacion"=> 1,
+            "pagos"=> null,
+            "numPagoElectronico"=> null
+        ];
+          $nitvendedorx='06141101171056';
+          $passPri = 'Am@z2Ll3rm0$ñ@';
+          $documento = [
+              'nit'=> $nitvendedorx,
+              'activo'=>true,
+              'passwordPri'=>$passPri,
+              'dteJson'=>[
+                  "identificacion"=>[
+                          "version"=> 1,
+                          "ambiente"=> "00",
+                          "tipoDte"=> "01",//ir cambiando el numero de Control desde 400
+                          "numeroControl"=> "DTE-01-0001ONEC-".$this->obtenerNumeroDeControl('FE'),
+                          "codigoGeneracion"=> $this->generaruuid(),
+                          "tipoModelo"=> 1,
+                          "tipoOperacion"=> 1,
+                          "tipoContingencia"=> null,
+                          "motivoContin"=> null,
+                          "fecEmi"=> date('Y-m-d'),
+                          "horEmi"=> date('h:i:s'),
+                          "tipoMoneda"=> "USD",
+                      ],
+                      "documentoRelacionado"=>null,
+                      "emisor"=> [
+                          //"nit"=> "$request->emisornit",
+                          "nit"=> strval($request->emisornit),
+                          "nrc"=> $request->emisornrc,
+                          "nombre"=> $request->emisornombre,
+                          "codActividad"=> "70200",
+                          "descActividad"=> $request->actividademisor,
+                          "nombreComercial"=> $request->nombreComercial,
+                          "tipoEstablecimiento"=> "01",
+                          "direccion"=>
+                          [
+                              "departamento"=> "06",
+                              "municipio"=> "14",
+                              "complemento"=> "San Salvador"
+                          ],
+                          "telefono"=> $request->emisortelefono,
+                          "codEstableMH"=> null,
+                          "codEstable"=> null,
+                          "codPuntoVentaMH"=> null,
+                          "codPuntoVenta"=> null,
+                          "correo"=> "rafaeledudominguez@gmail.com"
+                      ],
+                      "receptor"=> [
+                          "tipoDocumento"=> "36",
+                          "numDocumento"=> "066948964",
+                          "nrc"=> null,
+                          "nombre"=> $request->emisornombre,
+                          "codActividad"=> null,
+                          "descActividad"=> null,
+                          "direccion"=>
+                          [
+                              "departamento"=> "06",
+                              "municipio"=> "14",
+                              "complemento"=> "SAN SALVADOR"
+                          ],
+                          "telefono"=> "78291734",
+                          "correo"=> "rafaeledudominguez@gmail.com "
+                      ],
+                      "otrosDocumentos"=>[[
+                          "codDocAsociado"=> 3,
+                          "descDocumento"=> null,
+                          "detalleDocumento"=> null,
+                          "medico"=>
+                          [
+                              "nombre"=> "JUAN MANUEL REYES",
+                              "nit"=> null,
+                              "docIdentificacion"=> "066948964",
+                              "tipoServicio"=> 1
+                          ]
+                      ]],
+                      "ventaTercero"=>[
+                          "nombre"=> "JUAN MANUEL REYES",
+                          "nit"=> "043474311"
+                      ],
+                      "cuerpoDocumento"=> $cuerpodocumento,
+                      "resumen"=> $resumen,
+                      "extension"=> [
+                          "nombEntrega"=> null,
+                          "docuEntrega"=> null,
+                          "nombRecibe"=> null,
+                          "docuRecibe"=> null,
+                          "observaciones"=> null,
+                          "placaVehiculo"=> null
+                      ],
+
+                      "apendice"=>
+                      [[
+                          "campo"=> "Campo",
+                          "etiqueta"=> "Descripcion",
+                          "valor"=> "null"
+
+                      ]]
+
+              ],
+
+          ];
+
+          $docJSON = json_encode($documento);
+          //echo $docJSON;
+          //echo "----------------------------------------------------------------------------------------------";
+          return $this->firmarDocumento($docJSON, $request->tipoDeDocumento);
     }
 
 

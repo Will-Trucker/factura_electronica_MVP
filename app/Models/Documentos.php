@@ -9,14 +9,15 @@ class Documentos extends Model
 {
     use HasFactory;
 
-    protected $table = 'documentos';
+    protected $table = 'documentos_procesados';
 
     protected $primaryKey = 'id';
-    
+
     protected $fillable = [
-        'fecha',
+        'fhProcesamiento',
         'codigoGeneracion',
         'selloRecibido',
-        'observaciones'
+        'esquema',
+        'tipoDte'
     ];
 }

@@ -17,7 +17,8 @@ class DocumentosRechazados extends Model
         'fecha',
         'codigoGeneracion',
         'selloRecibido',
-        'observaciones'
+        'observaciones',
+        'descripcionMsg'
     ];
 
 

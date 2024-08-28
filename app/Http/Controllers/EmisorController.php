@@ -20,9 +20,8 @@ class EmisorController extends Controller
         $departments = Departamento::all()->keyBy('codigoDepartamento');
         $municipios = Municipio::all();
         $actividades = ActividadEconomica::all()->keyBy('codigoGiro');
-       
         $emisores = Emisor::all();
-    
+
 
         return view('emisor',compact('departments','municipios','actividades','emisores'));
     }
@@ -57,7 +56,7 @@ class EmisorController extends Controller
             'correo.required' => 'El correo electrónico es obligatorio',
             'correo.email' => 'El correo electrónico debe tener un formato válido'
         ]);
-    
+
             $emisor = new Emisor([
                             'Nombre'=>$request->nombre,
                             'NombreComercial'=>$request->nombrecomercial,
@@ -71,9 +70,9 @@ class EmisorController extends Controller
                             'Correo'=>$request->correo,
                     ]);
 
-            
+
             $emisor->save();
-    
+
         return redirect()->route('emisores')->with('success','Emisor Registrado Exitosamente');
     }
 
@@ -107,9 +106,9 @@ class EmisorController extends Controller
         'correo.required' => 'El correo electrónico es obligatorio',
         'correo.email' => 'El correo electrónico debe tener un formato válido'
     ]);
-    
+
     $id = $request->idemisor;
-    
+
 
     $emisor = Emisor::find($id);
 
@@ -118,7 +117,7 @@ class EmisorController extends Controller
         return redirect()->route('emisores')->with('error','Emisor no Encontrado');
     }
 
-    
+
 
     $emisor->update([
         'Nombre'=>$request->nombre,
@@ -133,15 +132,15 @@ class EmisorController extends Controller
         'Correo'=>$request->correo,
     ]);
 
-   
-    
+
+
      return redirect()->route('emisores')->with('success', 'Emisor Modificado Exitosamente');
     }
 
     public function eliminar_emisor(Request $request)
     {
         $idemisor = $request->input('idemisor');
-        
+
         $emisor = Emisor::find($idemisor);
 
         if(!$emisor){
@@ -153,5 +152,5 @@ class EmisorController extends Controller
          return redirect()->back()->with('success', 'Emisor eliminado correctamente.');
     }
 
-  
+
 }

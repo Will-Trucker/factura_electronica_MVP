@@ -9,14 +9,14 @@ class NumeroControl extends Model
 {
     use HasFactory;
 
-    protected $table = 'numerocontrol';
+    protected $table = 'reset_ndecontrol';
 
     protected $primaryKey = 'id';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'tipoDTE',
+        'tipodte',
         'numero'
     ];
 }
