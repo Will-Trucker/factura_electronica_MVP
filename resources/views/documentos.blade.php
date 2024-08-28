@@ -42,7 +42,7 @@
                         </th> --}}
                     </tr>
                 {{-- @empty --}}
-                    <th>Sin datos</th>
+                    <th colspan="4">Sin datos</th>
                 {{-- @endforelse --}}
             </tbody>
             </table>

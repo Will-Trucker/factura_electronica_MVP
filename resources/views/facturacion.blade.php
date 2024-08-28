@@ -107,7 +107,7 @@
                             <h2 class="title-2">Emisor</h2>
                             <select name="emisor" class="form-control" id="emisor" onBlur="traerEmisor()">
                                 @foreach($emisores as $emisor)
-                                <option value="{{ $emisor->id }}">{{ $emisor->Nombre }}</option>
+                                <option value="{{ $emisor['id'] }}">{{ $emisor['Nombre'] }}</option>
                                 @endforeach
                             </select>
                             <div class="row">
@@ -203,7 +203,7 @@
                             <h2 class="title-2">Receptor</h2>
                             <select name="receptor" class="form-control" id="receptor" onblur="traerReceptor()">
                                 @foreach ($receptores as $receptor)
-                                    <option value="{{ $receptor->id }}">{{ $receptor->Nombre }}</option>
+                                    <option value="{{ $receptor['id'] }}">{{ $receptor['Nombre'] }}</option>
                                 @endforeach
                             </select>
                             <div class="row">
