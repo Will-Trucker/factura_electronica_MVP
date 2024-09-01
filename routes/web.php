@@ -15,7 +15,7 @@ Route::get('/municipios/{idDepartamento}', [App\Http\Controllers\MunicipioContro
 
 
 // Route::post('/iniciarSesion',[App\Http\Controllers\loginController::class, 'iniciar_sesion'])->name('iniciarSesion');
-Route::post('/saveTicket',[App\Http\Controllers\facturaController::class, 'saveTicket'])->name('saveTicket');
+Route::post('/guardarFactura',[App\Http\Controllers\facturaController::class, 'guardarFactura'])->name('guardarFactura');
 Route::get('/tok',[App\Http\Controllers\FacturaController::class, 'lastToken'])->name('tok');
 
 Route::get('/token',[App\Http\Controllers\TokenController::class, 'index'])->name('tokens');
@@ -34,13 +34,26 @@ Route::put('/modificarreceptor',[App\Http\Controllers\ReceptorController::class,
 Route::post('/eliminarreceptor',[App\Http\Controllers\ReceptorController::class, 'eliminar_receptor'])->name('eliminar_receptor');
 Route::post('/buscareceptor/{id}', [App\Http\Controllers\ReceptorController::class, 'obtenerReceptor'])->name('buscareceptor');
 
+Route::get('/documentos',[App\Http\Controllers\documentosController::class, 'index'])->name('documentos');
+Route::get('/filtrarDocs',[App\Http\Controllers\documentosController::class, 'filtrarDoc'])->name('filtrarDocs');
+Route::get('/obtenerpdf/{codGeneracion}',[App\Http\Controllers\documentosController::class, 'obtenerPdf'])->name('obtenerpdf');
 
-Route::get('/documentos',[App\Http\Controllers\DocumentosController::class, 'index'])->name('documentos');
-Route::get('/obtenerpdf/{codGeneracion}',[App\Http\Controllers\DocumentosController::class, 'obtenerPdf'])->name('obtenerpdf');
+Route::get('/obtenerJsonGuardado/{codGeneracion}',[App\Http\Controllers\documentosController::class, 'obtenerJsonGuardado'])->name('obtenerJsonGuardado');
+Route::get('/obtenerJsonGuardadoC/{sello}',[App\Http\Controllers\documentosController::class, 'obtenerJsonGuardadoC'])->name('obtenerJsonGuardadoC');
+Route::get('/obtenerdoc',[App\Http\Controllers\documentosController::class, 'obtenerDocumento'])->name('obtenerdoc');
+
+
 
 Route::get('/eInvalidacion',[App\Http\Controllers\EventosController::class, 'listaEInvalidacion'])->name('eInvalidacion');
 Route::get('/eContingencia',[App\Http\Controllers\EventosController::class, 'listaEContingencia'])->name('eContingencia');
 Route::get('/nuevoEContingencia',[App\Http\Controllers\EventosController::class, 'nuevoEContingencia'])->name('nuevoEContingencia');
+Route::get('/lotesContingencia',[App\Http\Controllers\eventosController::class, 'nuevoEContingenciaLotes'])->name('lotesContingencia');
+Route::post('/generarContingencia',[App\Http\Controllers\eventosController::class, 'eventoContingencia'])->name('generarContingencia');
+
+Route::get('/facturacion',[App\Http\Controllers\facturaController::class, 'registro'])->name('facturacion');
+Route::get('/reenviar',[App\Http\Controllers\facturaController::class, 'registro'])->name('reenviar');
+Route::post('/docContingencia',[App\Http\Controllers\facturaController::class, 'docContingencia'])->name('docContingencia');
+
 
 
 Route::get('/facturacion',[App\Http\Controllers\FacturaController::class, 'registro'])->name('facturacion');

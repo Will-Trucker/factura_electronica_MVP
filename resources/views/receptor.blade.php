@@ -89,7 +89,7 @@
                                             class="col-sm-3 col-form-label cont-label">Municipio</label>
                                         <div class="col-sm-9">
                                             <select class="form-control form-control-lg" name="municipio" id="municipio">
-                                               
+
                                             </select>
                                             @error('municipio')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -116,7 +116,7 @@
                                             <input type="text" class="form-control form-control-lg"
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" name="telefono"
-                                                pattern="\+503 [267][0-9]{3}-[0-9]{4}" value="{{ old('telefono') }}">
+                                                pattern="\[267][0-9]{3}-[0-9]{4}" value="{{ old('telefono') }}">
                                             @error('telefono')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror

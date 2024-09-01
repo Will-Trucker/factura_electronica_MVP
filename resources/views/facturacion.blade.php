@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-md p-5 cont">
-       
+
             <h1 class="title-1">Facturacion</h1>
             @if (session('descError'))
                 <div class="alert alert-danger">
@@ -14,7 +14,7 @@
                     {{ session('observaciones') }}
                 </div>
             @endif
-            <form action="{{route('saveTicket')}}" method="post">
+            <form action="{{route('guardarFactura')}}" method="post">
                 @csrf
 
                 <input type="hidden" name="totalLetras" id="totalLetras" value='cero'>
@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>    
+                    </div>
                         <div class="d-none" id="tokenSection">
                             <h2 class="title-2">Token</h2>
                             <div class="row">
@@ -96,12 +96,12 @@
                                         </div>
                                         <hr class="mx-n3">
                                         <div class="px-5 py-4 text-center">
-                                            <button type="button" class="btn btn-secondary" onclick="cambiarSeccion(2)">Siguiente</button>    
-                                        </div>            
+                                            <button type="button" class="btn btn-secondary" onclick="cambiarSeccion(2)">Siguiente</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>  
-                        </div>      
+                            </div>
+                        </div>
 
                         <div class="d-none" id="emisorSection">
                             <h2 class="title-2">Emisor</h2>
@@ -120,7 +120,7 @@
                                                 <input name="emisornombre" type="text" class="form-control form-control-lg"
                                                 aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="emisorNombre">
                                             </div>
-                                        </div> 
+                                        </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
                                             <label for="nombrecomercial" class="col-sm-3 col-form-label cont-label">Nombre comercial</label>
@@ -128,7 +128,7 @@
                                                 <input name="nombrecomercial" type="text" class="form-control form-control-lg"
                                                 aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"
                                                 id="nombreComercial">
-                                            </div>        
+                                            </div>
                                         </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
@@ -136,12 +136,12 @@
                                             <div class="col-sm-9">
                                                 <input name="actividademisor" id="actividademisor" type="text"
                                                 class="form-control form-control-lg" aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default"> 
-                                            </div>    
-                                        </div>      
+                                                aria-describedby="inputGroup-sizing-default">
+                                            </div>
+                                        </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label cont-label" for="NIT">NIT</label> 
+                                            <label class="col-sm-3 col-form-label cont-label" for="NIT">NIT</label>
                                             <div class="col-sm-9">
                                                 <input name="emisornit" id="emisornit" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
@@ -158,7 +158,7 @@
                                             <label for="departamento" class="col-sm-3 col-form-label cont-label">Departamentos</label>
                                             <div class="col-sm-9">
                                                 <input name="emisordepartamento" id="emisordepartamento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                                            </div>    
+                                            </div>
                                         </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
@@ -166,13 +166,13 @@
                                             <div class="col-sm-9">
                                                 <input name="emisormunicipio" id="emisormunicipio" type="text"
                                                 class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                                            </div>     
+                                            </div>
                                         </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
                                             <label for="complemento" class="col-sm-3 col-form-label cont-label">Complemento</label>
                                             <div class="col-sm-9">
-                                                <input name="complemento" id="complemento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">   
+                                                <input name="complemento" id="complemento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
                                         </div>
                                         <hr class="mx-n3">
@@ -180,14 +180,14 @@
                                             <label for="telefono" class="col-sm-3 col-form-label cont-label">Teléfono</label>
                                             <div class="col-sm-9">
                                                 <input name="emisortelefono" id="emisortelefono" type="text"
-                                                class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"> 
+                                                class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
-                                        </div> 
+                                        </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
                                             <label for="correo" class="col-sm-3 col-form-label cont-label">Correo</label>
                                             <div class="col-sm-9">
-                                                <input name="emisorcorreo" id="emisorcorreo" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">                     
+                                                <input name="emisorcorreo" id="emisorcorreo" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
                                         </div>
                                         <hr class="mx-n3">
@@ -197,8 +197,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>                    
-                         
+                        </div>
+
                         <div class="d-none" id="receptorSection">
                             <h2 class="title-2">Receptor</h2>
                             <select name="receptor" class="form-control" id="receptor" onblur="traerReceptor()">
@@ -212,7 +212,7 @@
                                         <div class="form-group row">
                                             <label for="receptornombre" class="col-sm-3 col-form-label cont-label">Nombre</label>
                                             <div class="col-sm-9">
-                                                <input name="receptornombre" id="receptornombre" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">  
+                                                <input name="receptornombre" id="receptornombre" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
                                         </div>
                                         <hr class="mx-n3">
@@ -230,40 +230,40 @@
                                             </div>
                                         </div>
                                         <hr class="mx-n3">
-                                        
+
                                         <div class="form-group row">
                                             <label for="telefono" class="col-sm-3 col-form-label cont-label">Teléfono</label>
                                             <div class="col-sm-9">
                                                 <input name="receptortelefono" id="receptortelefono" type="text"
-                                                class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"> 
+                                                class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
-                                        </div> 
+                                        </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
                                             <label for="correo" class="col-sm-3 col-form-label cont-label">Correo</label>
                                             <div class="col-sm-9">
-                                                <input name="receptorcorreo" id="receptorcorreo" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">                     
+                                                <input name="receptorcorreo" id="receptorcorreo" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
                                         </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
                                             <label for="receptordepartamento"class="col-sm-3 col-form-label cont-label">Departamento</label>
                                             <div class="col-sm-9">
-                                                <input name="receptordepartamento" id="receptordepartamento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">                 
+                                                <input name="receptordepartamento" id="receptordepartamento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
-                                        </div> 
+                                        </div>
                                         <hr class="mx-n3">
                                         <div class="form-group row">
-                                            <label for="receptormunicipio" class="col-sm-3 col-form-label cont-label">Municipio</label>   
+                                            <label for="receptormunicipio" class="col-sm-3 col-form-label cont-label">Municipio</label>
                                             <div class="col-sm-9">
                                                 <input name="receptormunicipio" id="receptormunicipio" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
                                         </div>
-                                        <hr class="mx-n3"> 
+                                        <hr class="mx-n3">
                                         <div class="form-group row">
                                             <label for="receptorcomplemento" class="col-sm-3 col-form-label cont-label">Complemento</label>
                                             <div class="col-sm-9">
-                                                <input name="receptorcomplemento" id="receptorcomplemento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">                
+                                                <input name="receptorcomplemento" id="receptorcomplemento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
                                         </div>
                                         <div class="px-5 py-4 text-center">
@@ -273,10 +273,10 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                             {{-- <div class="row">
                                 <div class="col">
-                                    
+
                                 </div>
                                 <div class="col">
                                     <select name="receptor" class="form-control" id="receptor"
@@ -405,11 +405,9 @@
                             <tbody id="tablaDetalles">
                                 @for ($i = 0; $i < 5; $i++)
                                     <tr>
-                                        <th scope="row"><input class="cant" type="number"
-                                                onblur="calcularVentas()" value="0" min="0"></th>
+                                        <th scope="row"><input class="cant" type="number" onblur="calcularVentas()" value="0" min="0"></th>
                                         <td><input type="text" value="" onblur="calculoDetalles()"></td>
-                                        <td><input type="number" name="precio" class="precios"
-                                                onblur="calcularVentas()" value="0.00" min="0.00" step="0.01"></td>
+                                        <td><input type="number" name="precio" class="precios" onblur="calcularVentas()" value="0"></td>
                                         <td>0.0</td>
                                         <td>0.0</td>
                                         <td>0.0</td>

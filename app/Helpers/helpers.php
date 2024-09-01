@@ -1,74 +1,43 @@
 <?php
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
-// use Revolution\Google\Sheets\Facades\Sheets;
-use Illuminate\Support\Facades\Response;
-use Google\Exception as GoogleException;
-use App\Models\Token;
-use App\Models\NumeroControl;
+Use App\Models\Token;
+Use Carbon\Carbon;
 
-if(!function_exists('algo')){
-    function objeto(){
-        return "Hola Mundo!";
-    }
-}
+/**
+ * Write code on Method
+ *
+ * @return response()
+*/
 
-if(!function_exists('buscar_algo')){
-    function buscar($campo, $busqueda){
-        if(verificarConexionInternet()){
-            return DB::table('numerocontrol')
-            ->where($campo, $busqueda)
-            ->first();
-            //->get();
-            return $resultado;
-        } else {
-            return null;
-        }
-    }
-}
-
-
-if (!function_exists('verificarConexionInternet')) {
-    function verificarConexionInternet()
+function verificarConexionInternet($url = 'http://www.google.com', $timeout = 10)
     {
-        $url = 'http://www.google.com';
-        $headers = @get_headers($url);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-        if ($headers && strpos($headers[0], '200')) {
-            // Hay conexión a Internet
-            return true;
-        } else {
-            // No hay conexión a Internet
-            return false;
+        return ($httpcode >= 200 && $httpcode < 300);
+    }
+
+/**
+     * Obtén el último token generado.
+     *
+     * @return string|null El token más reciente o null si no hay tokens.
+     */
+    function obtenerUltimoToken()
+    {
+        // Obtén el registro con el mayor id (el último token generado)
+        $ultimoToken = Token::latest('id')->first();
+
+        // Verifica si existe un token y retorna el campo `token`
+        if ($ultimoToken) {
+            return $ultimoToken->token;
         }
+
+        // Si no hay tokens en la base de datos, retorna null
+        return null;
     }
-}
 
-if(!function_exists('ultimoToken')){
-    function ultimoToken(){
-        if(checkInternetConnection()){
-            $respuesta = DB::table('tokens')
-            ->orderBy('id','desc')
-            ->first();
-
-            return $respuesta ? $respuesta->token : null;
-            // Tomar el ultimo token de la bd
-            // $ultimoToken = Token::orderBy('fechaGeneracion','desc')->first();
-            // return $ultimoToken ? $ultimoToken->token : null;
-        } else {
-            return 0;
-        }
-    }
-}
-
-if(!function_exists('ultimoID')){
-    function ultimoID($tabla){
-        $respuesta = DB::table($tabla)
-        ->orderBy('id','desc')
-        ->first();
-
-        return $respuesta ? $respuesta->id : null;
-    }
-}
-?>

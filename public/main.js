@@ -2,26 +2,26 @@
 //datos de los detalles de factura
 let datos = [];
 window.addEventListener("load", function (event) {
-    console.log("'Todos los recursos terminaron de cargar!");
+    console.log("Todos los recursos terminaron de cargar!");
     const pagina = location.href;
     const menu = document.getElementById('listamenu');
     if (menu != null) {
-        
+
         for (let i = 0; i < menu.childElementCount; i++) {
-    
+
             if(menu.children[i].children[0].href == pagina){
-                var pagActual = menu.children[i].children[0]; 
+                var pagActual = menu.children[i].children[0];
                 console.log(pagActual.href)
                 pagActual.className = "nav-link text-white pgActual"
-    
+
             }
-            
+
         }
     }
   });
 
 function cambiarSeccion(seccion){
-    let section; 
+    let section;
     let secciones = document.getElementById("divisiones")
     for (let i = 0; i < secciones.childElementCount; i++) {
         secciones.children[i].className = 'd-none'
@@ -54,14 +54,14 @@ function cambiarSeccion(seccion){
         default:
             break;
     }
-    
+
     section.className = '';
-    
+
 }
 
 function calcularVentas(){
     let tabla = document.getElementById("tablaDetalles");
-    
+
     for (let i = 0; i < tabla.childElementCount; i++) {
         let fila = tabla.children[i];
         //casilla de ventas = cantidad * precio unitario
@@ -167,7 +167,7 @@ function ponerdatosReceptor(data) {
     document.getElementById('receptorcorreo').value = data.Correo || '';
     document.getElementById('receptorndocumento').value = data.NumDocumento || '';
     document.getElementById('receptornrc').value = data.NRC || '';
-    document.getElementById('receptordepartamento').value = data.departamento ? data.departamento.codigoDepartamento : '';
+    document.getElementById('receptordepartamento').value = data.idDepartamento || '';
     document.getElementById('receptormunicipio').value = data.idMunicipio || '';
     document.getElementById('receptorcomplemento').value = data.Complemento || '';
     document.getElementById('receptortelefono').value = data.Telefono || '';
@@ -191,7 +191,7 @@ function cambiarTipoDoc(){
     }else{
         document.getElementById('receptorExportacion').className = "d-none";
     }
-    
+
 }
 
 function calculoDetalles(){
@@ -202,7 +202,7 @@ function calculoDetalles(){
     for (let i = 0; i < filas; i++) {
         let descripcion = tabla.children[i].children[1].children[0].value;
         if(descripcion != ""){
-            
+
             let cantidad = tabla.children[i].children[0].children[0].value;
             let preciounitario = tabla.children[i].children[2].children[0].value;
             let ventasexcentas = tabla.children[i].children[3].textContent;
@@ -257,10 +257,10 @@ function calculoTotales(){
     vGravada.innerHTML = (sumaAfectas).toFixed(2);
 
     let tipoDocumento = document.getElementById("tipoDocumento");
-    
+
     iva.innerHTML = (sumaAfectas * 0.13).toFixed(2);
-    
-    
+
+
     Vexcenta.innerHTML = sumaExcenta;
     Vnosujeta.innerHTML = sumaNosujeta;
     subtotal.innerHTML = (parseFloat(iva.innerHTML) + parseFloat(vGravada.innerHTML)).toFixed(2);
@@ -272,9 +272,9 @@ function calculoTotales(){
     let TotalVenta = document.getElementById("TotalVenta");
     if (TotalVenta != null) {
         TotalVenta.value = parseFloat(subtotal2.innerHTML);
-        
+
     }
-    
+
 
     letras.innerHTML = NumeroALetras(parseFloat(subtotal2.innerHTML));
     document.getElementById('totalLetras').value = NumeroALetras(vGravada.innerHTML);
@@ -286,7 +286,7 @@ function agregarDetalle(){
     tabla = document.getElementById('tablaDetalles');
     //console.log()
     var nuevaFila = tabla.insertRow(tabla.rows.length);
-  
+
     var cantidadCell = nuevaFila.insertCell(0);
     var cantidadInput = document.createElement('input');
     cantidadInput.setAttribute('type', 'number');
@@ -294,13 +294,13 @@ function agregarDetalle(){
     cantidadInput.setAttribute('onblur', 'calcularVentas()');
     cantidadInput.setAttribute('value', '0');
     cantidadCell.appendChild(cantidadInput);
-    
+
     var descripcionCell = nuevaFila.insertCell(1);
     var descripcionInput = document.createElement('input');
     descripcionInput.setAttribute('type', 'text');
     descripcionInput.setAttribute('onblur', 'calculoDetalles()');
     descripcionCell.appendChild(descripcionInput);
-    
+
     var precioCell = nuevaFila.insertCell(2);
     var precioInput = document.createElement('input');
     precioInput.setAttribute('type', 'number');
@@ -311,10 +311,10 @@ function agregarDetalle(){
     precioInput.setAttribute('min','0');
     precioInput.setAttribute('step','0.01');
     precioCell.appendChild(precioInput);
-    
+
     for (var i = 3; i < 6; i++) {
       var cell = nuevaFila.insertCell(i);
       cell.innerHTML = "0.0";
     }
-  
+
 }
