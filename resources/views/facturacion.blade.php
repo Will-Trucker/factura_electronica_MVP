@@ -219,7 +219,7 @@
                                         <div class="form-group row">
                                             <label for="receptorndocumento" class="col-sm-3 col-form-label cont-label">N° Documento</label>
                                             <div class="col-sm-9">
-                                                <input name="ndocumento" id="receptorndocumento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                                <input name="receptorndocumento" id="receptorndocumento" type="text" class="form-control form-control-lg" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
                                         </div>
                                         <hr class="mx-n3">

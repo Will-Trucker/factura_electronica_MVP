@@ -132,8 +132,8 @@ function traerEmisor() {
 function ponerdatosEmisor(data) {
     document.getElementById('emisorNombre').value = data.Nombre || '';
     document.getElementById('nombreComercial').value = data.NombreComercial || '';
-    document.getElementById('emisornrc').value = data.NIT || '';
-    document.getElementById('emisornit').value = data.NRC || '';
+    document.getElementById('emisornrc').value = data.NRC || '';
+    document.getElementById('emisornit').value = data.NIT || '';
     document.getElementById('actividademisor').value = data.idActividadEconomica;
     document.getElementById('complemento').value = data.Complemento || '';
     document.getElementById('emisordepartamento').value = data.departamento ? data.departamento.codigoDepartamento : '';

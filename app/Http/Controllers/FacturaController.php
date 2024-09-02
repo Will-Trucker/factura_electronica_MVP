@@ -412,7 +412,7 @@ class FacturaController extends Controller
                     "version" => 1,
                     "ambiente" => "00",
                     "tipoDte" => "01",//ir cambiando el numero de Control desde 400
-                    "numeroControl" => "DTE-01-0001ONEC-000000000000925",//.$this->obtenerNumeroDeControl('FE'),
+                    "numeroControl" => "DTE-01-0001ONEC-000000000000927",//.$this->obtenerNumeroDeControl('FE'),
                     "codigoGeneracion" => $this->generaruuid(),
                     "tipoModelo" => 1,
                     "tipoOperacion" => 1,
@@ -425,8 +425,8 @@ class FacturaController extends Controller
                 "documentoRelacionado" => null,
                 "emisor" => [
                     //"nit"=> "$request->emisornit",
-                    "nit" => "06142803901121",
-                    "nrc" => "2398810",
+                    "nit" => strval($request->emisornit),//"06142803901121",
+                    "nrc" => $request->emisornrc,//"2398810",
                     "nombre" => $request->emisornombre,
                     "codActividad" => $request->actividademisor,
                     "descActividad" => "Publicidad",
@@ -447,7 +447,7 @@ class FacturaController extends Controller
                 ],
                 "receptor" => [
                     "tipoDocumento" => "36",
-                    "numDocumento" => "06141101171056",//$request->receptorndocumento,
+                    "numDocumento" => $request->receptorndocumento,//"06141101171056",
                     "nrc" => null,
                     "nombre" => $request->receptornombre,
                     "codActividad" => null,
