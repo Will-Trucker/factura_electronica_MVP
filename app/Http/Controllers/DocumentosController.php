@@ -27,11 +27,50 @@ class DocumentosController extends Controller
         return view('documentos', compact('documentos'));
     }
 
+    // function obtenerPdf($codGeneracion) {
+    //     return $this->otropdf($codGeneracion);
+    // }
+
+    // function otropdf($codGeneracion) {
+    //     $authToken = obtenerUltimoToken();
+    //     $url = "https://admin.factura.gob.sv/test/generardte/generar-pdf/descargar/base64/codigo-generacion/1/{$codGeneracion}";
+
+    //     try {
+    //         $response = Http::withHeaders([
+    //             'Authorization' => $authToken,
+    //         ])->post($url);
+
+    //         if ($response->status() == 200) {
+    //             $pdf = $response->body();
+    //             if ($pdf) {
+    //                 // Guardar el PDF en el almacenamiento
+    //                 $pdfPath = 'contingencia/' . $codGeneracion . '.pdf';
+    //                 Storage::put($pdfPath, base64_decode($pdf));
+
+    //                 // Puedes guardar la ruta del PDF en la base de datos si es necesario
+
+    //                 $headers = [
+    //                     'Content-Type' => 'application/pdf',
+    //                     'Content-Disposition' => 'attachment; filename=' . $codGeneracion . '.pdf',
+    //                 ];
+
+    //                 return Response::make(base64_decode($pdf), 200, $headers);
+    //             } else {
+    //                 return "ERROR";
+    //             }
+    //         }
+    //     } catch (\Exception $e) {
+    //         echo ("Error interno del servidor: {$e->getMessage()}");
+    //     }
+
+    //     return false;
+    // }
+
     function obtenerPdf($codGeneracion) {
-        return $this->otropdf($codGeneracion);
+        return $this->verPdfEnLinea($codGeneracion);
     }
 
-    function otropdf($codGeneracion) {
+    function verPdfEnLinea($codGeneracion) {
         $authToken = obtenerUltimoToken();
         $url = "https://admin.factura.gob.sv/test/generardte/generar-pdf/descargar/base64/codigo-generacion/1/{$codGeneracion}";
 
@@ -43,17 +82,11 @@ class DocumentosController extends Controller
             if ($response->status() == 200) {
                 $pdf = $response->body();
                 if ($pdf) {
-                    // Guardar el PDF en el almacenamiento
-                    $pdfPath = 'contingencia/' . $codGeneracion . '.pdf';
-                    Storage::put($pdfPath, base64_decode($pdf));
-
-                    // Puedes guardar la ruta del PDF en la base de datos si es necesario
-
                     $headers = [
                         'Content-Type' => 'application/pdf',
-                        'Content-Disposition' => 'attachment; filename=' . $codGeneracion . '.pdf',
                     ];
 
+                    // En lugar de "attachment", usa inline para mostrar el PDF en el navegador
                     return Response::make(base64_decode($pdf), 200, $headers);
                 } else {
                     return "ERROR";

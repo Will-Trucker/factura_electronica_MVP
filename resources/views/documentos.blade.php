@@ -72,9 +72,10 @@
                         <th>{{$documento->selloRecibido}}</th>
                         <th>
                             <div class="row">
-                                <a class="btn btn-secondary mb-2" href="{{ route('obtenerpdf', ['codGeneracion' => $documento->codigoGeneracion]) }}">Obtener PDF</a>
-            <a class="btn btn-secondary mb-2" href="{{ route('obtenerJsonGuardado', ['codGeneracion' => $documento->codigoGeneracion]) }}">Obtener JSON</a>
-            {{-- <a class="btn btn-secondary" href="{{ route('mandarComprobantes', ['codGeneracion' => $documento->codigoGeneracion]) }}">Mandar correo</a> --}}
+                                <a class="btn btn-secondary mb-2" href="{{ route('obtenerpdf', ['codGeneracion' => $documento->codigoGeneracion]) }}" target="_self">Ver PDF</a>
+                                {{-- <a class="btn btn-secondary mb-2" href="{{ route('obtenerpdf', ['codGeneracion' => $documento->codigoGeneracion]) }}">Obtener PDF</a> --}}
+                                <a class="btn btn-secondary mb-2" href="{{ route('obtenerJsonGuardado', ['codGeneracion' => $documento->codigoGeneracion]) }}">Obtener JSON</a>
+                                {{-- <a class="btn btn-secondary" href="{{ route('mandarComprobantes', ['codGeneracion' => $documento->codigoGeneracion]) }}">Mandar correo</a> --}}
 
                             </div>
                         </th>

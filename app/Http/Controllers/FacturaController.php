@@ -124,9 +124,9 @@ class FacturaController extends Controller
 
     public function guardarFactura(Request $request)
     {
-        // if($request->tipoDeDocumento == "CCFE"){
-        //     return $this->creditoFiscal($request);
-        // }
+        if($request->tipoDeDocumento == "CCFE"){
+             return $this->creditoFiscal($request);
+        }
 
         if ($request->tipoDeDocumento == "FE") {
             return $this->facturaElectronica($request);
@@ -394,7 +394,7 @@ class FacturaController extends Controller
             "montoTotalOperacion" => $totalgravado,
             "totalNoGravado" => 0,
             "totalPagar" => $totalgravado,
-            "totalLetras" => $formatter->toMoney($totalgravado, 2, "dolares", "centavos"),
+            "totalLetras" => $formatter->toMoney($totalgravado, 2, "Dolares Américanos", "Centavos"),
             "totalIva" => round($totaliva, 2),
             "saldoFavor" => 0,
             "condicionOperacion" => 1,
@@ -508,6 +508,146 @@ class FacturaController extends Controller
         //echo $docJSON;
         //echo "----------------------------------------------------------------------------------------------";
         return $this->firmarDocumento($docJSON, $request->tipoDeDocumento);
+    }
+
+    public function creditoFiscal(Request $request){
+        $formatter = new NumeroALetras();
+        $detallesfactura = json_decode($request->detallesfactura);
+        $cuerpodocumento = [];
+        $i = 0;
+        $totalnosujeto = 0;
+        $totalexcento = 0;
+        $totalgravado = 0;
+        $totalDespuesto = 0;
+        $totaliva = 0;
+        foreach($detallesfactura as $detalle){
+            $i++;
+            $totalnosujeto += $detalle->ventasnosujetas;
+            $totalexcento += $detalle->ventasexcentas;
+            $totalgravado += $detalle->ventasafectas;
+            $dato = [
+                "numItem"=> $i,
+                "tipoItem"=> 2,
+                "numeroDocumento"=> null,
+                "codigo"=> null,
+                "codTributo"=> null,
+                "descripcion"=> $detalle->descripcion,
+                "cantidad"=> floatval($detalle->cantidad),
+                "uniMedida"=> 59,
+                "precioUni"=> floatval($detalle->preciounitario),
+                "montoDescu"=> 0,
+                "ventaNoSuj"=> floatval($detalle->ventasnosujetas),
+                "ventaExenta"=> floatval($detalle->ventasexcentas),
+                "ventaGravada"=> floatval($detalle->ventasafectas),
+                "tributos"=> [
+                  "20"
+                ],
+                "psv"=> 0,
+                "noGravado"=> 0,
+            ];
+            $totaliva += round($detalle->ventasafectas/1.13*0.13, 2);
+            array_push($cuerpodocumento, $dato);
+        }
+        //echo "TOTAL DEL IVA $totaliva ----";
+        $totalConIVA = round($totalgravado*1.13,2);
+        $resumen = [
+            "totalNoSuj"=> $totalnosujeto,
+            "totalExenta"=> $totalexcento,
+            "totalGravada"=> $totalgravado,
+            "subTotalVentas"=> $totalgravado,
+            "descuNoSuj"=> 0,
+            "descuExenta"=> 0,
+            "descuGravada"=> 0,
+            "porcentajeDescuento"=> 0,
+            "totalDescu"=> 0,
+            "tributos"=> [[
+              "codigo"=> "20",
+              "descripcion"=> "Impuesto al Valor Agregado 13%",
+              "valor"=> round($totalgravado*0.13,2) // Multiplicar el subtotal ventas por 0.13 (13% iva)
+            ]
+            ],
+            "subTotal"=> $totalgravado,
+            "ivaPerci1"=> 0,
+            "ivaRete1"=> 0,
+            "reteRenta"=> 0,
+            "montoTotalOperacion"=> $totalConIVA,
+            "totalNoGravado"=> 0,
+            "totalPagar"=> $totalConIVA,
+            "totalLetras"=> $formatter->toMoney($totalConIVA, 2, "Dolares", "Centavos Americanos"),
+            "saldoFavor"=> 0,
+            "condicionOperacion"=> 1,
+            "pagos"=> null,
+            "numPagoElectronico"=> null
+        ];
+          $nitvendedorx='06142803901121';
+          $passPri = 'Rr2Ll3rm0@$ñ@';
+          $documento = [
+                  "nit"=>$nitvendedorx,
+                  "activo"=>true,
+                  "passwordPri"=> $passPri,
+                  "dteJson"=>[
+                    "identificacion" => [
+                      "version" =>3,
+                      "ambiente" =>"00",
+                      "tipoDte" => "03",
+                      "numeroControl" =>"DTE-03-0001ONEC-000000000000929",//.$this->obtenerNumeroDeControl('CCFE'),
+                      "codigoGeneracion" =>$this->generaruuid(),
+                      "tipoModelo" =>1,
+                      "tipoOperacion" =>1,
+                      "tipoContingencia" =>null,
+                      "motivoContin" => null,
+                      "fecEmi" => date('Y-m-d'),
+                      "horEmi" => date('h:i:s'),
+                      "tipoMoneda" => "USD"
+                  ],
+                "documentoRelacionado"=>null,
+                "emisor" => [
+                    "nit" => strval($request->emisornit),//"06141101171056",
+                    "nrc" => $request->emisornrc, //"2687740",
+                    "nombre" => $request->emisornombre, //"Fundacion Emprende Hoy",
+                    "codActividad" => $request->actividademisor,//"73100",
+                    "descActividad" => "Publicidad",
+                    "nombreComercial" => $request->nombreComercial,
+                    "tipoEstablecimiento" => "01",
+                    "direccion" => [
+                            "departamento" => $request->emisordepartamento, //"06",
+                            "municipio" => $request->emisormunicipio, //"14",
+                            "complemento" => $request->complemento//"San Salvador"
+                    ],
+                    "telefono" => $request->emisortelefono,//"2281-8000",
+                    "correo" => $request->emisorcorreo,//"mentesbrillantesagencia@gmail.com",
+                    "codEstableMH" => "0000",
+                    "codEstable" => "0000",
+                    "codPuntoVentaMH" => "0000",
+                    "codPuntoVenta" => "0000"
+                  ],
+                  "receptor" => [
+                    "nit" => $request->receptorndocumento,//"06142803901121",
+                    "nrc" => $request->receptornrc,//"2398810",
+                    "nombre" => $request->receptornombre,//"Fundacion Emprende Hoy",
+                    "codActividad" => "70200", //"73100",
+                    "descActividad" => "Actividades de Consultoria",//"",
+                    "nombreComercial" => null,
+                    "direccion" => [
+                            "departamento" => $request->receptordepartamento,//"06",
+                            "municipio" => $request->receptormunicipio, //"14",
+                            "complemento" => $request->receptorcomplemento//"San Salvador"
+                    ],
+                    "telefono" =>$request->receptortelefono, //"2281-8000",
+                    "correo" => $request->receptorcorreo,
+                  ],
+                    "otrosDocumentos"=>null,
+                    "ventaTercero" => null,
+                    "cuerpoDocumento"=> $cuerpodocumento,
+                    "resumen"=> $resumen,
+                    "extension" => null,
+                        "apendice"=> null
+                  ]
+          ];
+          $docJSON = json_encode($documento);
+          //echo $docJSON;
+          return $this->firmarDocumento($docJSON, $request->tipoDeDocumento);
+
     }
 
 
