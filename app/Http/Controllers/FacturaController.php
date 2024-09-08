@@ -590,7 +590,7 @@ class FacturaController extends Controller
                       "version" =>3,
                       "ambiente" =>"00",
                       "tipoDte" => "03",
-                      "numeroControl" =>"DTE-03-0001ONEC-000000000000929",//.$this->obtenerNumeroDeControl('CCFE'),
+                      "numeroControl" =>"DTE-03-0001ONEC-000000000000930",//.$this->obtenerNumeroDeControl('CCFE'),
                       "codigoGeneracion" =>$this->generaruuid(),
                       "tipoModelo" =>1,
                       "tipoOperacion" =>1,
