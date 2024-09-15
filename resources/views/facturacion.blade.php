@@ -40,27 +40,21 @@
                             <div class="col">
                                 <div class="card-body">
                                     <div class="form-group row">
-                                        <label for="receptor-tipodocumento" class="col-sm-3 col-form-label cont-label">Tipo
-                                            de Documento</label>
+                                        <label for="receptor-tipodocumento" class="col-sm-3 col-form-label cont-label">Documento Tributario Eléctronico</label>
                                         <div class="col-sm-9">
                                             <select class="form-control form-control-lg" name="tipoDeDocumento"
                                                 id="tipoDocumento" onchange="cambiarTipoDoc()">
-                                                <option value="FE" class="bg-activo" selected>Factura Electrónica
-                                                </option>
-                                                <option value="CCFE" class="bg-activo">Comprobante de Crédito Fiscal.
-                                                    Electrónico.</option>
-                                                <option value="NRE">Nota de Remisión Electrónico.</option>
-                                                <option value="NCE">Nota de Crédito Electrónico.vv</option>
-                                                <option value="NDE">Nota de Débito Electrónico.</option>
-                                                <option value="CRE">Comprobante de Retención Electrónico.</option>
-                                                <option value="CLE">Comprobante de Liquidación Electrónico.</option>
-                                                <option value="DCLE">Documento Contable de Liquidación Electrónico.
-                                                </option>
-                                                <option value="FEXE" class="bg-activo">Factura de Exportación Electrónica
-                                                </option>
-                                                <option value="FSEE" class="bg-activo">Factura de Sujeto Excluido
-                                                    Electrónica.</option>
-                                                <option value="CDE">Comprobante de Donación Electrónico.</option>
+                                                <option value="FE" class="bg-activo" selected>Factura</option>
+                                                <option value="CCFE" class="bg-activo">Comprobante de Crédito Fiscal</option>
+                                                <option value="NRE">Nota de Remisión</option>
+                                                <option value="NCE">Nota de Crédito</option>
+                                                <option value="NDE">Nota de Débito</option>
+                                                <option value="CRE">Comprobante de Retención</option>
+                                                <option value="CLE">Comprobante de Liquidación</option>
+                                                <option value="DCLE">Documento Contable de Liquidación</option>
+                                                <option value="FEXE" class="bg-activo">Factura de Exportación</option>
+                                                <option value="FSEE" class="bg-activo">Factura de Sujeto Excluido</option>
+                                                <option value="CDE">Comprobante de Donación</option>
                                             </select>
                                         </div>
                                     </div>
