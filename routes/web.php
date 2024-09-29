@@ -37,10 +37,16 @@ Route::post('/buscareceptor/{id}', [App\Http\Controllers\ReceptorController::cla
 Route::get('/documentos',[App\Http\Controllers\documentosController::class, 'index'])->name('documentos');
 Route::get('/filtrarDocs',[App\Http\Controllers\documentosController::class, 'filtrarDoc'])->name('filtrarDocs');
 Route::get('/obtenerpdf/{codGeneracion}',[App\Http\Controllers\documentosController::class, 'obtenerPdf'])->name('obtenerpdf');
+Route::get('/verJson/{codGeneracion}', [App\Http\Controllers\DocumentosController::class, 'verJson'])->name('verJson');
+
+
 
 Route::get('/obtenerJsonGuardado/{codGeneracion}',[App\Http\Controllers\documentosController::class, 'obtenerJsonGuardado'])->name('obtenerJsonGuardado');
 Route::get('/obtenerJsonGuardadoC/{sello}',[App\Http\Controllers\documentosController::class, 'obtenerJsonGuardadoC'])->name('obtenerJsonGuardadoC');
 Route::get('/obtenerdoc',[App\Http\Controllers\documentosController::class, 'obtenerDocumento'])->name('obtenerdoc');
+
+// Mandar el email
+Route::get('/mandarComprobantes/{codGeneracion}', [App\Http\Controllers\DocumentosController::class, 'enviarCorreoConDocumentos'])->name('mandarComprobantes');
 
 
 

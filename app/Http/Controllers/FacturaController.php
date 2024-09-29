@@ -424,7 +424,7 @@ class FacturaController extends Controller
                     "version" => 1,
                     "ambiente" => "00",
                     "tipoDte" => "01",//ir cambiando el numero de Control desde 400
-                    "numeroControl" => "DTE-01-0001ONEC-000000000000927",//.$this->obtenerNumeroDeControl('FE'),
+                    "numeroControl" => "DTE-01-0001ONEC-000000000000943",//.$this->obtenerNumeroDeControl('FE'),
                     "codigoGeneracion" => $this->generaruuid(),
                     "tipoModelo" => 1,
                     "tipoOperacion" => 1,
@@ -786,63 +786,104 @@ class FacturaController extends Controller
     }
 
     public function comprobanteDonacionElectronica(Request $request) {
-        // Datos del vendedor
+        // Crear una instancia del conversor de números a letras
+        $formatter = new NumeroALetras();
+
+        // Obtener los detalles de la donación del request
+        $detallesfactura = json_decode($request->detallesfactura);
+        $cuerpodocumento = [];
+        $i = 0;
+        $totalDonacion = 0;
+
+        // Procesar cada detalle de la donación
+        foreach ($detallesfactura as $detalle) {
+            $i++;
+            $totalDonacion += $detalle->ventasafectas;  // Sumar los valores de los artículos donados
+
+            $dato = [
+                "numItem" => $i,
+                "tipoDonacion" => 1,  // Tipo de donación, puede cambiar según sea necesario
+                "cantidad" => floatval($detalle->cantidad),
+                "codigo" => null,  // Aquí puedes añadir un código de producto si es necesario
+                "uniMedida" => 99,  // Unidad de medida, puede variar
+                "descripcion" => $detalle->descripcion,
+                "depreciacion" => 0,
+                "valorUni" => floatval($detalle->preciounitario),
+                "valor" => floatval($detalle->ventasafectas)  // Valor total del artículo
+            ];
+
+            array_push($cuerpodocumento, $dato);  // Añadir el detalle al cuerpo del documento
+        }
+
+        // Crear el resumen de la donación
+        $resumen = [
+            "valorTotal" => $totalDonacion,
+            "totalLetras" => $formatter->toMoney($totalDonacion, 2, "Dolares Americanos", "Centavos"),
+            "pagos" => [
+                [
+                    "codigo" => "02",  // Código del método de pago
+                    "montoPago" => $totalDonacion,
+                    "referencia" => "Pago en especias"
+                ]
+            ]
+        ];
+
+        // Datos del vendedor (estáticos en este caso)
         $nitvendedorx = '06142803901121';
         $passPri = 'Rr2Ll3rm0@$ñ@';
 
-        // Documento que se genera para la donación
+        // Estructura del documento de donación
         $documento = [
-            "nit" => $nitvendedorx,
-            "activo" => true,
-            "passwordPri" => $passPri,
-
-            "dteJson" => [
+            'nit' => $nitvendedorx,
+            'activo' => true,
+            'passwordPri' => $passPri,
+            'dteJson' => [
                 "identificacion" => [
                     "version" => 1,
-                    "ambiente" => "00", // Ambiente puede cambiar según producción o pruebas
-                    "tipoDte" => "15", // Tipo de DTE específico
-                    "numeroControl" => "DTE-15-00010001-000000000000937",
+                    "ambiente" => "00",
+                    "tipoDte" => "15",  // Tipo de DTE para donación
+                    "numeroControl" => "DTE-15-00010001-000000000000942",  // Número de control, puede ser dinámico
                     "codigoGeneracion" => $this->generaruuid(),
-                   "tipoModelo"=> 1,
-                  "tipoOperacion"=> 1,
-                  "fecEmi" => date('Y-m-d'),
-                  "horEmi" => date('h:i:s'),
-                  "tipoMoneda"=> "USD"
+                    "tipoModelo" => 1,
+                    "tipoOperacion" => 1,
+                    "fecEmi" => date('Y-m-d'),
+                    "horEmi" => date('h:i:s'),
+                    "tipoMoneda" => "USD"
                 ],
                 "donante" => [
-                    "tipoDocumento"=> "36",
-                    "numDocumento"=> "06141101171056",
-                    "nrc"=> "2687740",
-                    "nombre"=>"FUNDACION EMPRENDE HOY",
-                    "codActividad"=>"70200",
-                    "descActividad"=>null,
-                    "direccion"=>null,
-                    "telefono"=>"77958125",
-                    "correo"=>"mineromemo429@gmail.com",
-                    "codDomiciliado"=>2,
-                    "codPais"=>"9300"
+                    "tipoDocumento" => "36",
+                    "numDocumento" => strval($request->emisornit),
+                    "nrc" => $request->emisornrc,
+                    "nombre" => $request->emisornombre,
+                    "codActividad" => $request->actividademisor,
+                    "descActividad" => null,
+                    "direccion" => null,
+                    "telefono" => $request->emisortelefono,
+                    "correo" => $request->emisorcorreo,
+                    "codDomiciliado" => 2,
+                    "codPais" => "9300"
                 ],
                 "donatario" => [
-                    "tipoDocumento"=> "36",
-                    "numDocumento"=>"06142803901121",
-                    "nrc"=>"2398810",
-                    "nombre"=>"JUAN MANUEL REYES",
-                    "codActividad"=>"73100",
-                    "descActividad"=>"publicidad",
-                    "nombreComercial"=> null,
-                    "tipoEstablecimiento"=> "01",
-                    "direccion"=> [
-                        "departamento"=> "06",
-                        "municipio"=> "14",
-                        "complemento"=> "San Salvador"
+                    "tipoDocumento" => "36",
+                    "numDocumento" => $request->receptorndocumento,
+                    "nrc" => $request->receptornrc,
+                    "nombre" => $request->receptornombre,
+                    "codActividad" => "73100",
+                    "descActividad" => "Publicidad",
+                    "direccion" => [
+                        "departamento" => $request->receptordepartamento,
+                        "municipio" => $request->receptormunicipio,
+                        "complemento" => $request->receptorcomplemento
                     ],
-                    "telefono"=> "22687506",
-                    "correo"=> "mentesbrillantesagencia@gmail.com",
-                    "codEstableMH"=> null,
-                    "codEstable"=> null,
-                    "codPuntoVentaMH"=> null,
-                    "codPuntoVenta"=> null
-                    ],
+                    "telefono" => $request->receptortelefono,
+                    "correo" => $request->receptorcorreo,
+                    "nombreComercial" => null,
+                    "tipoEstablecimiento" => "01",
+                    "codEstableMH" => null,
+                    "codEstable" => null,
+                    "codPuntoVentaMH" => null,
+                    "codPuntoVenta" => null
+                ],
                 "otrosDocumentos" => [
                     [
                         "codDocAsociado" => 1,
@@ -850,44 +891,18 @@ class FacturaController extends Controller
                         "detalleDocumento" => "Donación de tres computadoras"
                     ]
                 ],
-                "cuerpoDocumento" => [
-                    [
-                        "numItem" => 1,
-                        "tipoDonacion" => 1,
-                        "cantidad" => 100.0,
-                        "codigo" => null,
-                        "uniMedida" => 99,
-                        "descripcion" => "Libros de texto",
-                        "depreciacion" => 0,
-                        "valorUni" => 10.0,
-                        "valor" => 1000.0
-                    ]
-                ],
-                "resumen" => [
-                    "valorTotal" => 1000.00,
-                    "totalLetras" => "mil dólares",
-                    "pagos" => [
-                        [
-                            "codigo" => "02", // Código del método de pago
-                            "montoPago" => 1000.00,
-                            "referencia" => "Pago en especias"
-                        ]
-                    ]
-                ],
+                "cuerpoDocumento" => $cuerpodocumento,
+                "resumen" => $resumen,
                 "apendice" => null
             ]
         ];
 
-        // Convertir a JSON el documento
+        // Convertir el documento a JSON
         $docJSON = json_encode($documento);
 
-        // Si quieres retornar el documento firmado, descomenta la siguiente línea
+        // Firmar y devolver el documento
         return $this->firmarDocumento($docJSON, $request->tipoDeDocumento);
-
-        // Si quieres actualizar el número de control, descomenta la siguiente línea
-        // return $this->actualizarNumeroControl('FSEE');
     }
-
 
 
 
