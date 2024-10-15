@@ -16,13 +16,13 @@ class Receptor extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'Nombre', 
-        'NumDocumento',  
-        'NRC', 
-        'idDepartamento', 
-        'idMunicipio', 
-        'Complemento', 
-        'Telefono', 
+        'Nombre',
+        'NumDocumento',
+        'NRC',
+        'idDepartamento',
+        'idMunicipio',
+        'Complemento',
+        'Telefono',
         'Correo'
     ];
 
@@ -33,6 +33,6 @@ class Receptor extends Model
 
  public function municipio()
     {
-        return $this->belongsTo(Municipio::class, 'idMunicipio');
+        return $this->belongsTo(Municipio::class, 'idMunicipio','codMunicipio');
     }
 }

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 
 class FacturaController extends Controller
 {
@@ -413,8 +414,8 @@ class FacturaController extends Controller
             "pagos" => null,
             "numPagoElectronico" => null
         ];
-        $nitvendedorx = '06142803901121';
-        $passPri = 'Rr2Ll3rm0@$ñ@';
+        $nitvendedorx = env('ENCRIPTED_NIT');//'06142803901121';
+        $passPri = env('ENCRIPTED_PSW_PRI');//'Rr2Ll3rm0@$ñ@';
         $documento = [
             'nit' => $nitvendedorx,
             'activo' => true,
@@ -424,7 +425,7 @@ class FacturaController extends Controller
                     "version" => 1,
                     "ambiente" => "00",
                     "tipoDte" => "01",//ir cambiando el numero de Control desde 400
-                    "numeroControl" => "DTE-01-0001ONEC-000000000000943",//.$this->obtenerNumeroDeControl('FE'),
+                    "numeroControl" => "DTE-01-0001ONEC-000000000000965",//.$this->obtenerNumeroDeControl('FE'),
                     "codigoGeneracion" => $this->generaruuid(),
                     "tipoModelo" => 1,
                     "tipoOperacion" => 1,
@@ -593,8 +594,8 @@ class FacturaController extends Controller
             "pagos" => null,
             "numPagoElectronico" => null
         ];
-        $nitvendedorx = '06142803901121';
-        $passPri = 'Rr2Ll3rm0@$ñ@';
+        $nitvendedorx = env('ENCRIPTED_NIT');//'06142803901121';
+        $passPri = env('ENCRIPTED_PSW_PRI');//'Rr2Ll3rm0@$ñ@';
         $documento = [
             "nit" => $nitvendedorx,
             "activo" => true,
@@ -715,8 +716,8 @@ class FacturaController extends Controller
 
             "pagos" => null,
         ];
-        $nitvendedorx = '06142803901121';
-        $passPri = 'Rr2Ll3rm0@$ñ@';
+        $nitvendedorx = env('ENCRIPTED_NIT');//'06142803901121';
+        $passPri = env('ENCRIPTED_PSW_PRI');//'Rr2Ll3rm0@$ñ@';
         $documento = [
 
             "nit" => $nitvendedorx,
@@ -829,8 +830,8 @@ class FacturaController extends Controller
         ];
 
         // Datos del vendedor (estáticos en este caso)
-        $nitvendedorx = '06142803901121';
-        $passPri = 'Rr2Ll3rm0@$ñ@';
+        $nitvendedorx = env('ENCRIPTED_NIT');//'06142803901121';
+        $passPri = env('ENCRIPTED_PSW_PRI');//'Rr2Ll3rm0@$ñ@';
 
         // Estructura del documento de donación
         $documento = [

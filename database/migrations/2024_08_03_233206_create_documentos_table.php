@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('documentos', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('fecha');
+            $table->timestamp('fhProcesamiento');
             $table->string('codigoGeneracion');
             $table->string('selloRecibido');
-            $table->string('observaciones');
+            $table->json('esquema');
+            $table->string('tipoDte');
             $table->timestamps();
         });
     }

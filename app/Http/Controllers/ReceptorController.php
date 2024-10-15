@@ -35,7 +35,7 @@ class ReceptorController extends Controller
             'nombre.required' => 'El Nombre es obligatorio.',
             'nombre.alpa' => 'El Nombre solo puede contener letras',
             'ndocumento.required' => 'La Actvidad es obligatorio.',
-            'ndocumento.numero' => 'La Actividad solo puede contener numeros',
+            'ndocumento.numeric' => 'La Actividad solo puede contener numeros',
             'nrc.required' => 'El NRC es obligatorio',
             'nrc.numeric' => 'El NRC solo puede contener números',
             'departamento.required' => 'El departamento es obligatorio.',
@@ -113,18 +113,18 @@ class ReceptorController extends Controller
     public function eliminar_receptor(Request $request)
     {
         $idreceptor = $request->input('idreceptor');
-    
+
         $receptores = Receptor::find($idreceptor);
-    
+
         if (!$receptores) {
             return redirect()->back()->with('error', 'Receptor No Encontrado');
         }
-    
+
         $receptores->delete();
-    
+
         return redirect()->back()->with('success', 'Receptor Eliminado Exitosamente');
     }
-    
+
     public function obtenerReceptor($id)
 {
     $receptor = Receptor::with('departamento', 'municipio')->find($id);
@@ -135,7 +135,7 @@ class ReceptorController extends Controller
             'NumDocumento' => $receptor->NumDocumento,
             'NRC' => $receptor->NRC,
             'Departamento' => $receptor->departamento->nombreDepartamento,
-            'Municipio' => $receptor->municipio->nombreMunicipio,
+            'idMunicipio' => $receptor->municipio->nombreMunicipio,
             'Complemento' => $receptor->Complemento,
         ];
         return response()->json($data);

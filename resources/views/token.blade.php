@@ -7,7 +7,7 @@
             <div class="alert alert-success alert-token-successful">
                 Token Activo
             </div>
-         @else 
+         @else
             <div class="alert alert-danger alert-token">
                 No tiene un Token Activo
             </div>
@@ -50,7 +50,7 @@
         <form action="" class="form-api">
             <div class="form-group forms-cont">
                 <label for="lastToken" class="title-apike">API KEY</label>
-                <textarea class="form-control text-area1" aria-label="With textarea" id="apikey" cols="10" rows="5" style="outline: 0;">   {{ $ultimo['token'] ?? 'Usted no tiene Tokens Activados' }}</textarea> 
+                <textarea class="form-control text-area1" aria-label="With textarea" id="apikey" cols="10" rows="5" style="outline: 0;">   {{ $ultimo['token'] ?? 'Usted no tiene Tokens Activados' }}</textarea>
             </div>
         </form>
         <div class="table-wrappers">
@@ -64,13 +64,13 @@
                 <tbody>
                     @forelse ($tokens as $registro)
                         <tr>
-                            <th>{{ $registro['fechaGeneracion'] }}</th> 
+                            <th>{{ $registro['fechaGeneracion'] }}</th>
                             <th>
-                                <textarea name="" id="" cols="100" rows="4">{{ $registro['token'] }}</textarea> 
+                                <textarea name="" id="" cols="100" rows="4">{{ $registro['token'] }}</textarea>
                             </th>
                         </tr>
                     @empty
-                        <th>Datos inexistentes</th>
+                        <th colspan="2">Datos inexistentes</th>
                     @endforelse
                 </tbody>
             </table>

@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('documentos_rechazados', function (Blueprint $table) {
+        Schema::create('t_giro_comercial', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('fecha');
-            $table->string('codigoGeneracion');
-            $table->string('selloRecibido');
-            $table->json('observaciones');
-            $table->string('descripcionMsg');
+            $table->string('codigoGiro');
+            $table->string('nombreGiro');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('documentos_rechazados');
+        //
     }
 };

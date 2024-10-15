@@ -60,6 +60,7 @@
                     <th>Fecha</th>
                     <th>Código de Generación</th>
                     <th>Sello de Recibido</th>
+                    <th>TipoDTE</th>
                     <th>Operaciones</th>
                 </tr>
                 </thead>
@@ -70,6 +71,7 @@
                         <th>{{$documento->fhProcesamiento}}</th>
                         <th>{{$documento->codigoGeneracion}}</th>
                         <th>{{$documento->selloRecibido}}</th>
+                        <th>{{$documento->tipoDte}}</th>
                         <th>
                             <div class="row">
                                 <a class="btn btn-secondary mb-2" href="{{ route('obtenerpdf', ['codGeneracion' => $documento->codigoGeneracion]) }}" target="_self">Ver PDF</a>

@@ -24,7 +24,7 @@ class DocumentosController extends Controller
     {
         // Filtrar documentos por 'tipoDTE' en la tabla 'documentos_procesados'
         $documentos = DB::table('documentos_procesados')
-            ->where('tipoDTE', $request->tipoDeDocumento)
+            ->where('tipoDte', $request->tipoDte)
             ->orderBy('id', 'desc')
             ->get();
 
@@ -176,47 +176,110 @@ class DocumentosController extends Controller
 
             // Verificar si el JSON es válido
             if (json_last_error() === JSON_ERROR_NONE) {
-                // Obtener el correo del receptor desde el JSON
-                if (isset($jsonObject->receptor->correo)) {
-                    $receptorEmail = $jsonObject->receptor->correo;
+                // Verificar si existe el tipo de DTE
+                if (isset($jsonObject->identificacion->tipoDte)) {
+                    $tipoDte = $jsonObject->identificacion->tipoDte;
 
-                    // Ruta para obtener el PDF de forma remota
-                    $authToken = obtenerUltimoToken();
-                    $url = "https://admin.factura.gob.sv/test/generardte/generar-pdf/descargar/base64/codigo-generacion/1/{$codGeneracion}";
+                    // Verificar el tipo de DTE (15 es para Donaciones, otros para Factura, Crédito Fiscal, etc.)
+                    if ($tipoDte == '15') {
+                        // Obtener el correo del donatario para donaciones
+                        if (isset($jsonObject->donante->correo)) {
+                            $receptorEmail = $jsonObject->donante->correo;
 
-                    try {
-                        $response = Http::withHeaders([
-                            'Authorization' => $authToken,
-                        ])->post($url);
+                            // Ruta para obtener el PDF de forma remota
+                            $authToken = obtenerUltimoToken();
+                            $url = "https://admin.factura.gob.sv/test/generardte/generar-pdf/descargar/base64/codigo-generacion/1/{$codGeneracion}";
 
-                        if ($response->status() == 200) {
-                            $pdfBase64 = $response->body();
-                            if ($pdfBase64) {
-                                // Decodificar el PDF
-                                $pdfDecoded = base64_decode($pdfBase64);
+                            try {
+                                $response = Http::withHeaders([
+                                    'Authorization' => $authToken,
+                                ])->post($url);
 
-                                // Crear un archivo temporal para adjuntar al correo
-                                $pdfTempPath = storage_path('app/temp/') . $codGeneracion . '.pdf';
-                                Storage::put('temp/' . $codGeneracion . '.pdf', $pdfDecoded);
+                                // Agregar registro de la respuesta del servidor
+                                Log::info('Código de estado: ' . $response->status());
+                                Log::info('Cuerpo de la respuesta: ' . $response->body());
 
-                                // Enviar el correo con el JSON y el PDF adjuntos
-                                Mail::to($receptorEmail)->send(new EnvioDTE($jsonData, $pdfTempPath, $receptorEmail));
+                                if ($response->status() == 200) {
+                                    $pdfBase64 = $response->body();
+                                    if ($pdfBase64) {
+                                        // Decodificar el PDF
+                                        $pdfDecoded = base64_decode($pdfBase64);
 
-                                // Eliminar el archivo temporal después de enviar el correo
-                                Storage::delete('temp/' . $codGeneracion . '.pdf');
+                                        // Crear un archivo temporal para adjuntar al correo
+                                        $pdfTempPath = storage_path('app/temp/') . $codGeneracion . '.pdf';
+                                        Storage::put('temp/' . $codGeneracion . '.pdf', $pdfDecoded);
 
-                                return response()->json(['success' => 'Correo enviado con éxito']);
-                            } else {
-                                return response()->json(['error' => 'No se pudo obtener el PDF del servidor remoto'], 500);
+                                        // Enviar el correo con el JSON y el PDF adjuntos
+                                        Mail::to($receptorEmail)->send(new EnvioDTE($jsonData, $pdfTempPath, $receptorEmail));
+
+                                        // Eliminar el archivo temporal después de enviar el correo
+                                        Storage::delete('temp/' . $codGeneracion . '.pdf');
+
+                                        return response()->json(['success' => 'Correo enviado con éxito']);
+                                    } else {
+                                        return response()->json(['error' => 'No se pudo decodificar el PDF del servidor remoto'], 500);
+                                    }
+                                } else {
+                                    return response()->json(['error' => 'Error al obtener el PDF desde el servidor remoto'], 500);
+                                }
+                            } catch (\Exception $e) {
+                                return response()->json(['error' => 'Error interno del servidor: ' . $e->getMessage()], 500);
                             }
                         } else {
-                            return response()->json(['error' => 'Error al obtener el PDF desde el servidor remoto'], 500);
+                            return response()->json(['error' => 'Correo electrónico del receptor no encontrado en el JSON'], 400);
                         }
-                    } catch (\Exception $e) {
-                        return response()->json(['error' => 'Error interno del servidor: ' . $e->getMessage()], 500);
+                    } else if (in_array($tipoDte, ['01', '03','11'])) {
+                        // Lógica para otros tipos de DTE
+                        if (isset($jsonObject->receptor->correo)) {
+                            $receptorEmail = $jsonObject->receptor->correo;
+
+                            // Ruta para obtener el PDF de forma remota
+                            $authToken = obtenerUltimoToken();
+                            $url = "https://admin.factura.gob.sv/test/generardte/generar-pdf/descargar/base64/codigo-generacion/1/{$codGeneracion}";
+
+                            try {
+                                $response = Http::withHeaders([
+                                    'Authorization' => $authToken,
+                                ])->post($url);
+
+                                // Agregar registro de la respuesta del servidor
+                                Log::info('Código de estado: ' . $response->status());
+                                Log::info('Cuerpo de la respuesta: ' . $response->body());
+
+                                if ($response->status() == 200) {
+                                    $pdfBase64 = $response->body();
+                                    if ($pdfBase64) {
+                                        // Decodificar el PDF
+                                        $pdfDecoded = base64_decode($pdfBase64);
+
+                                        // Crear un archivo temporal para adjuntar al correo
+                                        $pdfTempPath = storage_path('app/temp/') . $codGeneracion . '.pdf';
+                                        Storage::put('temp/' . $codGeneracion . '.pdf', $pdfDecoded);
+
+                                        // Enviar el correo con el JSON y el PDF adjuntos
+                                        Mail::to($receptorEmail)->send(new EnvioDTE($jsonData, $pdfTempPath, $receptorEmail));
+
+                                        // Eliminar el archivo temporal después de enviar el correo
+                                        Storage::delete('temp/' . $codGeneracion . '.pdf');
+
+                                        return response()->json(['success' => 'Correo enviado con éxito']);
+                                    } else {
+                                        return response()->json(['error' => 'No se pudo decodificar el PDF del servidor remoto'], 500);
+                                    }
+                                } else {
+                                    return response()->json(['error' => 'Error al obtener el PDF desde el servidor remoto'], 500);
+                                }
+                            } catch (\Exception $e) {
+                                return response()->json(['error' => 'Error interno del servidor: ' . $e->getMessage()], 500);
+                            }
+                        } else {
+                            return response()->json(['error' => 'Correo electrónico del receptor no encontrado en el JSON'], 400);
+                        }
+                    } else {
+                        return response()->json(['error' => 'Tipo de DTE no válido para el envío de correos'], 400);
                     }
                 } else {
-                    return response()->json(['error' => 'Correo electrónico del receptor no encontrado en el JSON'], 400);
+                    return response()->json(['error' => 'El JSON no contiene el campo tipoDte'], 400);
                 }
             } else {
                 return response()->json(['error' => 'El JSON en el esquema no es válido'], 400);
@@ -225,4 +288,5 @@ class DocumentosController extends Controller
             return response()->json(['error' => 'Documento no encontrado'], 404);
         }
     }
+
 }

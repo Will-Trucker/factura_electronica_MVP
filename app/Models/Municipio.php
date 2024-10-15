@@ -16,13 +16,13 @@ class Municipio extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'codMunicipio', 
-        'nombreMunicipio', 
+        'codMunicipio',
+        'nombreMunicipio',
         'idDepartamento'
     ];
 
     public function departamento()
     {
-        return $this->belongsTo(Departamento::class, 'idDepartamento');
+        return $this->belongsTo(Departamento::class, 'idDepartamento',);
     }
 }
