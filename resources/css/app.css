@@ -1,3 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 500 !important;
+  font-style: normal !important;
+}
+
+.nav {
+    background: #1b1f22;
+    font-size: 1rem;
+}
+
+body{
+    background: #37393a;
+}
+
+*{
+    font-family: 'Poppins', sans-serif;
+    margin:0; padding:0;
+    box-sizing: border-box;
+    outline: none; border:none;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: .2s linear;
+}
+
 .contenedor{
     display: flex;
     justify-content: center;
@@ -11,7 +43,7 @@
     width: 300px;
     margin: 10px;
     transition: 300ms;
-    margin: 20px;
+
 }
 
 .personaje, .personaje_2, .personaje_3, .personaje_4, .personaje_5, .personaje_6, .personaje_7{
@@ -21,7 +53,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 10%;
-    background-color: #b6b9ee;
+    background-color: #686767;
     transition: 300ms;
     position: relative;
 }
@@ -29,7 +61,7 @@
 .imagen_personaje{
     height: 190px;
     width: 190px;
-    background-image: url(../../public/imagenes/digital-key.png);
+    background-image: url(../img/digital-key.png);
     background-size: cover;
     margin-bottom: 205px;
 
@@ -38,7 +70,7 @@
 .imagen_personaje_2{
     height: 140px;
     width: 140px;
-    background-image: url(../../public/imagenes/financial-advisor.png);
+    background-image: url(../img/financial-advisor.png);
     background-size: cover;
     margin-bottom: 200px;
 }
@@ -46,7 +78,7 @@
 .imagen_personaje_3{
     height: 140px;
     width: 140px;
-    background-image: url(../../public/imagenes/board-of-directors.png);
+    background-image: url(../img/board-of-directors.png);
     background-size: cover;
     margin-bottom: 200px;
 }
@@ -54,7 +86,7 @@
 .imagen_personaje_4{
     height: 140px;
     width: 140px;
-    background-image: url(../../public/imagenes/invoice.png);
+    background-image: url(../img/invoice.png);
     background-size: cover;
     margin-bottom: 200px;
 }
@@ -62,7 +94,7 @@
 .imagen_personaje_5{
     height: 140px;
     width: 140px;
-    background-image: url(../../public/imagenes/idea.png);
+    background-image: url(../img/idea.png);
     background-size: cover;
     margin-bottom: 200px;
 }
@@ -70,7 +102,7 @@
 .imagen_personaje_6{
     height: 140px;
     width: 140px;
-    background-image: url(../../public/imagenes/invalid-vote.png);
+    background-image: url(../img/invalid-vote.png);
     background-size: cover;
     margin-bottom: 200px;
 }
@@ -78,7 +110,7 @@
 .imagen_personaje_7{
     height: 140px;
     width: 140px;
-    background-image: url(../../public/imagenes/send.png);
+    background-image: url(../img/send.png);
     background-size: cover;
     margin-bottom: 200px;
 }
@@ -95,7 +127,6 @@
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
     transition: 300ms;
-
 }
 
 /* texto y bottun */
@@ -156,11 +187,10 @@
     text-align: center;
 }
 
-
-
 .boton h6{
     text-align: center;
     font-weight: 100;
+    font-size: 20px;
 }
 
 .boton {
@@ -168,19 +198,161 @@
     margin: auto;
     margin-top: 1rem;
     cursor: pointer;
-    background: #7178df;
+    background: #585858;
     -webkit-border-radius: 8;
     -moz-border-radius: 8;
     border-radius: 8px;
-    font-family: Arial;
+
     color: #ffffff;
-    font-size: 20px;
     padding: 15px 10px 10px 10px;
     text-decoration: none;
-  }
+}
 
-  .boton:hover {
-    background: #6569ab;
-
+.boton:hover {
+    background: #d43030;
     text-decoration: none;
-  }
+}
+
+.token-btn{
+    margin-top: 2rem;
+}
+
+.tabla-tok{
+    margin-top: 5rem;
+    color: black;
+    overflow: none;
+}
+
+.tabla-tok thead{
+    font-size: 1.3rem;
+}
+
+.tabla-tok textarea{
+    border: 0.1rem solid black;
+}
+
+.title-em{
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 3rem;
+    color: white;
+}
+
+.tabla-em{
+    overflow: none;
+    margin-top: 5rem;
+    border-radius: 40% !important;
+    margin-left: -2rem;
+    text-transform: none !important;
+}
+
+.tabla-rec{
+    overflow: none;
+    margin-top: 5rem;
+    border-radius: 40% !important;
+    text-transform: none !important;
+}
+
+.tabla-rec thead{
+    font-size: 1.2rem;
+    color: white;
+}
+
+.tabla-rec tbody{
+    font-size: 1rem;
+}
+
+.asd, .ase input[type="email"]{
+    text-transform: none;
+}
+
+input[type="email"]{
+    text-transform: none;
+}
+
+.tabla-em thead{
+    font-size: 1rem;
+    color: white;
+}
+
+.form input{
+    border: 0.1rem solid black;
+}
+
+.form textarea{
+    border: 0.1rem solid black;
+}
+
+.form select{
+    border: 0.1rem solid black;
+}
+
+.form option{
+    border: 0.1rem solid black;
+}
+
+.btn-editEm{
+    cursor: pointer;
+}
+
+.btn-deleteEm{
+    cursor: pointer;
+}
+
+.form-editEm{
+    text-align: left;
+}
+
+.form-editEm input{
+    border: 0.1rem solid black;
+}
+
+.form-editEm textarea{
+    border: 0.1rem solid black;
+}
+
+.form-editEm select{
+    border: 0.1rem solid black;
+}
+
+.form-editEm option{
+    border: 0.1rem solid black;
+}
+
+.modal-emi{
+    text-align: left;
+}
+
+.tabla-docs{
+    margin-top: 2rem;
+}
+
+.tabla-docs thead{
+    font-size: 1rem;
+}
+
+
+.title-doc{
+    margin-top: 7rem;
+    font-size: 2rem;
+    color: white;
+}
+
+.title-dte{
+    margin-top: 4rem;
+    font-size: 2rem;
+    color: white;
+}
+
+.factura-cont{
+    margin-top: 4rem;
+}
+
+.title-apike{
+    font-size: 2rem;
+    color: white;
+}
+
+.form-control-email input[type="email"]{
+    text-transform: none;
+}

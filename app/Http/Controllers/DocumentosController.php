@@ -17,7 +17,7 @@ class DocumentosController extends Controller
     public function index()
     {
         $documentos = DB::table('documentos_procesados')->orderBy('id', 'desc')->get();
-        return view('documentos', compact('documentos'));
+        return view('documentos.index', compact('documentos'));
     }
 
     public function filtrarDoc(Request $request)

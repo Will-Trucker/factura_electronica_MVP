@@ -19,7 +19,7 @@ class TokenController extends Controller
             $ultimo = [];
         }
 
-        return view('token', compact('tokens', 'ultimo'));
+        return view('token.index', compact('tokens', 'ultimo'));
         }
 
         public function guardartoken(Request $request){
@@ -33,7 +33,7 @@ class TokenController extends Controller
 
             Token::create($datosT);
 
-            return redirect()->route('tokens')->with('success','Token Creado con Éxito');
+            return redirect()->route('token')->with('success','Token Creado con Éxito');
         }
 
         function generartoken($usuario, $clave){

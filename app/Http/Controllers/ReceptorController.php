@@ -18,7 +18,7 @@ class ReceptorController extends Controller
         $receptores = Receptor::all();
 
 
-        return view('receptor',compact('departments','municipios','receptores'));
+        return view('receptor.index',compact('departments','municipios','receptores'));
     }
 
     public function storeRe(Request $request){
@@ -61,7 +61,7 @@ class ReceptorController extends Controller
 
         $receptores->save();
 
-        return redirect()->route('receptores')->with('success','Receptor Registrado Exitosamente');
+        return redirect()->route('receptor')->with('success','Receptor Registrado Exitosamente');
     }
 
     public function modificar_receptor(Request $request){
@@ -94,7 +94,7 @@ class ReceptorController extends Controller
         $receptores= Receptor::find($id);
 
         if(!$receptores){
-            return redirect()->route('receptores')->with('error','Receptor no Encontrado');
+            return redirect()->route('receptor')->with('error','Receptor no Encontrado');
         }
 
         $receptores->update([
@@ -107,7 +107,7 @@ class ReceptorController extends Controller
             'Telefono' => $request->telefono,
             'Correo' => $request->correo
         ]);
-        return redirect()->route('receptores')->with('success', 'Emisor Modificado Exitosamente');
+        return redirect()->route('receptor')->with('success', 'Emisor Modificado Exitosamente');
     }
 
     public function eliminar_receptor(Request $request)

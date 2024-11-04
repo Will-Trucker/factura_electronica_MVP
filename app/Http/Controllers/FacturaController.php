@@ -28,7 +28,7 @@ class FacturaController extends Controller
         // ...
         $emisores = $this->obtenerEmisores(); // Obtiene todos los emisores de la base de datos
         $receptores = $this->obtenerReceptores();
-        return view('facturacion', compact('emisores', 'receptores'));
+        return view('factura.index', compact('emisores', 'receptores'));
     }
 
     function obtenerEmisores()
@@ -43,19 +43,6 @@ class FacturaController extends Controller
         return $receptores;
     }
 
-    // function obtenerNumeroDeControl($tipoDte){
-    //     $respuesta = NumeroControl::where('tipodte',$tipoDte)->first();
-    //     if(!$respuesta){
-    //         return rand(1,100);
-    //     }
-
-    //     $nuevoNumero = intval($respuesta->numero + 1);
-    //     $respuesta->numero = $nuevoNumero;
-    //     $respuesta->save();
-
-    //     $codigo = str_pad((string) $nuevoNumero, 15, "0", STR_PAD_LEFT);
-    //     return $codigo;
-    // }
     // Generar Codigo UUID V4
     function generaruuid()
     {
@@ -100,8 +87,10 @@ class FacturaController extends Controller
                     $cuerpoDte->identificacion->codigoGeneracion = $codGen;
 
                     // Define las credenciales y el documento para enviar
-                    $nitvendedorx = '06142803901121';
-                    $passPri = 'iDJWKWGC@459bzM';
+                    $nitvendedorx = env('ENCRIPTED_NIT');//'06142803901121';
+                    $passPri = env('ENCRIPTED_PSW_PRI');//'iDJWKWGC@459bzM';
+
+
                     $documento = [
                         'nit' => $nitvendedorx,
                         'activo' => true,
@@ -260,50 +249,6 @@ class FacturaController extends Controller
         return $this->guardarDocumento($response, $esquema);
     }
 
-    // public function actualizarNumeroControl($tipoDte)
-    // {
-    //     $respuesta = DB::table('reset_ndecontrol')
-    //         ->where('tipodte', $tipoDte)
-    //         ->first();
-
-    //     if ($respuesta) {
-    //         $nuevo = intval($respuesta['numero']) + 1;
-    //         DB::table('reset_ndecontrol')
-    //             ->where('tipodte', $tipoDte)
-    //             ->update(['numero' => $nuevo]);
-    //     } else {
-    //         DB::table('reset_ndecontrol')
-    //             ->insert(['tipodte' => $tipoDte, 'numero' => 1]);
-
-    //         $nuevo = 1;
-    //     }
-
-    //     return $nuevo;
-    // }
-
-    // public function actualizarNumeroControl($tipoDte) {
-    //     $respuesta = DB::table('reset_ndecontrol')
-    //                     ->where('tipodte', $tipoDte)
-    //                     ->first();
-
-    //     if ($respuesta) {
-    //         $nuevo = intval($respuesta->numero) + 1;
-    //         DB::table('reset_ndecontrol')
-    //             ->where('tipodte', $tipoDte)
-    //             ->update(['numero' => $nuevo]);
-    //         dd("Actualización exitosa", $nuevo);
-    //     } else {
-    //         DB::table('reset_ndecontrol')
-    //             ->insert(['tipodte' => $tipoDte, 'numero' => 1]);
-    //         $nuevo = 1;
-    //         dd("Inserción exitosa", $nuevo);
-    //     }
-
-    //     return $nuevo;
-    // }
-
-
-
     public function guardarDocumento($response, $esquema)
     {
         if ($response == '' || $response == null) {
@@ -332,7 +277,7 @@ class FacturaController extends Controller
 
             DB::table('documentos_procesados')->insert($datos);
 
-            return redirect()->route('documentos')->with('success', 'El documento se procesó correctamente');
+            return redirect()->route('documento')->with('success', 'El documento se procesó correctamente');
         } elseif ($response != null && $response['estado'] == "RECHAZADO") {
             \Log::info('Guardando documento rechazado.');
             $datos = [
@@ -345,7 +290,7 @@ class FacturaController extends Controller
 
             DB::table('documentos_rechazados')->insert($datos);
 
-            return redirect()->route('documentos')
+            return redirect()->route('documento')
                 ->with('mensaje', $response['descripcionMsg'])
                 ->with('observ', implode(',', $response['observaciones']));
         }
@@ -425,7 +370,7 @@ class FacturaController extends Controller
                     "version" => 1,
                     "ambiente" => "00",
                     "tipoDte" => "01",//ir cambiando el numero de Control desde 400
-                    "numeroControl" => "DTE-01-0001ONEC-000000000000965",//.$this->obtenerNumeroDeControl('FE'),
+                    "numeroControl" => "DTE-01-0001ONEC-000000000000984",//.$this->obtenerNumeroDeControl('FE'),
                     "codigoGeneracion" => $this->generaruuid(),
                     "tipoModelo" => 1,
                     "tipoOperacion" => 1,
@@ -605,7 +550,7 @@ class FacturaController extends Controller
                     "version" => 3,
                     "ambiente" => "00",
                     "tipoDte" => "03",
-                    "numeroControl" => "DTE-03-0001ONEC-000000000000930",//.$this->obtenerNumeroDeControl('CCFE'),
+                    "numeroControl" => "DTE-03-0001ONEC-000000000000985",//.$this->obtenerNumeroDeControl('CCFE'),
                     "codigoGeneracion" => $this->generaruuid(),
                     "tipoModelo" => 1,
                     "tipoOperacion" => 1,

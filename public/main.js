@@ -24,7 +24,7 @@ function cambiarSeccion(seccion){
     let section;
     let secciones = document.getElementById("divisiones")
     for (let i = 0; i < secciones.childElementCount; i++) {
-        secciones.children[i].className = 'd-none'
+        secciones.children[i].className = 'hidden'
     }
     switch (seccion) {
         case 0:
@@ -181,15 +181,15 @@ function cambiarTipoDoc(){
 
     if (documento.value == "CLE") {
         document.getElementById('liquidacion').className = "";
-        document.getElementById('detallesnormal').className = "d-none";
+        document.getElementById('detallesnormal').className = "hidden";
     }else{
-        document.getElementById('liquidacion').className = "d-none";
+        document.getElementById('liquidacion').className = "hidden";
     }
 
     if (documento.value == "FEXE") {
         document.getElementById('receptorExportacion').className = "";
     }else{
-        document.getElementById('receptorExportacion').className = "d-none";
+        document.getElementById('receptorExportacion').className = "hidden";
     }
 
 }
@@ -283,38 +283,51 @@ function calculoTotales(){
 
 
 function agregarDetalle(){
+    // Obtiene la referencia de la tabla donde se insertará la nueva fila
     tabla = document.getElementById('tablaDetalles');
-    //console.log()
-    var nuevaFila = tabla.insertRow(tabla.rows.length);
 
+    // Crea una nueva fila al final de la tabla
+    var nuevaFila = tabla.insertRow(tabla.rows.length);
+    nuevaFila.classList.add('hover:bg-blue-100'); // Aplica estilo de la fila al pasar el cursor
+
+    // Celda para la cantidad
     var cantidadCell = nuevaFila.insertCell(0);
     var cantidadInput = document.createElement('input');
     cantidadInput.setAttribute('type', 'number');
-    cantidadInput.setAttribute('class', 'cant');
+    cantidadInput.setAttribute('class', 'border rounded-md w-full p-1 cant');
     cantidadInput.setAttribute('onblur', 'calcularVentas()');
     cantidadInput.setAttribute('value', '0');
+    cantidadInput.setAttribute('min', '0');
+    cantidadCell.classList.add('border', 'border-gray-300', 'px-4', 'py-2'); // Estilos de la celda
     cantidadCell.appendChild(cantidadInput);
 
+    // Celda para la descripción
     var descripcionCell = nuevaFila.insertCell(1);
     var descripcionInput = document.createElement('input');
     descripcionInput.setAttribute('type', 'text');
     descripcionInput.setAttribute('onblur', 'calculoDetalles()');
+    descripcionInput.setAttribute('class', 'border rounded-md w-full p-1');
+    descripcionCell.classList.add('border', 'border-gray-300', 'px-4', 'py-2'); // Estilos de la celda
     descripcionCell.appendChild(descripcionInput);
 
+    // Celda para el precio unitario
     var precioCell = nuevaFila.insertCell(2);
     var precioInput = document.createElement('input');
     precioInput.setAttribute('type', 'number');
     precioInput.setAttribute('name', 'precio');
-    precioInput.setAttribute('class', 'precios');
+    precioInput.setAttribute('class', 'border rounded-md w-full p-1 precios');
     precioInput.setAttribute('onblur', 'calcularVentas()');
-    precioInput.setAttribute('value','0')
-    precioInput.setAttribute('min','0');
-    precioInput.setAttribute('step','0.01');
+    precioInput.setAttribute('value', '0');
+    precioInput.setAttribute('min', '0');
+    precioInput.setAttribute('step', '0.01');
+    precioCell.classList.add('border', 'border-gray-300', 'px-4', 'py-2'); // Estilos de la celda
     precioCell.appendChild(precioInput);
 
+    // Celdas adicionales para Ventas No Sujetas, Ventas Exentas, Ventas Afectas
     for (var i = 3; i < 6; i++) {
       var cell = nuevaFila.insertCell(i);
       cell.innerHTML = "0.0";
+      cell.classList.add('border', 'border-gray-300', 'px-4', 'py-2'); // Estilos de la celda
     }
-
 }
+

@@ -23,7 +23,7 @@ class EmisorController extends Controller
         $emisores = Emisor::all();
 
 
-        return view('emisor',compact('departments','municipios','actividades','emisores'));
+        return view('emisor.index',compact('departments','municipios','actividades','emisores'));
     }
 
     public function storeEm(Request $request){
@@ -73,7 +73,7 @@ class EmisorController extends Controller
 
             $emisor->save();
 
-        return redirect()->route('emisores')->with('success','Emisor Registrado Exitosamente');
+        return redirect()->route('emisor')->with('success','Emisor Registrado Exitosamente');
     }
 
     public function modificar_emisor(Request $request){
@@ -114,7 +114,7 @@ class EmisorController extends Controller
 
 
     if(!$emisor){
-        return redirect()->route('emisores')->with('error','Emisor no Encontrado');
+        return redirect()->route('emisor')->with('error','Emisor no Encontrado');
     }
 
 
@@ -134,7 +134,7 @@ class EmisorController extends Controller
 
 
 
-     return redirect()->route('emisores')->with('success', 'Emisor Modificado Exitosamente');
+     return redirect()->route('emisor')->with('success', 'Emisor Modificado Exitosamente');
     }
 
     public function eliminar_emisor(Request $request)
