@@ -130,6 +130,17 @@ function traerEmisor() {
 // }
 
 function ponerdatosEmisor(data) {
+    try {
+    // const emisorNombre = document.getElementById('emisorNombre');
+    // const emisorTelefono = document.getElementById('emisortelefono');
+    // const emisorCorreo = document.getElementById('emisorcorreo');
+
+    // if (emisorNombre) emisorNombre.value = data.Nombre || '';
+    // if (emisorTelefono) emisorTelefono.value = data.Telefono || '';
+    // if (emisorCorreo) emisorCorreo.value = data.Correo || '';
+    // if (emisornit) emisornit.value = data.NIT || '';
+
+
     document.getElementById('emisorNombre').value = data.Nombre || '';
     document.getElementById('nombreComercial').value = data.NombreComercial || '';
     document.getElementById('emisornrc').value = data.NRC || '';
@@ -140,6 +151,9 @@ function ponerdatosEmisor(data) {
     document.getElementById('emisormunicipio').value = data.idMunicipio;
     document.getElementById('emisortelefono').value = data.Telefono || '';
     document.getElementById('emisorcorreo').value = data.Correo || '';
+    } catch (error){
+        console.error("Error setting emisor data:", error);
+    }
 }
 
 function traerReceptor() {

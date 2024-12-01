@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@extends('layouts.navigation')
 
 @section('content')
     <center>
@@ -85,7 +86,7 @@
                         <hr class="my-4">
                         <div class="flex justify-center">
                             <button type="button"
-                                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
                                 onclick="cambiarSeccion(2)">Siguiente</button>
                         </div>
                     </div>
@@ -182,7 +183,7 @@
                         <hr class="my-4">
                         <div class="flex justify-center">
                             <button type="button"
-                                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
                                 onclick="cambiarSeccion(3)">Siguiente</button>
                         </div>
                     </div>
@@ -279,7 +280,7 @@
                     class="ms-3 text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5">Guardar</button>
             </div>
         </div>
-        <input type="hidden" name="detallesfactura" value="" id="detallesfactura">
+        <input type="hidden" name="detallesfactura" id="detallesfactura">
     </form>
     <div class="flex justify-center mt-12">
         <div class="hidden" id="descripcionSection" style="width: 100%; max-width: 800px;">
@@ -380,7 +381,7 @@
             <br><br>
             <div class="flex justify-center">
                 <button type="button"
-                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
                     onclick="cambiarSeccion(5)">Siguiente</button>
             </div>
         </div>

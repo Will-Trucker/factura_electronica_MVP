@@ -41,3 +41,24 @@ function verificarConexionInternet($url = 'http://www.google.com', $timeout = 10
         return null;
     }
 
+
+    if(!function_exists('obtenerDetalles')){
+        function obtenerDetalles($codGeneracion){
+            // Consulta a la base de datos para obtener el documento asociado al código de generación
+            $documento = DB::table('documentos_procesados') // Suponiendo que la tabla se llama 'documentos'
+                            ->where('codigoGeneracion', $codGeneracion) // Filtrar por código de generación
+                            ->first(); // Obtener el primer resultado (debería ser único)
+
+            if($documento) {
+                // Si se encuentra el documento, decodificar el campo 'esquema' (si es necesario)
+                $documentoEsquema = json_decode($documento->esquema);
+
+                if($documentoEsquema && isset($documentoEsquema->cuerpoDocumento)) {
+                    return $documentoEsquema->cuerpoDocumento; // Retornar los detalles encontrados
+                }
+            }
+
+            // Si no se encuentra el documento o los detalles no son válidos
+            return null; // O manejar con un error apropiado si lo prefieres
+        }
+    }

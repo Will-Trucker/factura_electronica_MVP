@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@extends('layouts.navigation')
 @section('link-css-js-assets')
     @vite(['resources/css/app.css','resources/js/app.js','resources/img/avatar5.png','resources/img/factura.png','resources/img/digital-key.png','resources/img/financial-advisor.png','resources/img/invoice.png','resources/img/idea.png','resources/img/invalid-vote.png','resources/img/send.png'])
 @endsection
@@ -53,7 +53,7 @@
             <div class="imagen_personaje_5"></div>
             <div class="detalle_5">
                 <h2>Eventos de Contingencia</h2>
-                <a href="#" class="title"><div class="boton"><h6 class="t6">Entrar</h6></div></a>
+                <a href="{{route('eContingencia')}}" class="title"><div class="boton"><h6 class="t6">Entrar</h6></div></a>
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
             <div class="imagen_personaje_6"></div>
             <div class="detalle_6">
                 <h2>Eventos de invalidacion</h2>
-                <a href="#" class="title"><div class="boton"><h6 class="t6">Entrar</h6></div></a>
+                <a href="{{route('eInvalidacion')}}" class="title"><div class="boton"><h6 class="t6">Entrar</h6></div></a>
             </div>
         </div>
     </div>

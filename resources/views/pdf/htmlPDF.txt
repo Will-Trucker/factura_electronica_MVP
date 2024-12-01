@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documento Tributario Electrónico</title>
+    <style>
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table td {
+            padding: 5px;
+        }
+        .strong {
+            font-weight: bold;
+        }
+        .right-align {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <table class="table">
+        <tr>
+            <td><span class="strong">Código de Generación:</span></td>
+            <td class="right-align">46E78585-0694-4C35-B949-0C0B048A9F3D</td>
+        </tr>
+        <tr>
+            <td><span class="strong">Número de Control:</span></td>
+            <td class="right-align">DTE-03-00010000-0000000000000913</td>
+        </tr>
+        <tr>
+            <td><span class="strong">Sello de Recepción:</span></td>
+            <td class="right-align">2024C75FCC29B3B548FDBBB12E4B5FD41B6AJEW2</td>
+        </tr>
+        <tr>
+            <td><span class="strong">Modelo de Facturación:</span></td>
+            <td class="right-align">Previo</td>
+        </tr>
+        <tr>
+            <td><span class="strong">Tipo de Transmisión:</span></td>
+            <td class="right-align">Normal</td>
+        </tr>
+        <tr>
+            <td><span class="strong">Fecha y Hora de Generación:</span></td>
+            <td class="right-align">2024-06-12 19:50:00</td>
+        </tr>
+    </table>
+</body>
+</html>

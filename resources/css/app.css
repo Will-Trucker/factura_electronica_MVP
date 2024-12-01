@@ -1,3 +1,4 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
 @tailwind base;
 @tailwind components;
@@ -355,4 +356,44 @@ input[type="email"]{
 
 .form-control-email input[type="email"]{
     text-transform: none;
+}
+
+.title-event1{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.individualE input{
+    border: 0.1rem solid black;
+    text-transform: none;
+}
+
+.individualE select{
+    border: 0.1rem solid black;
+}
+
+.individualE option{
+    border: 0.1rem solid black;
+}
+
+.individualE textarea{
+    border: 0.1rem solid black;
+    text-transform: none;
+}
+
+.pin{
+    text-transform: none;
+
+}
+
+.lotesEc input{
+    border: 0.1rem solid black;
+}
+
+.lotesEc select{
+    border: 0.1rem solid black;
+}
+
+.lotesEc option{
+    border: 0.1rem solid black;
 }

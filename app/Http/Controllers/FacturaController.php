@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
-
+use Exception;
 class FacturaController extends Controller
 {
     public function registro()
@@ -66,51 +66,140 @@ class FacturaController extends Controller
 
     public function docContingencia(Request $request, $tipo, $motivo, $codGen)
     {
-        if ($request->hasFile('documento')) {
-            $archivo = $request->file('documento');
-
-            if ($archivo->isValid()) {
-                $contenidoJson = file_get_contents($archivo->path());
-                $nuevoDoc = json_decode($contenidoJson);
-
-                if ($nuevoDoc !== null && json_last_error() === JSON_ERROR_NONE) {
-                    $cuerpoDte = json_decode($nuevoDoc->esquema);
-                    $tipoDte = $cuerpoDte->identificacion->tipoDte;
-
-                    // Elimina o ajusta la asignación del número de control
-                    // $ncontrol = $this->obtenerNumeroDeControl($tipoDte);
-                    // $cuerpoDte->identificacion->numeroControl = $ncontrol;
-
-                    // Asigna un valor vacío o algún valor predeterminado si es necesario
-                    $cuerpoDte->identificacion->numeroControl = ''; // O un valor predeterminado
-
-                    $cuerpoDte->identificacion->codigoGeneracion = $codGen;
-
-                    // Define las credenciales y el documento para enviar
-                    $nitvendedorx = env('ENCRIPTED_NIT');//'06142803901121';
-                    $passPri = env('ENCRIPTED_PSW_PRI');//'iDJWKWGC@459bzM';
-
-
-                    $documento = [
-                        'nit' => $nitvendedorx,
-                        'activo' => true,
-                        'passwordPri' => $passPri,
-                        'dteJson' => $cuerpoDte
-                    ];
-
-                    $documento = json_encode($documento);
-                    $this->firmarDocumento($documento, $tipoDte);
-                } else {
-                    return ['error' => 'El archivo no es un JSON válido'];
-                }
-            } else {
-                return ['error' => 'El archivo no es válido'];
-            }
-        } else {
-            return response()->json(['error' => 'No se proporcionó ningún archivo'], 400);
+        if (!$request->hasFile('documento')) {
+            return response()->json(['error' => 'No se ha recibido ningún archivo'], 400);
         }
+
+        $archivo = $request->file('documento');
+        if (!$archivo->isValid()) {
+            return response()->json(['error' => 'El archivo no es válido'], 400);
+        }
+
+        // Leer el contenido del archivo JSON
+        $contenidoJson = file_get_contents($archivo->path());
+        $nuevoDoc = json_decode($contenidoJson);
+
+        if ($nuevoDoc === null || json_last_error() !== JSON_ERROR_NONE) {
+            Log::error('Error al decodificar el JSON.');
+            return response()->json(['error' => 'Error al procesar el archivo JSON'], 400);
+        }
+
+        // Verificar si el objeto contiene la propiedad 'identificacion'
+        if (!isset($nuevoDoc->identificacion)) {
+            Log::error('El archivo JSON no contiene la propiedad "identificacion".');
+            return response()->json(['error' => 'Propiedad "identificacion" no encontrada'], 400);
+        }
+
+        $identificacion = $nuevoDoc->identificacion;
+        $tipoDte = $identificacion->tipoDte;
+
+        try {
+            // Generar el número de control basado en el tipo de DTE
+            $ncontrol = $this->generarNumeroControl($tipoDte);
+        } catch (\Exception $e) {
+            Log::error('Error al generar el número de control: ' . $e->getMessage());
+            return response()->json(['error' => 'Tipo de DTE no válido'], 400);
+        }
+
+        // Continuar procesando el documento según sea necesario
+        return response()->json(['message' => 'Documento procesado correctamente', 'numeroControl' => $ncontrol]);
     }
 
+    public function docInvalidacion(Request $request, $tipo, $motivo, $codGen)
+    {
+        if (!$request->hasFile('documento')) {
+            return response()->json(['error' => 'No se ha recibido ningún archivo'], 400);
+        }
+
+        $archivo = $request->file('documento');
+        if (!$archivo->isValid()) {
+            return response()->json(['error' => 'El archivo no es válido'], 400);
+        }
+
+        // Leer el contenido del archivo JSON
+        $contenidoJson = file_get_contents($archivo->path());
+        $nuevoDoc = json_decode($contenidoJson);
+
+        $contenidoJson = file_get_contents($archivo->path());
+        $nuevoDoc = json_decode($contenidoJson);
+
+        if ($nuevoDoc === null || json_last_error() !== JSON_ERROR_NONE) {
+            Log::error('Error al decodificar el JSON.');
+            return response()->json(['error' => 'Error al procesar el archivo JSON'], 400);
+        }
+
+        // Verificar si el objeto contiene la propiedad 'identificacion'
+        if (!isset($nuevoDoc->identificacion)) {
+            Log::error('El archivo JSON no contiene la propiedad "identificacion".');
+            return response()->json(['error' => 'Propiedad "identificacion" no encontrada'], 400);
+        }
+
+        $identificacion = $nuevoDoc->identificacion;
+        $tipoDte = $identificacion->tipoDte;
+
+        try {
+            // Generar el número de control basado en el tipo de DTE
+            $ncontrol = $this->generarNumeroControl($tipoDte);
+        } catch (Exception $e) {
+            Log::error('Error al generar el número de control: ' . $e->getMessage());
+            return response()->json(['error' => 'Tipo de DTE no válido'], 400);
+        }
+
+        // Continuar procesando el documento según sea necesario
+        return response()->json(['message' => 'Documento procesado correctamente', 'numeroControl' => $ncontrol]);
+    }
+
+    public function obtenerNumero($tipoDte)
+    {
+        // Obtener el registro correspondiente al tipo de documento
+        $registro = NumeroControl::where('tipo_dte', $tipoDte)->first();
+
+        if (!$registro) {
+            // Si no existe el registro, inicializarlo en 1
+            $registro = new NumeroControl();
+            $registro->tipo_dte = $tipoDte;
+            $registro->ultimo_numero = 1;
+            $registro->save();
+        } else {
+            // Incrementar el número de control
+            $registro->ultimo_numero += 1;
+            $registro->save();
+        }
+
+        // Retornar el número de control actualizado
+        return $registro->ultimo_numero;
+    }
+
+    function generarNumeroControl($tipoDocumento) {
+        // Primera sección: "DTE"
+        $prefijo = "DTE";
+
+        // Segunda sección: Tipo de documento (pasado como parámetro)
+        // Asegúrate de que el tipo de documento sea válido
+        $tiposValidos = ["01", "03", "11", "15"];  // Tipos de documentos válidos
+        if (!in_array($tipoDocumento, $tiposValidos)) {
+            throw new Exception('Tipo de documento no válido.');
+        }
+
+        // Tercera sección: Código de sucursal y punto de venta
+        $codigoSucursal = "OFEM";  // Código de la casa matriz o sucursal
+        $codigoPuntoVenta = "0001"; // Código del punto de venta
+        $codigoTerceraSeccion = $codigoPuntoVenta . $codigoSucursal; // Secciones combinadas en el orden correcto
+
+        // Cuarta sección: Número secuencial (dinámico, reiniciado cada vez que se llame)
+        $numeroSecuencial = rand(1, 999999999999999);  // Generar un número secuencial aleatorio de 15 dígitos
+        $numeroSecuencialFormateado = str_pad($numeroSecuencial, 15, '0', STR_PAD_LEFT);  // Asegura que el número tenga 15 dígitos
+
+        // Generación del número de control
+        $numeroControl = $prefijo . '-' . $tipoDocumento . '-' . $codigoTerceraSeccion . '-' . $numeroSecuencialFormateado;
+
+        // Verificación de longitud del número de control
+        if (strlen($numeroControl) != 31) {
+            throw new Exception('El número de control generado no tiene la longitud correcta.');
+        }
+
+        return $numeroControl;
+    }
 
     public function guardarFactura(Request $request)
     {
@@ -154,9 +243,9 @@ class FacturaController extends Controller
         //     // FACTURA DE SUJETO EXCLUIDO ELECTRONICA
         //     return $this->facturadeSujetoExcluido($request);
         // }
-        if ($request->tipoDeDocumento == "CDE"){
-           // COMPROBANTE DE DONACIÓN ELECTRONICO
-          return $this->comprobanteDonacionElectronica($request);
+        if ($request->tipoDeDocumento == "CDE") {
+            // COMPROBANTE DE DONACIÓN ELECTRONICO
+            return $this->comprobanteDonacionElectronica($request);
         }
     }
 
@@ -265,12 +354,14 @@ class FacturaController extends Controller
             \Log::info('Guardando documento procesado.');
             $esquema = json_decode($esquema);
             $tipoDTE = $esquema->identificacion->tipoDte;
+            $numeroControl = $esquema->identificacion->numeroControl;
             $esquema = json_encode($esquema);
 
             $datos = [
                 'fhProcesamiento' => $response['fhProcesamiento'],
                 'codigoGeneracion' => $response['codigoGeneracion'],
                 'selloRecibido' => $response['selloRecibido'],
+                'numeroControl' => $numeroControl,
                 'esquema' => $esquema,
                 'tipoDte' => $tipoDTE
             ];
@@ -361,6 +452,8 @@ class FacturaController extends Controller
         ];
         $nitvendedorx = env('ENCRIPTED_NIT');//'06142803901121';
         $passPri = env('ENCRIPTED_PSW_PRI');//'Rr2Ll3rm0@$ñ@';
+        $tipoDocumento = "01";
+        $numeroControl = $this->generarNumeroControl($tipoDocumento);
         $documento = [
             'nit' => $nitvendedorx,
             'activo' => true,
@@ -369,8 +462,9 @@ class FacturaController extends Controller
                 "identificacion" => [
                     "version" => 1,
                     "ambiente" => "00",
-                    "tipoDte" => "01",//ir cambiando el numero de Control desde 400
-                    "numeroControl" => "DTE-01-0001ONEC-000000000000984",//.$this->obtenerNumeroDeControl('FE'),
+                    "tipoDte" => "01",//ir cambiando el numero de Control desde 5000
+                    "numeroControl" => $numeroControl,
+                    //"DTE-01-0001ONEC-000000000000997",//"DTE-01-0001ONEC-000000000000994",//"DTE-01-0001ONEC-000000000000993",//$this->obtenerNumero('FE')//.$this->obtenerNumeroDeControl('FE'),
                     "codigoGeneracion" => $this->generaruuid(),
                     "tipoModelo" => 1,
                     "tipoOperacion" => 1,
@@ -463,6 +557,7 @@ class FacturaController extends Controller
         ];
 
         $docJSON = json_encode($documento);
+        echo $numeroControl;
         //echo $docJSON;
         //echo "----------------------------------------------------------------------------------------------";
         return $this->firmarDocumento($docJSON, $request->tipoDeDocumento);
@@ -541,6 +636,8 @@ class FacturaController extends Controller
         ];
         $nitvendedorx = env('ENCRIPTED_NIT');//'06142803901121';
         $passPri = env('ENCRIPTED_PSW_PRI');//'Rr2Ll3rm0@$ñ@';
+        $tipoDocumento = "03";
+        $numeroControl = $this->generarNumeroControl($tipoDocumento);
         $documento = [
             "nit" => $nitvendedorx,
             "activo" => true,
@@ -550,7 +647,7 @@ class FacturaController extends Controller
                     "version" => 3,
                     "ambiente" => "00",
                     "tipoDte" => "03",
-                    "numeroControl" => "DTE-03-0001ONEC-000000000000985",//.$this->obtenerNumeroDeControl('CCFE'),
+                    "numeroControl" =>$numeroControl,
                     "codigoGeneracion" => $this->generaruuid(),
                     "tipoModelo" => 1,
                     "tipoOperacion" => 1,
@@ -663,6 +760,8 @@ class FacturaController extends Controller
         ];
         $nitvendedorx = env('ENCRIPTED_NIT');//'06142803901121';
         $passPri = env('ENCRIPTED_PSW_PRI');//'Rr2Ll3rm0@$ñ@';
+        $tipoDocumento = "11";
+        $numeroControl = $this->generarNumeroControl($tipoDocumento);
         $documento = [
 
             "nit" => $nitvendedorx,
@@ -674,7 +773,7 @@ class FacturaController extends Controller
                     "version" => 1,
                     "ambiente" => "00",
                     "tipoDte" => "11",
-                    "numeroControl" => "DTE-11-00390001-000000000000936",
+                    "numeroControl" => $numeroControl,
                     "codigoGeneracion" => $this->generaruuid(),
                     "tipoModelo" => 1,
                     "tipoOperacion" => 1,
@@ -731,54 +830,46 @@ class FacturaController extends Controller
         return $this->firmarDocumento($docJSON, $request->tipoDeDocumento);
     }
 
-    public function comprobanteDonacionElectronica(Request $request) {
-        // Crear una instancia del conversor de números a letras
+    public function comprobanteDonacionElectronica(Request $request)
+    {
         $formatter = new NumeroALetras();
-
-        // Obtener los detalles de la donación del request
         $detallesfactura = json_decode($request->detallesfactura);
         $cuerpodocumento = [];
         $i = 0;
         $totalDonacion = 0;
-
-        // Procesar cada detalle de la donación
         foreach ($detallesfactura as $detalle) {
             $i++;
-            $totalDonacion += $detalle->ventasafectas;  // Sumar los valores de los artículos donados
-
+            $totalDonacion += $detalle->ventasafectas;
             $dato = [
                 "numItem" => $i,
-                "tipoDonacion" => 1,  // Tipo de donación, puede cambiar según sea necesario
+                "tipoDonacion" => 1,
                 "cantidad" => floatval($detalle->cantidad),
-                "codigo" => null,  // Aquí puedes añadir un código de producto si es necesario
-                "uniMedida" => 99,  // Unidad de medida, puede variar
+                "codigo" => null,
+                "uniMedida" => 99,
                 "descripcion" => $detalle->descripcion,
                 "depreciacion" => 0,
                 "valorUni" => floatval($detalle->preciounitario),
-                "valor" => floatval($detalle->ventasafectas)  // Valor total del artículo
+                "valor" => floatval($detalle->ventasafectas)
             ];
 
-            array_push($cuerpodocumento, $dato);  // Añadir el detalle al cuerpo del documento
+            array_push($cuerpodocumento, $dato);
         }
-
-        // Crear el resumen de la donación
         $resumen = [
             "valorTotal" => $totalDonacion,
             "totalLetras" => $formatter->toMoney($totalDonacion, 2, "Dolares Americanos", "Centavos"),
             "pagos" => [
                 [
-                    "codigo" => "02",  // Código del método de pago
+                    "codigo" => "02",
                     "montoPago" => $totalDonacion,
                     "referencia" => "Pago en especias"
                 ]
             ]
         ];
 
-        // Datos del vendedor (estáticos en este caso)
-        $nitvendedorx = env('ENCRIPTED_NIT');//'06142803901121';
-        $passPri = env('ENCRIPTED_PSW_PRI');//'Rr2Ll3rm0@$ñ@';
-
-        // Estructura del documento de donación
+        $nitvendedorx = env('ENCRIPTED_NIT');
+        $passPri = env('ENCRIPTED_PSW_PRI');
+        $tipoDocumento = "15";
+        $numeroControl = $this->generarNumeroControl($tipoDocumento);
         $documento = [
             'nit' => $nitvendedorx,
             'activo' => true,
@@ -787,8 +878,8 @@ class FacturaController extends Controller
                 "identificacion" => [
                     "version" => 1,
                     "ambiente" => "00",
-                    "tipoDte" => "15",  // Tipo de DTE para donación
-                    "numeroControl" => "DTE-15-00010001-000000000000942",  // Número de control, puede ser dinámico
+                    "tipoDte" => "15",
+                    "numeroControl" => $numeroControl,
                     "codigoGeneracion" => $this->generaruuid(),
                     "tipoModelo" => 1,
                     "tipoOperacion" => 1,
@@ -798,31 +889,31 @@ class FacturaController extends Controller
                 ],
                 "donante" => [
                     "tipoDocumento" => "36",
-                    "numDocumento" => strval($request->emisornit),
-                    "nrc" => $request->emisornrc,
-                    "nombre" => $request->emisornombre,
-                    "codActividad" => $request->actividademisor,
+                    "numDocumento" => strval($request->receptorndocumento),
+                    "nrc" => $request->receptornrc,
+                    "nombre" => $request->receptornombre,
+                    "codActividad"=>"70200",
                     "descActividad" => null,
                     "direccion" => null,
-                    "telefono" => $request->emisortelefono,
-                    "correo" => $request->emisorcorreo,
+                    "telefono"=>"77958125",
+                    "correo"=>"mineromemo429@gmail.com",
                     "codDomiciliado" => 2,
                     "codPais" => "9300"
                 ],
                 "donatario" => [
                     "tipoDocumento" => "36",
-                    "numDocumento" => $request->receptorndocumento,
-                    "nrc" => $request->receptornrc,
-                    "nombre" => $request->receptornombre,
+                    "numDocumento" => $request->emisornit,
+                    "nrc" => $request->emisornrc,
+                    "nombre" => $request->emisornombre,
                     "codActividad" => "73100",
-                    "descActividad" => "Publicidad",
+                    "descActividad" => "publicidad",
                     "direccion" => [
-                        "departamento" => $request->receptordepartamento,
-                        "municipio" => $request->receptormunicipio,
-                        "complemento" => $request->receptorcomplemento
+                        "departamento" => $request->emisordepartamento,
+                        "municipio" => $request->emisormunicipio,
+                        "complemento" => $request->complemento
                     ],
-                    "telefono" => $request->receptortelefono,
-                    "correo" => $request->receptorcorreo,
+                    "telefono" => $request->emisortelefono,
+                    "correo" => $request->emisorcorreo,
                     "nombreComercial" => null,
                     "tipoEstablecimiento" => "01",
                     "codEstableMH" => null,
@@ -843,303 +934,9 @@ class FacturaController extends Controller
             ]
         ];
 
-        // Convertir el documento a JSON
         $docJSON = json_encode($documento);
 
-        // Firmar y devolver el documento
         return $this->firmarDocumento($docJSON, $request->tipoDeDocumento);
     }
-
-
-
-    // public function firmarDocumento($documento, $tipoDocumento) {
-
-    //     $curl = curl_init();
-    //     curl_setopt_array($curl, array(
-    //     CURLOPT_URL => 'http://localhost:8113/firmardocumento/',
-    //     CURLOPT_RETURNTRANSFER => true,
-    //     CURLOPT_ENCODING => '',
-    //     CURLOPT_MAXREDIRS => 10,
-    //     CURLOPT_TIMEOUT => 0,
-    //     CURLOPT_FOLLOWLOCATION => true,
-    //     CURLOPT_SSL_VERIFYPEER => false,
-    //     CURLOPT_SSL_VERIFYHOST => false,
-    //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    //     CURLOPT_CUSTOMREQUEST => 'POST',
-    //     CURLOPT_POSTFIELDS =>$documento,
-    //     CURLOPT_HTTPHEADER => array(
-    //         'Content-Type: application/json'
-    //     ),
-    //     ));
-
-    //     $response = curl_exec($curl);
-    //     $info = curl_getinfo($curl);
-
-    //     //echo $response;
-    //     if(curl_errno($curl)) {
-    //         echo 'Error al realizar la solicitud: ' . curl_error($curl);
-    //         print_r($info);
-    //     }
-    //     curl_close($curl);
-
-    //     //echo $response;
-    //     //echo $documento;
-    //     //echo $this->obtenerNumeroDeControl('FSEE');
-    //     return $this->mandarDocFirmado(json_decode($response), $tipoDocumento);
-    // }
-
-    // public function mandarDocFirmado($respuesta, $tipoDocumento){
-
-    //     $tipoDte="01";
-    //     $version="1";
-    //     if($tipoDocumento == "FE"){
-    //         $tipoDte = "01";
-    //         $version="1";
-    //     }
-    //     if($tipoDocumento == "CCFE"){
-    //         $tipoDte = "03";
-    //         $version="3";
-    //     }
-    //     if($tipoDocumento == "FEXE"){
-    //         $tipoDte = "11";
-    //         $version="1";
-    //     }
-    //     if($tipoDocumento == "FSEE"){
-    //         $tipoDte = "14";
-    //         $version="1";
-    //     }
-    //     if($tipoDocumento == "CDE"){
-    //         $tipoDte = "15";
-    //         $version="1";
-    //     }
-    //     $documento = [
-    //         "ambiente"=>"00",
-    //         "idEnvio"=>"1",
-    //         "version"=>$version,
-    //         "tipoDte"=>$tipoDte,
-    //         "documento"=>$respuesta->body,
-    //     ];
-    //     //echo json_encode($documento)."  cuerpofirmado------respuesta  ";
-    //     $apiUrl = "https://apitest.dtes.mh.gob.sv/fesv/recepciondte";
-
-    //     $headers = [
-    //         'Authorization' => ultimoToken(),
-    //         'Content-Type' => 'application/json',
-    //     ];
-
-    //     $response = Http::withHeaders($headers)->post($apiUrl, $documento);
-    //     dd($response);
-
-    // }
-
-
-    // public function updateNumControl($tipoDTE){
-    //      // Buscar el registro en la base de datos
-    //      $respuesta = NumeroControl::where('tipodte', $tipoDTE)->first();
-
-    //      if ($respuesta) {
-    //          // Incrementar el número
-    //          $nuevo = intval($respuesta->numero) + 1;
-
-    //          // Actualizar el registro en la base de datos
-    //          $respuesta->numero = $nuevo;
-    //          $respuesta->save();
-
-    //          return $nuevo;
-    //      } else {
-    //          // Manejar el caso en el que no se encuentra el registro
-    //          return null;
-    //      }
-
-    // $respuesta = buscar('numerocontrol', 'tipoDTE', $tipoDTE);
-
-    // if ($respuesta) {
-    //     // Calcula el nuevo número de control
-    //     $nuevoNumero = intval($respuesta['numero']) + 1;
-
-    //     // Actualiza el registro en la base de datos
-    //     NumeroControl::where('tipoDTE', $tipoDTE)->update(['numero' => $nuevoNumero]);
-    // } else {
-    //     // Manejo de error si no se encuentra el registro
-    //     // Puedes lanzar una excepción o manejarlo de otra manera
-    //     throw new \Exception('Tipo de DTE no encontrado.');
-    // }
-
-    //}
-
-    // public function saveDoc($response){
-    //     if ($response['estado'] != null && $response['estado'] == "PROCESADO") {
-    //         $datos = [
-    //             "fecha" => $response['fhProcesamiento'],
-    //             "codigoGeneracion" => $response['codigoGeneracion'],
-    //             "selloRecibido" => $response['selloRecibido'],
-    //             "observaciones" => implode(',', $response['observaciones']),
-    //         ];
-
-    //         Documentos::create($datos);
-
-    //         return redirect()->route('documentos')
-    //             ->with('success', 'El documento se proceso correctamente');
-    //     } else if ($response['estado'] != null && $response['estado'] == "RECHAZADO") {
-    //         $datos = [
-    //             "fecha" => $response['fhProcesamiento'],
-    //             "codigoGeneracion" => $response['codigoGeneracion'],
-    //             "selloRecibido" => $response['selloRecibido'],
-    //             "observaciones" => implode(',', $response['observaciones']),
-    //         ];
-
-    //         DocumentosRechazados::create($datos);
-
-    //         echo " - ocurrio un error al momento de procesar - ";
-    //         echo $response['descripcionMsg'];
-    //         print_r($response['observaciones']);
-    //         return redirect()->route('documentos')
-    //             ->with('mensaje', $response['descripcionMsg'])
-    //             ->with('observ', implode(',', $response['observaciones']));
-    //     }
-    // }
-
-    // // Funciones para DTE
-    // public function facturaElectronica(Request $request){
-    //     $formatter = new NumeroALetras;
-
-    //     $detallesFact = json_decode($request->detallesFactura);
-    //     $cuerpoDocumento = [];
-
-    //     $i = 0;
-
-    //     $totalNoSujeto = 0;
-    //     $totalExento = 0;
-    //     $totalGravado = 0;
-    //     $totalIva = 0;
-
-    //     foreach($detallesFact as $detalle){
-    //         $i++;
-    //         $totalNoSujeto += $detalle->ventasnosujetas;
-    //         $totalExento +=  $detalle->ventasexcentas;
-    //         $totalGravado += $detalle->ventasafectas;
-    //         $dato = [
-    //             "numItem" => $i,
-    //             "tipoItem" => 2,
-    //             "numeroDocumento" => null,
-    //             "cantidad" => floatval($detalle->cantidad),
-    //             "codigo" => null,
-    //             "codTributo" => null,
-    //             "uniMedida" => 59,
-    //             "descripcion" => $detalle->descripcion,
-    //             "precioUni" => $detalle->preciounitario,
-    //             "montoDescu" => 0,
-    //             "ventaNoSuj" => floatval($detalle->ventasnosujetas),
-    //             "ventaExenta" => floatval($detalle->ventasexcentas),
-    //             "ventaGravada" => floatval($detalle->ventasafectas),
-    //             "tributos" => null,
-    //             "psv" => 0,
-    //             "noGravado" => 0,
-    //             "ivaItem" => round($detalle->ventasafectas/1.13*0.13,2)
-    //         ];
-    //         $totaliva += round($detalle->ventasafectas/1.13*0.13,2);
-    //         array_push($cuerpoDocumento,$dato);
-    //     }
-
-    //     $resumen = [
-    //         "totalNoSuj" => $totalNoSujeto,
-    //         "totalExenta" => $totalExento,
-    //         "totalGravada" => $totalGravado,
-    //         "subTotalVentas" => $totalGravado,
-    //         "descuNoSuj" => 0,
-    //         "descuExenta" => 0,
-    //         "descuGravada" => 0,
-    //         "porcentajeDescuento" => 0,
-    //         "totalDescu" => 0,
-    //         "tributos" => null,
-    //         "subtotal" => $totalGravado,
-    //         "ivaReten1" => 0,
-    //         "reteRenta" => 0,
-    //         "montoTotalOperacion" => $totalGravado,
-    //         "totalNoGravado" => 0,
-    //         "totalPagar" => $totalGravado,
-    //         "totalLetras" => $formatter->toMoney($totalGravado,2,"dolares","centavos")  ,
-    //         "totalIva" => $totalIva,
-    //         "saldoAFavor" => 0,
-    //         "condicionOperacion" => 1,
-    //         "pagos" => null,
-    //         "numPagoElectronico" => null
-    //     ];
-    //     $nitAdmin = '06142803901121';
-    //     $pswPRI = 'Rr2Ll3rm0@$ñ@';
-    //     $documento = [
-    //         'nit' => $nitAdmin,
-    //         'activo' => true,
-    //         'passwordPri' => $pswPRI,
-    //         'dteJson' => [
-    //             "identificacion" => [
-    //                 "version" => 1,
-    //                 "ambiente" => "00",
-    //                 "tipoDTE" => "01",
-    //                 "numeroControl" => "DTE-01-0001O000-".$this->obtenerNumeroDeControl('FE'),
-    //                 "codigoGeneracion" => $this->generarUUID(),
-    //                 "tipoModelo" => 1,
-    //                 "tipoOperacion" => 1,
-    //                 "tipoContingencia" => null,
-    //                 "motivoContin" => null,
-    //                 "fechEmi" => date('Y-m-d'),
-    //                 "horEmi" => date('h:i:s'),
-    //                 "tipoMoneda" => "USD"
-    //             ],
-    //             "documentoRelacionado" => null,
-    //             "emisor" => [
-    //                 "nit" => strval($request->emisornit),
-    //                 "nrc" => $request->emisornrc,
-    //                 "nombre" => $request->emisornombre,
-    //                 "codActividad" => $request->actividademisor,
-    //                 "descActividad" => "Publicidad",
-    //                 "nombreComercial" => $request->nombrecomercial,
-    //                 "tipoEstablecimiento" => "01",
-    //                 "direccion" => [
-    //                     "departamento" => $request->emisordepartamento,
-    //                     "municipio" => $request->emisormunicipio,
-    //                     "complemento" => $request->complemento,
-    //                 ],
-    //                 "telefono" => $request->emisortelefono,
-    //                 "codEstableMH"=> "0000",
-    //                 "codEstable"=>"0000",
-    //                 "codPuntoVentaMH"=>"0000",
-    //                 "codPuntoVenta"=> "0000",
-    //                 "correo" => $request->emisorcorreo
-    //             ],
-    //             "receptor" => [
-    //                 "tipoDocumento" =>  "36",
-    //                 "numDocumento" => $request->ndocumento,
-    //                 "nrc" => $request->receptornrc,
-    //                 "codActividad" => null,
-    //                 "descActividad" => null,
-    //                 "direccion" => [
-    //                     "departamento" => $request->receptordepartamento,
-    //                     "municipio" => $request->receptormunicipio,
-    //                     "complemento" => $request->receptorcomplemento
-    //                 ],
-    //                 "telefono" => $request->receptortelefono,
-    //                 "correo" => $request->receptorcorreo
-    //             ],
-    //             "otrosDocumentos" => null,
-    //             "ventaTercero" => null,
-    //             "cuerpoDocumento" => $cuerpoDocumento,
-    //             "resumen" => $resumen,
-    //             "extension"=> [
-    //                     "nombEntrega"=> null,
-    //                     "docuEntrega"=> null,
-    //                     "nombRecibe"=> null,
-    //                     "docuRecibe"=> null,
-    //                     "observaciones"=> null,
-    //                     "placaVehiculo"=> null
-    //             ],
-    //             "apendice" => null
-    //         ],
-    //     ];
-
-    //     $docJson = json_encode($documento);
-    //     return $this->firmarDocumento($docJson,$request->tipoDeDocumento);
-
-    // }
 
 }

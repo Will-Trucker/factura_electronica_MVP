@@ -17,6 +17,7 @@ class Documentos extends Model
         'fhProcesamiento',
         'codigoGeneracion',
         'selloRecibido',
+        'numeroControl',
         'esquema',
         'tipoDte'
     ];
